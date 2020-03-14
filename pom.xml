@@ -19,7 +19,7 @@
 
 	<packaging>war</packaging>
 	<build>
-		<finalName>centauri.be</finalName>
+		<finalName>cerepro.hr.backend</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
