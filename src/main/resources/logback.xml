@@ -1,0 +1,31 @@
+<configuration>
+
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+	<file>/logs/cerepro/backend.log</file>
+<!-- 		 <file>c:\\logs\\cerepro\\backend.log</file>  -->
+		<encoder>
+			<pattern>%date %level %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<!-- <pattern>%msg%n</pattern> -->
+			<pattern>%date %level %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+<!-- 	<logger name="centauri.academy.proxima.cerepro" level="debug" /> -->
+<!-- 	<logger name="o.h.t.BasicTypeRegistry" level="OFF" /> -->
+<!-- 	<logger name="o.h.*" level="WARNING" /> -->
+<!-- 	<logger name="org.hibernate" level="OFF" /> -->
+
+
+	<root level="info">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

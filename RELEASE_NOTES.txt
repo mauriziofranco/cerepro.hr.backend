@@ -1,0 +1,19 @@
+REQUIREMENTS:
+1) Following libraries needs to be installed:
+   - imagemagick
+   - calibre
+   
+2) Following folders needs to be created:
+    - /cerepro/candidates/img
+    - /cerepro/candidates/cv
+    - /cerepro/itconsultants/img
+    - /cerepro/itconsultants/cv 
+    - /cerepro/thumbnails 
+
+3) Following symbolik link needs to be created(after folders creation)
+
+    - ln -sf /cerepro/candidates/img /home/maurizio/apache-tomcat-9.0.14/webapps/canimg
+    - ln -sf /cerepro/candidates/cv  /home/maurizio/apache-tomcat-9.0.14/webapps/cancv
+    - ln -sf /cerepro/itconsultants/img /home/maurizio/apache-tomcat-9.0.14/webapps/itcimg
+    - ln -sf /cerepro/itconsultants/cv /home/maurizio/apache-tomcat-9.0.14/webapps/itccv
+    - ln -sf /cerepro/thumbnails /home/maurizio/apache-tomcat-9.0.14/webapps/thumbnails
