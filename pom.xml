@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>centauri.academy</groupId>
 	<artifactId>cerepro.backend</artifactId>
-	<version>1.1</version>
+	<version>1.2</version>
 
 
 	<name>CeReProBackend</name>
@@ -262,7 +262,7 @@
 		<dependency>
 			<groupId>centauri.academy</groupId>
 			<artifactId>cerepro.persistence</artifactId>
-			<version>1.3</version>
+			<version>1.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.proxima</groupId>
