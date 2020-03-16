@@ -28,9 +28,9 @@ public class CeReProBackendApplication extends SpringBootServletInitializer {
 		ApplicationContext applicationContext = 
 				SpringApplication.run(CeReProBackendApplication.class, args);
 		
-		for (String name : applicationContext.getBeanDefinitionNames()) {
-			logger.info(name);
-		}
+//		for (String name : applicationContext.getBeanDefinitionNames()) {
+//			logger.info(name);
+//		}
 		logger.info("APPLICATION STARTED!!!!!!");
 	}
 	
