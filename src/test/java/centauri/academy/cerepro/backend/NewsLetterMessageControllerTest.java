@@ -27,9 +27,9 @@ import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.NoteTemplate;
 import centauri.academy.cerepro.persistence.repository.NoteTemplateRepository;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+//
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class NewsLetterMessageControllerTest {
 
 	public static final Logger logger = LoggerFactory.getLogger(NewsLetterMessageControllerTest.class);
