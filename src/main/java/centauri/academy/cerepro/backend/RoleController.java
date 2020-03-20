@@ -8,13 +8,12 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +27,7 @@ import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
+import centauri.academy.cerepro.service.RoleService;
 
 
 
@@ -43,10 +43,12 @@ public class RoleController {
 	
 	@Autowired
 	private RoleRepository roleRepository ;
+	@Autowired
+	private RoleService roleService ;
 
 	@GetMapping("/")
 	public ResponseEntity<List<Role>> getRoles() {
-		List<Role> roles = roleRepository.findAll();
+		List<Role> roles = roleService.getAll();
 		
 		if (roles.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
