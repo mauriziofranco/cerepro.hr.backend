@@ -10,8 +10,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +42,7 @@ import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
+import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.UserService;
 
 /**
@@ -56,7 +57,9 @@ public class UserController {
 	public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
-	private UserService userService;	
+	private UserService userService;
+	@Autowired
+	private CandidateService candidateService;	
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -270,7 +273,7 @@ public class UserController {
 	public ResponseEntity <Long> getUserRegistratedToday(){
 		logger.info("getUserRegistratedToday() started");
 		LocalDate today = LocalDate.now();
-		long count = userService.getPeriod(today);
+		long count = candidateService.getRegisteredCandidatesInDate(today);
 		logger.info("getUserRegistratedToday() end " + count);
 		return new ResponseEntity<Long>(count, HttpStatus.OK);
 	}
@@ -279,7 +282,7 @@ public class UserController {
 	@GetMapping("/lastSevenDaysRegistrated")
 	public ResponseEntity<Long> getUserRegistratedLastSevenDays(){
 		logger.info("getUserRegistratedLastSevenDays() started");
-		long count = userService.getUserRegistratedInPeriod(7);
+		long count = candidateService.getRegisteredCandidatesFromDaysAgo(7);
 		logger.info("getUserRegistratedLastSevenDays() end " + count);
 		return new ResponseEntity<Long>(count, HttpStatus.OK);
 	}
@@ -289,7 +292,7 @@ public class UserController {
 			logger.info("getUserRegistratedToday() started");
 			LocalDate yesterday = LocalDate.now();
 			yesterday = yesterday.minusDays(1);
-			long count = userService.getPeriod(yesterday);
+			long count = candidateService.getRegisteredCandidatesInDate(yesterday);
 			logger.info("getUserRegistratedToday() end " + count);
 			return new ResponseEntity<Long>(count, HttpStatus.OK);
 		}
@@ -298,7 +301,8 @@ public class UserController {
 		@GetMapping("/lastWeekRegistrated")
 		public ResponseEntity<Long> getUserRegistratedLastWeek(){
 			logger.info("getUserRegistratedLastSevenDays() started");
-			long count = userService.getUserRegistratedInLastWeek(14);
+//			long count = userService.getUserRegistratedInLastWeek(14);
+			long count = candidateService.getRegisteredCandidatesFromDaysAgo(14);
 			logger.info("getUserRegistratedLastSevenDays() end " + count);
 			return new ResponseEntity<Long>(count, HttpStatus.OK);
 		}

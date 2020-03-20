@@ -3,6 +3,7 @@
  */
 package centauri.academy.cerepro.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,7 @@ import centauri.academy.cerepro.persistence.repository.candidate.CandidateReposi
  */
 @Service 
 public class CandidateService {
-	public static final Logger log = LoggerFactory.getLogger(CandidateService.class);
+	public static final Logger logger = LoggerFactory.getLogger(CandidateService.class);
 	
 	@Autowired
 	private CandidateRepository candidateRepository;
@@ -38,7 +39,7 @@ public class CandidateService {
 	 * @return List<Candidate>
 	 */
 	public List<Candidate> getAll () {
-		log.info("CandidateService.getAll - START");
+		logger.info("CandidateService.getAll - START");
 		return candidateRepository.findAll();
 	}
 	
@@ -71,7 +72,7 @@ public class CandidateService {
 	 * @return Page<CandidateCustom>
 	 */
 	public Page<CandidateCustom> getAllCustomPaginatedByCourseCode (Pageable p, String courseCode) {
-		log.info("CandidateService.getAllCustomPaginatedByCourseCode - START - with pageable info {0} and course code: {1}", p, courseCode);
+		logger.info("CandidateService.getAllCustomPaginatedByCourseCode - START - with pageable info {0} and course code: {1}", p, courseCode);
 		return candidateRepository.getAllCustomCandidatesPaginatedByCourseCode(p, courseCode);
 	}
 	
@@ -81,7 +82,7 @@ public class CandidateService {
 	 * @return List<CandidateCustom>
 	 */
 	public List<CandidateCustom> getAllByCourseCode (String courseCode) {
-		log.info("CandidateService.getAllByCourseCode - START with given course code {}", courseCode);
+		logger.info("CandidateService.getAllByCourseCode - START with given course code {}", courseCode);
 		List<CandidateCustom> items = candidateRepository.findByCourseCode(courseCode);
 		return items;
 	}
@@ -91,10 +92,10 @@ public class CandidateService {
 	 * 
 	 */
 	public Candidate insert (Candidate c) {
-		log.info("CandidateService.insert START with given candidate {}", c);
+		logger.info("CandidateService.insert START with given candidate {}", c);
 		c.setCandidacyDateTime(LocalDateTime.now());
 		c.setCandidateStatesId(CandidateStates.DEFAULT_INSERTING_STATUS_CODE);
-		log.info("CandidateService.insert DEBUG with given candidate {}", c);
+		logger.info("CandidateService.insert DEBUG with given candidate {}", c);
 		return candidateRepository.save(c);
 	}
 	
@@ -103,7 +104,7 @@ public class CandidateService {
 	 * 
 	 */
 	public Candidate update (Candidate c) {
-		log.info("CandidateService.update START with given candidate {}", c);
+		logger.info("CandidateService.update START with given candidate {}", c);
 		//TO DO: check all form files mandatory and legacy....
 		return candidateRepository.save(c);
 	}
@@ -115,7 +116,7 @@ public class CandidateService {
 	 * @return candidate entity
 	 */
 	public Optional<Candidate> getById(long id) {
-		log.info("CandidateService.getById START with given id {}", id);
+		logger.info("CandidateService.getById START with given id {}", id);
 		return candidateRepository.findById(id);
 		
 	}
@@ -127,7 +128,7 @@ public class CandidateService {
 	 * @return candidate entity
 	 */
 	public CandidateCustom getCustomById(long id) {
-		log.info("CandidateService.getCustomById START with given id {}", id);
+		logger.info("CandidateService.getCustomById START with given id {}", id);
 		return candidateRepository.getSingleCustomCandidate(id);
 		
 	}
@@ -138,7 +139,7 @@ public class CandidateService {
 	 * @param id of the candidate to delete
 	 */
 	public void deleteById(long id) {
-		log.info("CandidateService.deleteById START with given id {}", id);
+		logger.info("CandidateService.deleteById START with given id {}", id);
 		candidateRepository.deleteById(id);
 		
 	}
@@ -156,5 +157,48 @@ public class CandidateService {
 //		candidateRepository.save(c);
 //	}
 	
+	public long getRegisteredCandidatesInDate(LocalDate date) {
+		logger.info("getRegisteredCandidatesInDate - START");
+		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
+		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
+		long count = candidateRepository.getCandidateCountWithRegdateInPeriod(start, end);
 	
+		logger.info("getRegisteredCandidatesInDate - END - with registered candidates: " + count);
+		return count;
+	}
+	
+	/**
+	 * 
+	 * Returns number of candidates registered from days ago number received.
+	 * 
+	 * @param daysAgo
+	 * @return
+	 * @author orlando
+	 * @author m.franco@proximanetwork.it
+	 */
+	public long getRegisteredCandidatesFromDaysAgo(long daysAgo) {
+		logger.info("getRegisteredCandidatesFromDaysAgo - START - daysAgo: " + daysAgo);
+		long count = 0;
+		LocalDate date = LocalDate.now();
+		//User currentUser;
+		for(int i = 0; i < daysAgo; i++) {
+			LocalDate day = date.minusDays(i);
+			count += getRegisteredCandidatesInDate(day);		
+		}
+		logger.info("getRegisteredCandidatesFromDaysAgo - END - return: " + count);
+		return count;
+	}
+//	public long getUserRegistratedInLastWeek(long period) {
+//		logger.info("UserService getUserRegistratedInPeriod start");
+//		long count = 0;
+//		LocalDate date = LocalDate.now();
+//		//User currentUser;
+//		for(int i = 6; i < period; i++) {
+//			LocalDate yesterday = date.minusDays(i);
+//		//	currentUser = new User();
+//			count += userService.getPeriod(yesterday);		
+//		}
+//		logger.info("UserService getUserRegistratedInPeriod end" + count);
+//		return count;
+//	}
 }

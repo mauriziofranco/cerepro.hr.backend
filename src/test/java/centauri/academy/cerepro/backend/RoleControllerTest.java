@@ -26,6 +26,7 @@ import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
+import centauri.academy.cerepro.service.RoleService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -37,11 +38,14 @@ public class RoleControllerTest {
 	private RoleController roleController;
 	@Mock
 	private RoleRepository roleRepository;
+	@Mock
+	private RoleService roleService;
 
 	@Before
 	public void setup() {
 		roleController = new RoleController();
 		ReflectionTestUtils.setField(roleController, "roleRepository", roleRepository);
+		ReflectionTestUtils.setField(roleController, "roleService", roleService);
 	}
 
 	@Test
@@ -49,7 +53,7 @@ public class RoleControllerTest {
 		logger.info("testListAllRoles - START");
 		List<Role> roleList = new ArrayList<Role>();
 		roleList.add(new Role());
-		when(this.roleRepository.findAll()).thenReturn(roleList);
+		when(this.roleService.getAll()).thenReturn(roleList);
 		ResponseEntity<List<Role>> responseEntity = this.roleController.getRoles();
 		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		Assert.assertEquals(1, responseEntity.getBody().size());

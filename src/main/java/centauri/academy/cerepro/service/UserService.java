@@ -28,43 +28,6 @@ public class UserService {
 	@Autowired
 	UserService userService;
 	
-	public long getPeriod(LocalDate date) {
-		logger.info("UserService getPeriod start");
-		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-		long count = userRepository.getUserRegdateInPeriod(start, end);
-	
-		logger.info("UserService getPeriod end " + count);
-		return count;
-	}
-	
-	public long getUserRegistratedInPeriod(long period) {
-		logger.info("UserService getUserRegistratedInPeriod start");
-		long count = 0;
-		LocalDate date = LocalDate.now();
-		//User currentUser;
-		for(int i = 0; i < period; i++) {
-			LocalDate yesterday = date.minusDays(i);
-		//	currentUser = new User();
-			count += userService.getPeriod(yesterday);		
-		}
-		logger.info("UserService getUserRegistratedInPeriod end" + count);
-		return count;
-	}
-	public long getUserRegistratedInLastWeek(long period) {
-		logger.info("UserService getUserRegistratedInPeriod start");
-		long count = 0;
-		LocalDate date = LocalDate.now();
-		//User currentUser;
-		for(int i = 6; i < period; i++) {
-			LocalDate yesterday = date.minusDays(i);
-		//	currentUser = new User();
-			count += userService.getPeriod(yesterday);		
-		}
-		logger.info("UserService getUserRegistratedInPeriod end" + count);
-		return count;
-	}
-	
 //	@Autowired
 //	private UserRepository userRepository;
 //
