@@ -45,7 +45,7 @@ public class RoleServiceTest {
     
     @Before
     public void setup() {
-    	roleService = new RoleService();
+    	roleService = new RoleService();    	
    	    ReflectionTestUtils.setField(roleService, "roleRepository", roleRepository);
     }
     
@@ -53,8 +53,8 @@ public class RoleServiceTest {
     public void testGetAllFullOk() {
    	    logger.info("testGetAllFullOk - START");
    	    List<Role> rolesList = new ArrayList<Role>();
-   	    rolesList.add(new Role(ROLE_LABEL_TEST, ROLE_DESCRIPTION_TEST, ROLE_LEVEL_TEST));
-	    when(this.roleService.getAll()).thenReturn(rolesList);
+   	    rolesList.add(new Role(ROLE_LABEL_TEST, ROLE_DESCRIPTION_TEST, ROLE_LEVEL_TEST));   	 
+   	    when(roleRepository.findAll()).thenReturn(rolesList);
 	    assertEquals(1, roleService.getAll().size());
 	    assertEquals(ROLE_LABEL_TEST,       roleService.getAll().get(0).getLabel());
 	    assertEquals(ROLE_DESCRIPTION_TEST, roleService.getAll().get(0).getDescription());
@@ -66,7 +66,7 @@ public class RoleServiceTest {
     public void testGetAllEmptyOk() {
    	    logger.info("testGetAllEmptyOk - START");
    	    List<Role> rolesList = new ArrayList<Role>();
-	    when(this.roleService.getAll()).thenReturn(rolesList);
+	    when(roleRepository.findAll()).thenReturn(rolesList);
 	    assertEquals(0, roleService.getAll().size());	    
 	    logger.info("testGetAllEmptyOk - END");
     }
