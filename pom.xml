@@ -221,6 +221,7 @@
 										<echo>selected prod profile</echo>
 										<delete
 											file="${project.build.outputDirectory}/application.properties" />
+											<echo>copyng ${project.build.outputDirectory}/application.prod.properties</echo>
 										<copy
 											file="${project.build.outputDirectory}/application.prod.properties"
 											tofile="${project.build.outputDirectory}/application.properties" />
