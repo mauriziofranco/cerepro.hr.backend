@@ -38,7 +38,8 @@ public class LoginService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		logger.info("LoginService.loadUserByUsername - START - email: " + email);
 		Optional<User> optUser = userRepository.findByEmail(email);
-		if (!optUser.isPresent()) {
+		if (optUser.isEmpty()) {
+			logger.info("LoginService.loadUserByUsername - WARNING - USER NOT FOUND, email: " + email);
 			throw new UsernameNotFoundException("Opps! user not found with user-name: " + email);
 		}
 		// System.out.println(optUser.get().getId());
