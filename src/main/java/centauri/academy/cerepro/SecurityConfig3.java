@@ -72,6 +72,8 @@ public class SecurityConfig3 extends WebSecurityConfigurerAdapter {
 	      config.applyPermitDefaultValues();
 	      
 	      source.registerCorsConfiguration("/api/v1/**", config);
+	      source.registerCorsConfiguration("/**", config);
+	      source.registerCorsConfiguration("/user", config);
 	      return source;
 	}	
 	
