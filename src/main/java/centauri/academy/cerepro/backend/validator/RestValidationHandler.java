@@ -8,6 +8,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -20,8 +22,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import centauri.academy.cerepro.CeReProBackendApplication;
+
 @ControllerAdvice
 public class RestValidationHandler {
+	
+	private static final Logger logger = LoggerFactory.getLogger(RestValidationHandler.class);
+	
 	@Autowired
 	private MessageSource messageSource;
 	
@@ -31,6 +38,17 @@ public class RestValidationHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<FieldValidationErrorDetails> handleValidationError(
 			MethodArgumentNotValidException mNotValidException, HttpServletRequest request) {
+		logger.warn("#################");
+		logger.warn("#################");
+		logger.warn("#################");
+		logger.warn("#################");
+		logger.warn("#################");
+		logger.warn("WARNING");
+		logger.warn("#################");
+		logger.warn("#################");
+		logger.warn("#################");
+		logger.warn("#################");
+		logger.warn("#################");
 		FieldValidationErrorDetails fErrorDetails = new FieldValidationErrorDetails();
 		fErrorDetails.setError_timeStamp(new Date().getTime());
 		fErrorDetails.setError_status(HttpStatus.BAD_REQUEST.value());
@@ -55,15 +73,18 @@ public class RestValidationHandler {
 
 	// method to process field error
 	private FieldValidationError processFieldError(final FieldError error) {
+		logger.warn("processFieldError - START - error: " + error);
 		FieldValidationError fieldValidationError = new FieldValidationError();
 		if (error != null) {
 			Locale currentLocale = LocaleContextHolder.getLocale();
+			//logger.info("processFieldError - DEBUG - error.getDefaultMessage(): " + error.getDefaultMessage());
 			String msg = messageSource.getMessage(
 			error.getDefaultMessage(), null, currentLocale);
 			fieldValidationError.setFiled(error.getField());
 			fieldValidationError.setType(MessageType.ERROR);
 			fieldValidationError.setMessage(msg);
 		}
+		logger.warn("processFieldError - END - fieldValidationError: " + fieldValidationError);
 		return fieldValidationError;
 	}
 
