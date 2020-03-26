@@ -99,7 +99,6 @@ public class NewsLetterMessageService {
 			 
 			log.info("NewsletterMessageService : method update(NewsletterMessage dataToUpdate,Long id) - DEBUG -> newsLetterMessagePut = " + currentNewsletterMessage.toString()); 
 			newsLetterMessageRepository.saveAndFlush(currentNewsletterMessage.get());
-			log.info("NewsletterMessageService : method update(NewsletterMessage dataToUpdate,Long id) - DEBUG -> newsLetterMessageRepository = " + newsLetterMessageRepository.toString()); 
 		}
 		else {
 			log.info("NewsletterMessageService : method update(NewsletterMessage dataToUpdate,Long id) - ERROR ->   method isEmpty return tru"); 

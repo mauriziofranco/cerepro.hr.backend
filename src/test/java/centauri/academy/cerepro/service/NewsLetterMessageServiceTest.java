@@ -147,31 +147,31 @@ public class NewsLetterMessageServiceTest {
 	@Test
 	public void testGetBySubjectFullOk() {
 		logger.info("TEST - testGetBySubjectFullOk - START");
-		
+
 		List<NewsLetterMessage> newsLetterMessagesList = new ArrayList<NewsLetterMessage>();
 
 		logger.info("TEST - testGetBySubjectFullOk - DEBUG: added new NewsLetterMessage");
 		newsLetterMessagesList.add(new NewsLetterMessage(MESSAGE_SUBJECT_TEST, MESSAGE_TEXT_TEST));
 
-		logger.info("TEST - testGetBySubjectFullOk - DEBUG:" + this.newsLetterMessageRepository.findBySubject(MESSAGE_SUBJECT_TEST));
+		logger.info("TEST - testGetBySubjectFullOk - DEBUG:"
+				+ this.newsLetterMessageRepository.findBySubject(MESSAGE_SUBJECT_TEST));
 
 		when(this.newsLetterMessageRepository.findBySubject(MESSAGE_SUBJECT_TEST)).thenReturn(newsLetterMessagesList);
-		
-		List<NewsLetterMessage> lisRetToController = this.newsLetterMessageRepository.findBySubject(MESSAGE_SUBJECT_TEST);
 
-		
+		List<NewsLetterMessage> lisRetToController = this.newsLetterMessageRepository
+				.findBySubject(MESSAGE_SUBJECT_TEST);
+
 		logger.info("TEST - testGetBySubjectFullOk - DEBUG: test1  [1]==[" + lisRetToController.size() + "]");
-		assertEquals(1,lisRetToController.size());
+		assertEquals(1, lisRetToController.size());
 
 		logger.info("TEST - testGetBySubjectFullOk - DEBUG: test2  [" + MESSAGE_SUBJECT_TEST + "]==["
 				+ lisRetToController.get(0).getSubject() + "]");
-		assertEquals(MESSAGE_SUBJECT_TEST,lisRetToController.get(0).getSubject());
+		assertEquals(MESSAGE_SUBJECT_TEST, lisRetToController.get(0).getSubject());
 
 		logger.info("TEST - testGetBySubjectFullOk - DEBUG: test2  [" + MESSAGE_TEXT_TEST + "]==["
-				+lisRetToController.get(0).getMessage() + "]");
-		assertEquals(MESSAGE_TEXT_TEST,lisRetToController.get(0).getMessage());
+				+ lisRetToController.get(0).getMessage() + "]");
+		assertEquals(MESSAGE_TEXT_TEST, lisRetToController.get(0).getMessage());
 
-		
 		logger.info("TEST - testGetBySubjectFullOk - END");
 
 	}
@@ -181,17 +181,16 @@ public class NewsLetterMessageServiceTest {
 		logger.info("TEST - testGetBySubjectEmptyOk - START");
 		List<NewsLetterMessage> newsLetterMessagesList = new ArrayList<NewsLetterMessage>();
 		when(this.newsLetterMessageRepository.findBySubject(MESSAGE_SUBJECT_TEST)).thenReturn(newsLetterMessagesList);
-		
-		List<NewsLetterMessage> lisRetToController = this.newsLetterMessageRepository.findBySubject(MESSAGE_SUBJECT_TEST);
-		
+
+		List<NewsLetterMessage> lisRetToController = this.newsLetterMessageRepository
+				.findBySubject(MESSAGE_SUBJECT_TEST);
+
 		logger.info("TEST - testGetBySubjectEmptyOk - DEBUG: test1  [0]==[" + lisRetToController.size() + "]");
 		assertEquals(0, lisRetToController.size());
-		
-		
+
 		logger.info("TEST - testGetBySubjectEmptyOk - END");
 
 	}
-	
 
 	@Test
 	public void testDeleteAllOk() {
@@ -200,8 +199,8 @@ public class NewsLetterMessageServiceTest {
 		this.newsLetterMessageService.deleteAll();
 		verify(this.newsLetterMessageRepository, times(1)).deleteAll();
 		logger.info("testDeleteAllOk - END");
-	}	
-	
+	}
+
 	@Test
 	public void testDeleteAllOk2() {
 		logger.info("testDeleteAllOk2 - START");
@@ -210,36 +209,34 @@ public class NewsLetterMessageServiceTest {
 		this.newsLetterMessageService.deleteAll();
 		verify(this.newsLetterMessageRepository, times(2)).deleteAll();
 		logger.info("testDeleteAllOk2 - END");
-	}	
-	
-	
-	
-	
+	}
+
 	@Test
 	public void testCreateOk() {
-		
+
 		logger.info("TEST - testCreateOk - START");
-		NewsLetterMessage newsLetterMessage = new NewsLetterMessage(ID_TEST,MESSAGE_SUBJECT_TEST,MESSAGE_TEXT_TEST);
-		NewsLetterMessage newsLetterMessage2 = new NewsLetterMessage(MESSAGE_SUBJECT_TEST,MESSAGE_TEXT_TEST);
+		NewsLetterMessage newsLetterMessage = new NewsLetterMessage(ID_TEST, MESSAGE_SUBJECT_TEST, MESSAGE_TEXT_TEST);
+		NewsLetterMessage newsLetterMessage2 = new NewsLetterMessage(MESSAGE_SUBJECT_TEST, MESSAGE_TEXT_TEST);
 
 		when(this.newsLetterMessageRepository.save(newsLetterMessage2)).thenReturn(newsLetterMessage);
-		
+
 		Optional<NewsLetterMessage> newsLetterMessageTest = this.newsLetterMessageService.create(newsLetterMessage2);
 
-		logger.info("TEST - testCreateOk - DEBUG: test1 ["+true+"]==["+newsLetterMessageTest.isPresent()+"]");
-		assertEquals(true,newsLetterMessageTest.isPresent());
-		
-		logger.info("TEST - testCreateOk - DEBUG: test1 ["+MESSAGE_SUBJECT_TEST+"]==["+newsLetterMessageTest.get().getSubject()+"]");
-		assertEquals(MESSAGE_SUBJECT_TEST,newsLetterMessageTest.get().getSubject());
-		
-		logger.info("TEST - testCreateOk - DEBUG: test1 ["+MESSAGE_TEXT_TEST+"]==["+newsLetterMessageTest.get().getMessage()+"]");
-		assertEquals(MESSAGE_TEXT_TEST,newsLetterMessageTest.get().getMessage());
-		
+		logger.info("TEST - testCreateOk - DEBUG: test1 [" + true + "]==[" + newsLetterMessageTest.isPresent() + "]");
+		assertEquals(true, newsLetterMessageTest.isPresent());
+
+		logger.info("TEST - testCreateOk - DEBUG: test1 [" + MESSAGE_SUBJECT_TEST + "]==["
+				+ newsLetterMessageTest.get().getSubject() + "]");
+		assertEquals(MESSAGE_SUBJECT_TEST, newsLetterMessageTest.get().getSubject());
+
+		logger.info("TEST - testCreateOk - DEBUG: test1 [" + MESSAGE_TEXT_TEST + "]==["
+				+ newsLetterMessageTest.get().getMessage() + "]");
+		assertEquals(MESSAGE_TEXT_TEST, newsLetterMessageTest.get().getMessage());
+
 		logger.info("TEST - testCreateOk - END");
 
 	}
-	
-	
+
 //	@Test
 //	public void testCreateKo() {
 //		
@@ -248,41 +245,95 @@ public class NewsLetterMessageServiceTest {
 //		logger.info("TEST - testCreateKo - END");
 //
 //	}
-//	
-	
+
 	@Test
 	public void testDeleteKo() {
-		
+
 		logger.info("TEST - testDeleteKo - START");
+		when(this.newsLetterMessageRepository.findById(ID_Empty_TEST)).thenReturn(Optional.empty());
+		Optional<NewsLetterMessage> newsLetterMessageTest = this.newsLetterMessageService.delete(ID_Empty_TEST);
+
+		logger.info("TEST - testDeleteKo - DEBUG: test1  [" + true + "]==[" + newsLetterMessageTest.isEmpty() + "]");
+		assertEquals(true, newsLetterMessageTest.isEmpty());
+
 		logger.info("TEST - testDeleteKo - END");
 
 	}
-	
-	
+
 	@Test
 	public void testDeleteOk() {
 		logger.info("TEST - testDeleteOk - START");
-		NewsLetterMessage newsLetterMessage = new NewsLetterMessage(ID_TEST,MESSAGE_SUBJECT_TEST,MESSAGE_TEXT_TEST);
+		NewsLetterMessage newsLetterMessage = new NewsLetterMessage(ID_TEST, MESSAGE_SUBJECT_TEST, MESSAGE_TEXT_TEST);
+
 		when(this.newsLetterMessageRepository.findById(ID_TEST)).thenReturn(Optional.ofNullable(newsLetterMessage));
-		
+
 //		this.newsLetterMessageService.deleteAll();
-		verify(this.newsLetterMessageRepository, times(1)).delete(newsLetterMessage);// method deleteAll Repository
-		Optional<NewsLetterMessage> newsLetterMessageTest =this.newsLetterMessageService.delete(ID_TEST);
-		
-		logger.info("TEST - testDeleteOk - DEBUG: test1 ["+true+"]==["+newsLetterMessageTest.isPresent()+"]");
-		assertEquals(true,newsLetterMessageTest.isPresent());
-		
-		
+//		verify(this.newsLetterMessageRepository, times(1)).delete(new NewsLetterMessage());// method deleteAll Repository
+		Optional<NewsLetterMessage> newsLetterMessageTest = this.newsLetterMessageService.delete(ID_TEST);
+
+		logger.info(
+				"TEST - testDeleteOk - DEBUG: test1  [" + ID_TEST + "]==[" + newsLetterMessageTest.get().getId() + "]");
+		assertEquals(ID_TEST, newsLetterMessageTest.get().getId());
+
+		logger.info("TEST - testDeleteOk - DEBUG: test2  [" + MESSAGE_SUBJECT_TEST + "]==["
+				+ newsLetterMessageTest.get().getSubject() + "]");
+		assertEquals(MESSAGE_SUBJECT_TEST, newsLetterMessageTest.get().getSubject());
+
+		logger.info("TEST - testDeleteOk - DEBUG: test3  [" + MESSAGE_TEXT_TEST + "]==["
+				+ newsLetterMessageTest.get().getMessage() + "]");
+		assertEquals(MESSAGE_TEXT_TEST, newsLetterMessageTest.get().getMessage());
+
+		logger.info("TEST - testDeleteOk - DEBUG: test4 [" + true + "]==[" + newsLetterMessageTest.isPresent() + "]");
+		assertEquals(true, newsLetterMessageTest.isPresent());
 		logger.info("TEST - testDeleteOk - END");
+//		List<String> mockedList = mock(MyList.class);
+//		mockedList.addAll(Lists.<String> newArrayList("someElement"));
+//		ArgumentCaptor<List> argumentCaptor = ArgumentCaptor.forClass(List.class);
+//		verify(mockedList).addAll(argumentCaptor.capture());
+//		List<String> capturedArgument = argumentCaptor.<List<String>> getValue();
+//		assertThat(capturedArgument, hasItem("someElement"));
+	}
+
+	@Test
+	public void testUpdateOk() {
+
+		logger.info("TEST - testUpdateOk - START");
+		NewsLetterMessage newsLetterMessage = new NewsLetterMessage(MESSAGE_SUBJECT_TEST, MESSAGE_TEXT_TEST);
+		when(this.newsLetterMessageRepository.findById(ID_TEST)).thenReturn(Optional
+				.of(new NewsLetterMessage(ID_TEST, MESSAGE_SUBJECT_TEST + "before", MESSAGE_TEXT_TEST + " before")));
+		Optional<NewsLetterMessage> newsLetterMessageTest = this.newsLetterMessageService.update(newsLetterMessage,
+				ID_TEST);
+
+		logger.info("TEST - testUpdateOk - DEBUG: test1  [" + ID_TEST + "]==[" + newsLetterMessageTest.get().getId() + "]");
+		assertEquals(ID_TEST, newsLetterMessageTest.get().getId());
+
+		logger.info("TEST - testUpdateOk - DEBUG: test2  [" + MESSAGE_SUBJECT_TEST + "]==["+ newsLetterMessageTest.get().getSubject() + "]");
+		assertEquals(MESSAGE_SUBJECT_TEST, newsLetterMessageTest.get().getSubject());
+
+		logger.info("TEST - testUpdateOk - DEBUG: test3  [" + MESSAGE_TEXT_TEST + "]==["+ newsLetterMessageTest.get().getMessage() + "]");
+		assertEquals(MESSAGE_TEXT_TEST, newsLetterMessageTest.get().getMessage());
+		
+		logger.info("TEST - testUpdateOk - DEBUG: test4  [" + true + "]==[" + newsLetterMessageTest.isPresent() + "]");
+		assertEquals(true, newsLetterMessageTest.isPresent());
+
+		logger.info("TEST - testUpdateOk - END");
 
 	}
-	
-	
-	
-	
-	
-	
-	
+
+	@Test
+	public void testUpdateKoById() {
+
+		logger.info("TEST - testUpdateKo - START");
+		when(this.newsLetterMessageRepository.findById(ID_Empty_TEST)).thenReturn(Optional.empty());
+
+		Optional<NewsLetterMessage> newsLetterMessageTest = this.newsLetterMessageService
+				.update(new NewsLetterMessage(), ID_Empty_TEST);
+		logger.info("TEST - testUpdateOk - DEBUG: test1  [" + true + "]==[" + newsLetterMessageTest.isEmpty() + "]");
+		assertEquals(true, newsLetterMessageTest.isEmpty());
+
+		logger.info("TEST - testUpdateKo - END");
+
+	}
+
 //	logger.info("TEST - testCreateOk - DEBUG: test1 ["++"]==["++"]");
 }
-
