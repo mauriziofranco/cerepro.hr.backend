@@ -44,22 +44,22 @@ public class NewsLetterMessageController {
 
 	@GetMapping("/")
 	public ResponseEntity<List<NewsLetterMessage>> getAll() {
-		logger.debug("NewsLetterMessageController  getAll - START");
+		logger.info("NewsLetterMessageController  getAll - START");
 		ResponseEntity<List<NewsLetterMessage>> responseToView = null;
 		List<NewsLetterMessage> newsLetterMessages = this.newsLetterMessageService.getAll();
 		logger.info(
 				"NewsLetterMessageController method getAll() - DEBUG -> newsLetterMessages = " + newsLetterMessages);
 		if (newsLetterMessages.isEmpty()) {
-			logger.debug(
+			logger.info(
 					"NewsLetterMessageController  All NewsLetterMessages - END  Status Code:" + HttpStatus.NO_CONTENT);
 			responseToView = new ResponseEntity<>(newsLetterMessages, HttpStatus.NO_CONTENT);
-			logger.debug("responseToView return :" + responseToView);
+			logger.info("responseToView return :" + responseToView);
 			return responseToView;
 		}
 		responseToView = new ResponseEntity<>(newsLetterMessages, HttpStatus.OK);
-		logger.debug("NewsLetterMessageController All NewsLetterMessages Status Code:" + HttpStatus.OK
+		logger.info("NewsLetterMessageController All NewsLetterMessages Status Code:" + HttpStatus.OK
 				+ "------ return :" + responseToView);
-		logger.debug("NewsLetterMessageController  getAll - END");
+		logger.info("NewsLetterMessageController  getAll - END");
 		return responseToView;
 	}
 	
@@ -71,23 +71,23 @@ public class NewsLetterMessageController {
 	//posso passarli un entita newslettermessage senza fare controlli e prendermi lattributo subject, trovare altra soluzione
 	@GetMapping(value = "/subject/", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<NewsLetterMessage>> getAllBySubject(@Valid @RequestBody String subject) {
-		logger.debug("NewsLetterMessageController  getAllBySubject - START");
-		logger.debug("NewsLetterMessageController  getAllBySubject - DEBUG subject:"+subject);
+		logger.info("NewsLetterMessageController  getAllBySubject - START");
+		logger.info("NewsLetterMessageController  getAllBySubject - DEBUG subject:"+subject);
 		ResponseEntity<List<NewsLetterMessage>> responseToView = null;
 		List<NewsLetterMessage> newsLetterMessagesBySubject = this.newsLetterMessageService.getBySubject(subject);
 		logger.info(
 				"NewsLetterMessageController method getAllBySubject() - DEBUG -> newsLetterMessagesBySubject = " + newsLetterMessagesBySubject);
 		if (newsLetterMessagesBySubject.isEmpty()) {
-			logger.debug(
+			logger.info(
 					"NewsLetterMessageController  All newsLetterMessagesBySubject - END  Status Code:" + HttpStatus.NO_CONTENT);
 			responseToView = new ResponseEntity<>(newsLetterMessagesBySubject, HttpStatus.NO_CONTENT);
-			logger.debug("responseToView return :" + responseToView);
+			logger.info("responseToView return :" + responseToView);
 			return responseToView;
 		}
 		responseToView = new ResponseEntity<>(newsLetterMessagesBySubject, HttpStatus.OK);
-		logger.debug("NewsLetterMessageController All newsLetterMessagesBySubject Status Code:" + HttpStatus.OK
+		logger.info("NewsLetterMessageController All newsLetterMessagesBySubject Status Code:" + HttpStatus.OK
 				+ "------ return :" + responseToView);
-		logger.debug("NewsLetterMessageController  getAllBySubject - END");
+		logger.info("NewsLetterMessageController  getAllBySubject - END");
 		return responseToView;
 	}
 	
@@ -98,22 +98,22 @@ public class NewsLetterMessageController {
 	 */
 	@GetMapping(value = "/subject/{subject}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<NewsLetterMessage>> getAllBySubject2(@Valid @RequestBody @PathVariable("subject")String subject) {
-		logger.debug("NewsLetterMessageController  getAllBySubject2 - START");
+		logger.info("NewsLetterMessageController  getAllBySubject2 - START");
 		ResponseEntity<List<NewsLetterMessage>> responseToView = null;
 		List<NewsLetterMessage> newsLetterMessagesBySubject = this.newsLetterMessageService.getBySubject(subject);
 		logger.info(
 				"NewsLetterMessageController method getAllBySubject2() - DEBUG -> newsLetterMessagesBySubject = " + newsLetterMessagesBySubject);
 		if (newsLetterMessagesBySubject.isEmpty()) {
-			logger.debug(
+			logger.info(
 					"NewsLetterMessageController  All newsLetterMessagesBySubject - END  Status Code:" + HttpStatus.NO_CONTENT);
 			responseToView = new ResponseEntity<>(newsLetterMessagesBySubject, HttpStatus.NO_CONTENT);
-			logger.debug("responseToView return :" + responseToView);
+			logger.info("responseToView return :" + responseToView);
 			return responseToView;
 		}
 		responseToView = new ResponseEntity<>(newsLetterMessagesBySubject, HttpStatus.OK);
-		logger.debug("NewsLetterMessageController All newsLetterMessagesBySubject Status Code:" + HttpStatus.OK
+		logger.info("NewsLetterMessageController All newsLetterMessagesBySubject Status Code:" + HttpStatus.OK
 				+ "------ return :" + responseToView);
-		logger.debug("NewsLetterMessageController  getAllBySubject2 - END");
+		logger.info("NewsLetterMessageController  getAllBySubject2 - END");
 		return responseToView;
 	}
 	
@@ -125,21 +125,21 @@ public class NewsLetterMessageController {
 	 */
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CeReProAbstractEntity> getNewsLetterMessageById(@PathVariable("id")  final Long  id) {
-		logger.debug("NewsLetterMessageController  Get by Id NewsLetterMessage - START-" + id);
+		logger.info("NewsLetterMessageController  Get by Id NewsLetterMessage - START-" + id);
 		ResponseEntity<CeReProAbstractEntity> responseToView = null;
 		Optional<NewsLetterMessage> newsLetterMessage = this.newsLetterMessageService.getById(id);
-		if (!newsLetterMessage.isPresent()) {
+		if (newsLetterMessage.isEmpty()) {
 			responseToView = new ResponseEntity<>(new CustomErrorType("NewsLetterMessage with id " + id + " not found"),
 					HttpStatus.NOT_FOUND);
 
-			logger.debug("NewsLetterMessageController  Get by Id NewsLetterMessage - END:" + HttpStatus.NOT_FOUND);
+			logger.info("NewsLetterMessageController  Get by Id NewsLetterMessage - END:" + HttpStatus.NOT_FOUND);
 			return responseToView;
 		}
 		responseToView = new ResponseEntity<>(newsLetterMessage.get(), HttpStatus.OK);
 
-		logger.debug("NewsLetterMessageController getNewsLetterMessageById Status Code:" + HttpStatus.OK
+		logger.info("NewsLetterMessageController getNewsLetterMessageById Status Code:" + HttpStatus.OK
 				+ "------ return :" + responseToView);
-		logger.debug("NewsLetterMessageController  getNewsLetterMessageById - END");
+		logger.info("NewsLetterMessageController  getNewsLetterMessageById - END");
 		return responseToView;
 	}
 	
@@ -151,12 +151,11 @@ public class NewsLetterMessageController {
 	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CeReProAbstractEntity> createNewsLetterMessage(
 			@Valid @RequestBody final NewsLetterMessage newsLetterMessage) {
-		logger.debug("NewsLetterMessageController  Insert NewsLetterMessage - START - " + newsLetterMessage.toString());
+		logger.info("NewsLetterMessageController  Insert NewsLetterMessage - START - " + newsLetterMessage.toString());
 		logger.info("Creating NewsLetterMessage : {}", newsLetterMessage);
 		ResponseEntity<CeReProAbstractEntity> responseToView = null;
-		boolean created = this.newsLetterMessageService.create(newsLetterMessage);
 
-		if (!created) {
+		if (this.newsLetterMessageService.create(newsLetterMessage).isEmpty()) {
 			responseToView = new ResponseEntity<>(new CustomErrorType("Unable to create new NewsLetterMessage"),
 					HttpStatus.CONFLICT);
 			logger.info("NewsLetterMessageController createNewsLetterMessage - END:" + HttpStatus.CONFLICT);
@@ -164,10 +163,10 @@ public class NewsLetterMessageController {
 		}
 
 		responseToView = new ResponseEntity<>(newsLetterMessage, HttpStatus.CREATED);
-		logger.debug("NewsLetterMessageController createNewsLetterMessage Status Code:" + HttpStatus.CREATED
+		logger.info("NewsLetterMessageController createNewsLetterMessage Status Code:" + HttpStatus.CREATED
 				+ "------ return :" + responseToView);
 
-		logger.debug("NewsLetterMessageController  createNewsLetterMessage - END");
+		logger.info("NewsLetterMessageController  createNewsLetterMessage - END");
 
 		return responseToView;
 	}
@@ -181,12 +180,11 @@ public class NewsLetterMessageController {
 	//	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<CeReProAbstractEntity> delete(@PathVariable Long id) {
-		logger.debug("NewsLetterMessageController  delete by Id - START - id:" + id);
+		logger.info("NewsLetterMessageController  delete by Id - START - id:" + id);
 
 		ResponseEntity<CeReProAbstractEntity> responseToView = null;
-		boolean delete = this.newsLetterMessageService.delete(id);
-
-		if (!delete) {
+		Optional<NewsLetterMessage> retrieve=this.newsLetterMessageService.delete(id);
+		if (retrieve.isEmpty()) {
 			responseToView = new ResponseEntity<>(
 					new CustomErrorType("Unable to delete. NewsLetterMessage with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
@@ -194,32 +192,34 @@ public class NewsLetterMessageController {
 			return responseToView;
 		}
 
-		responseToView = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		logger.debug("NewsLetterMessageController delete by Id Status Code:" + HttpStatus.NO_CONTENT + "------ return :"
+		responseToView = new ResponseEntity<>(retrieve.get(),HttpStatus.NO_CONTENT);
+		logger.info("test get -------------------"+retrieve.get());
+
+		logger.info("NewsLetterMessageController delete by Id Status Code:" + HttpStatus.NO_CONTENT + "------ return :"
 				+ responseToView);
-		logger.debug("NewsLetterMessageController  delete by Id - END");
+		logger.info("NewsLetterMessageController  delete by Id - END");
 		return responseToView;
 	}
 
 //	@RequestMapping(value = "/", method = RequestMethod.DELETE)
 	@DeleteMapping(value = "/")
 	public ResponseEntity<CeReProAbstractEntity> deleteAll() {
-		logger.debug("NewsLetterMessageController  deleteAll - START - ");
+		logger.info("NewsLetterMessageController  deleteAll - START - ");
 
 		ResponseEntity<CeReProAbstractEntity> responseToView = null;
-		boolean deleteAll = this.newsLetterMessageService.deleteAll();
-
-		if (!deleteAll) {
-			responseToView = new ResponseEntity<>(new CustomErrorType("Unable to delete all NewsLetterMessages"),
-					HttpStatus.BAD_REQUEST);
-			logger.info("NewsLetterMessageController deleteAll - END:" + HttpStatus.BAD_REQUEST);
-			return responseToView;
-		}
-
-		responseToView = new ResponseEntity<>(HttpStatus.OK);
-		logger.debug("NewsLetterMessageController deleteAll Status Code:" + HttpStatus.OK + "------ return :"
+		this.newsLetterMessageService.deleteAll();
+//
+//		if (!deleteAll) {
+//			responseToView = new ResponseEntity<>(new CustomErrorType("Unable to delete all NewsLetterMessages"),
+//					HttpStatus.BAD_REQUEST);
+//			logger.info("NewsLetterMessageController deleteAll - END:" + HttpStatus.BAD_REQUEST);
+//			return responseToView;
+//		}
+//		
+		responseToView = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		logger.info("NewsLetterMessageController deleteAll Status Code:" + HttpStatus.NO_CONTENT + "------ return :"
 				+ responseToView);
-		logger.debug("NewsLetterMessageController  deleteAll - END");
+		logger.info("NewsLetterMessageController  deleteAll - END");
 
 		return responseToView;
 	}
@@ -233,11 +233,11 @@ public class NewsLetterMessageController {
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CeReProAbstractEntity> updateNewsLetterMessage(@PathVariable("id") final Long id,@Valid @RequestBody NewsLetterMessage newsLetterMessage) {
 		
-		logger.debug("NewsLetterMessageController  updateNewsLetterMessage - START - id:"+id+"-NewsLetterMessage:"+newsLetterMessage.toString());
+		logger.info("NewsLetterMessageController  updateNewsLetterMessage - START - id:"+id+"-NewsLetterMessage:"+newsLetterMessage.toString());
 		ResponseEntity<CeReProAbstractEntity> responseToView=null;
-		boolean update = this.newsLetterMessageService.update(newsLetterMessage,id);
-		
-		if(!update) {
+
+		Optional<NewsLetterMessage> retrieve= this.newsLetterMessageService.update(newsLetterMessage,id);
+		if(retrieve.isEmpty()) {
 			responseToView = new ResponseEntity<>(new CustomErrorType("Unable to update. NewsLetterMessage with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 			logger.info("NewsLetterMessageController updateNewsLetterMessage - END:"+HttpStatus.NOT_FOUND); 
@@ -245,8 +245,10 @@ public class NewsLetterMessageController {
 		}
 		
 		responseToView = new ResponseEntity<>(this.newsLetterMessageService.getById(id).get(),HttpStatus.OK);
-		logger.debug("NewsLetterMessageController updateNewsLetterMessage Status Code:"+HttpStatus.OK+"------ return :"+responseToView);
-		logger.debug("NewsLetterMessageController  updateNewsLetterMessage - END" );
+
+		responseToView = new ResponseEntity<>(retrieve.get(),HttpStatus.OK);
+		logger.info("NewsLetterMessageController updateNewsLetterMessage Status Code:"+HttpStatus.OK+"------ return :"+responseToView);
+		logger.info("NewsLetterMessageController  updateNewsLetterMessage - END" );
 		return responseToView;
 	}
 	
