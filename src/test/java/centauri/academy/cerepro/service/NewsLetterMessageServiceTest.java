@@ -267,31 +267,29 @@ public class NewsLetterMessageServiceTest {
 
 		when(this.newsLetterMessageRepository.findById(ID_TEST)).thenReturn(Optional.ofNullable(newsLetterMessage));
 
-//		this.newsLetterMessageService.deleteAll();
-//		verify(this.newsLetterMessageRepository, times(1)).delete(new NewsLetterMessage());// method deleteAll Repository
 		Optional<NewsLetterMessage> newsLetterMessageTest = this.newsLetterMessageService.delete(ID_TEST);
 
-		logger.info(
-				"TEST - testDeleteOk - DEBUG: test1  [" + ID_TEST + "]==[" + newsLetterMessageTest.get().getId() + "]");
+//		logger.info(
+//				"TEST - testDeleteOk - DEBUG: test1  [" + ID_TEST + "]==[" + newsLetterMessageTest.get().getId() + "]");
 		assertEquals(ID_TEST, newsLetterMessageTest.get().getId());
 
-		logger.info("TEST - testDeleteOk - DEBUG: test2  [" + MESSAGE_SUBJECT_TEST + "]==["
-				+ newsLetterMessageTest.get().getSubject() + "]");
+//		logger.info("TEST - testDeleteOk - DEBUG: test2  [" + MESSAGE_SUBJECT_TEST + "]==["
+//				+ newsLetterMessageTest.get().getSubject() + "]");
 		assertEquals(MESSAGE_SUBJECT_TEST, newsLetterMessageTest.get().getSubject());
 
-		logger.info("TEST - testDeleteOk - DEBUG: test3  [" + MESSAGE_TEXT_TEST + "]==["
-				+ newsLetterMessageTest.get().getMessage() + "]");
+//		logger.info("TEST - testDeleteOk - DEBUG: test3  [" + MESSAGE_TEXT_TEST + "]==["
+//				+ newsLetterMessageTest.get().getMessage() + "]");
 		assertEquals(MESSAGE_TEXT_TEST, newsLetterMessageTest.get().getMessage());
 
-		logger.info("TEST - testDeleteOk - DEBUG: test4 [" + true + "]==[" + newsLetterMessageTest.isPresent() + "]");
+//		logger.info("TEST - testDeleteOk - DEBUG: test4 [" + true + "]==[" + newsLetterMessageTest.isPresent() + "]");
 		assertEquals(true, newsLetterMessageTest.isPresent());
+		
+		
+		
+		verify(this.newsLetterMessageRepository, times(1)).delete(newsLetterMessage);// method deleteAll Repository
+		verify(this.newsLetterMessageRepository, times(1)).findById(ID_TEST);
+
 		logger.info("TEST - testDeleteOk - END");
-//		List<String> mockedList = mock(MyList.class);
-//		mockedList.addAll(Lists.<String> newArrayList("someElement"));
-//		ArgumentCaptor<List> argumentCaptor = ArgumentCaptor.forClass(List.class);
-//		verify(mockedList).addAll(argumentCaptor.capture());
-//		List<String> capturedArgument = argumentCaptor.<List<String>> getValue();
-//		assertThat(capturedArgument, hasItem("someElement"));
 	}
 
 	@Test
