@@ -61,7 +61,7 @@ public class NewsLetterMessageController {
 				+ "------ return :" + responseToView);
 		logger.info("NewsLetterMessageController  getAll - END");
 		return responseToView;
-	}
+	} 
 	
 	/**
 	 * 

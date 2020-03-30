@@ -33,7 +33,7 @@ public class NewsLetterMessageService {
 		
 		List<NewsLetterMessage> lisRetToController = this.newsLetterMessageRepository.findAll();
 		
-		log.info("NewsletterMessageService : method getAll() - RETURNED -> lisRetToController = " + lisRetToController); 
+		log.info("NewsletterMessageService : method getAll() - RETURNED -> " + lisRetToController); 
 		log.info("NewsletterMessageService : method getAll() - END"); 
 		return lisRetToController;
 	}
@@ -42,23 +42,16 @@ public class NewsLetterMessageService {
 		log.info("NewsletterMessageService :method getById(Long id) - START - : id-" + id); 
 		
 		Optional<NewsLetterMessage> retToController = this.newsLetterMessageRepository.findById(id);
-		log.info("NewsletterMessageService : method getById(Long id) - DEBUG -> value_is_present = " + retToController.isPresent()); 
-		if( retToController.isPresent()) {
-			log.info("NewsletterMessageService : method getById(Long id) - RETURNED -> retToController = " + retToController.get().toString()); 
-		}
-		
-		
-		log.info("NewsletterMessageService : method getById(Long id) - RETURNED -> retToController = " + retToController); 
 
+		log.info("NewsletterMessageService : method getById(Long id) - RETURNED -> retToController = " + retToController); 
 		log.info("NewsletterMessageService : method getById(Long id) - END"); 
 		return retToController;
 	}
 	
 	public List<NewsLetterMessage> getBySubject(String subject){
 		log.info("NewsletterMessageService :method getBySubject(String subject) - START - subject : " + subject); 
+		
 		List<NewsLetterMessage> lisRetToController = this.newsLetterMessageRepository.findBySubject(subject);
-		log.info("NewsletterMessageService : method getBySubject(String subject) - DEBUG -> value_is_Empty = " + lisRetToController.isEmpty()); 
-		log.info("NewsletterMessageService : method getBySubject(String subject) - DEBUG -> retToController.toString = " + lisRetToController.toString()); 
 		log.info("NewsletterMessageService : method getBySubject(String subject) - DEBUG -> retToController.size = " + lisRetToController.size()); 
 		log.info("NewsletterMessageService : method getBySubject(String subject) - RETURNED -> retToController = " + lisRetToController); 
 
@@ -69,7 +62,9 @@ public class NewsLetterMessageService {
 	
 	public Optional<NewsLetterMessage> create(NewsLetterMessage newsLetterMessageToSave){
 		log.info("NewsletterMessageService : method create(NewsletterMessage newsLetterMessageToSave) - START - newsLetterMessageToSave :" + newsLetterMessageToSave.toString()); 
+		
 		NewsLetterMessage newsLetterMessage =this.newsLetterMessageRepository.save(newsLetterMessageToSave);
+		
 		log.info("NewsletterMessageService : method save(NewsletterMessage newsLetterMessageToSave) - DEBUG - newsLetterMessage :" + newsLetterMessage.toString()); 
 
 		Optional<NewsLetterMessage> newsLetterMessageOptional = Optional.ofNullable(newsLetterMessage);
@@ -100,22 +95,8 @@ public class NewsLetterMessageService {
 			log.info("NewsletterMessageService : method update(NewsletterMessage dataToUpdate,Long id) - DEBUG -> newsLetterMessagePut = " + currentNewsletterMessage.toString()); 
 			newsLetterMessageRepository.saveAndFlush(currentNewsletterMessage.get());
 		}
-		else {
-			log.info("NewsletterMessageService : method update(NewsletterMessage dataToUpdate,Long id) - ERROR ->   method isEmpty return tru"); 
-
-		}
 		log.info("NewsletterMessageService : method update(NewsletterMessage dataToDelete,Long id) - END"); 
 		return currentNewsletterMessage;
-		
-		/*
-		dataToUpdate.setId(id);
-		if(!newsLetterMessageRepository.findById(dataToUpdate.getId()).isEmpty()) {	
-			newsLetterMessageRepository.saveAndFlush(dataToUpdate);
-			return Optional.ofNullable(dataToUpdate);
-		}
-		return Optional.empty();
-		*/
-		
 	}
 	
 	
@@ -127,9 +108,6 @@ public class NewsLetterMessageService {
 			this.newsLetterMessageRepository.delete(retrieve.get());
 			log.info("NewsletterMessageService : method delete(Long idDataToDelete) - DEBUG -> value_retrieve_isEmpty = " + retrieve.isEmpty()); 
 		}
-		else {
-			log.info("NewsletterMessageService : method delete(Long idDataToDelete)- ERROR ->   method isEmpty return false"); 
-		}
 		log.info("NewsletterMessageService : method delete(Long idDataToDelete) - RETURNED -> retrieve = " + retrieve); 
 		log.info("NewsletterMessageService :method delete(Long idDataToDelete) - END"); 
 		return retrieve;
@@ -138,18 +116,11 @@ public class NewsLetterMessageService {
 	
 	public void deleteAll(){
 		log.info("NewsletterMessageService : method deleteAll() - START"); 
-		//try {
-			this.newsLetterMessageRepository.deleteAll();
-			/*
-			log.info("NewsletterMessageService : method deleteAll () - DEBUG -> retValue = "+ retValue);
-		} catch (Exception ex) {
-			log.info("NewsletterMessageService : method deleteAll () - ERROR -> List entity NewsletterMessage to deleteAll not can be null", ex);
-			ex.printStackTrace();
-		}
 		
-		log.info("NewsletterMessageService : method deleteAll() - RETURNED -> retValue = " + retValue);
-		*/
+		this.newsLetterMessageRepository.deleteAll();
+		
 		log.info("NewsletterMessageService : method deleteAll() - END"); 
+		
 	}
 //	
 //	public boolean delete(NewsLetterMessage dataToDelete){

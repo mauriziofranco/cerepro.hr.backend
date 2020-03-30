@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.datatype.jdk8.OptionalDoubleSerializer;
+import com.jayway.jsonpath.Option;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.NewsLetterMessage;
@@ -42,11 +43,11 @@ public class NewsLetterMessageServiceIntegrationTest {
 	// sistemare contatore
 	public  static Long ID_TEST_FIRST ;
 	public  static Long ID_TEST_SECOND;
-	public  static Long ID_Empty_TEST;
-	public final static String MESSAGE_SUBJECT_TEST_FIRST= "messageSubjectServiceTest1";
-	public final static String MESSAGE_TEXT_TEST_FIRST = "messageTextServiceTest1";
-	public final static String MESSAGE_SUBJECT_TEST_SECOND = "messageSubjectServiceTest2";
-	public final static String MESSAGE_TEXT_TEST_SECOND = "messageTextServiceTest2";
+	public  static Long ID_Empty_TEST =999l;
+	public final static String MESSAGE_SUBJECT_TEST_FIRST= "messageSubjectServiceTestFirst";
+	public final static String MESSAGE_TEXT_TEST_FIRST = "messageTextServiceTestFirst";
+	public final static String MESSAGE_SUBJECT_TEST_SECOND = "messageSubjectServiceTestSecond";
+	public final static String MESSAGE_TEXT_TEST_SECOND = "messageTextServiceTestSecond";
 	public final static String MESSAGE_SUBJECT_TEST_UPDATE= "messageSubjectServiceUpdate";
 	public final static String MESSAGE_TEXT_TEST_UPDATE = "messageTextServiceTestUpdate";
 	
@@ -65,6 +66,26 @@ public class NewsLetterMessageServiceIntegrationTest {
 	
 	
 	
+	@Test
+	public void testGetAllOk(){
+		
+		assertEquals(0,this.newsLetterMessageService.getAll().size());
+		
+		int numEntitiesCreated=4;
+		for(int cont=0; cont<numEntitiesCreated ;cont++) {
+			
+			this.newsLetterMessageService.create(new NewsLetterMessage(MESSAGE_SUBJECT_TEST_FIRST+cont,MESSAGE_TEXT_TEST_FIRST+cont));
+			logger.info(cont+"");
+		}
+		assertEquals(numEntitiesCreated,this.newsLetterMessageService.getAll().size());
+		
+	}
+	
+	
+	 
+	
+	
+	
 	/*
 	 *deleteAll 
 	 *
@@ -74,56 +95,66 @@ public class NewsLetterMessageServiceIntegrationTest {
 	public void testDeleteAllOk() {
 		logger.info("TEST - testDeleteAllOk - START");
 
-		List<NewsLetterMessage> newsLetterMessagesList;
-		newsLetterMessagesList = newsLetterMessageService.getAll();
-		assertEquals(0, newsLetterMessagesList.size());
-//		logger.info("TEST - testDeleteAllOk - Debug: newsLetterMessagesList size - "+ newsLetterMessagesList.size());
-//		logger.info("TEST - testDeleteAllOk - Debug: Create new NewsLetterMessage  first");
+		assertEquals(0,this.newsLetterMessageService.getAll().size());
 		
 		this.newsLetterMessageService.create(new NewsLetterMessage(MESSAGE_SUBJECT_TEST_FIRST,MESSAGE_TEXT_TEST_FIRST));
-		newsLetterMessagesList = newsLetterMessageService.getAll();
-		assertEquals(1, newsLetterMessagesList.size());
-//		logger.info("TEST - testDeleteAllOk - Debug: newsLetterMessagesList size - "+ newsLetterMessagesList.size());
+		assertEquals(1,this.newsLetterMessageService.getAll().size());
 
 //		logger.info("TEST - testDeleteAllOk - Debug: Create new NewsLetterMessage  second");
 		this.newsLetterMessageService.create(new NewsLetterMessage(MESSAGE_SUBJECT_TEST_SECOND,MESSAGE_TEXT_TEST_SECOND));
-		newsLetterMessagesList = newsLetterMessageService.getAll();
-		assertEquals(2, newsLetterMessagesList.size());
-//		logger.info("TEST - testDeleteAllOk - Debug: newsLetterMessagesList size - "+ newsLetterMessagesList.size());
+		assertEquals(2,this.newsLetterMessageService.getAll().size());
 
 //		logger.info("TEST - testDeleteAllOk - Debug: deleteAll");
 		this.newsLetterMessageService.deleteAll();
 
-		newsLetterMessagesList = newsLetterMessageService.getAll();
-		assertEquals(0, newsLetterMessagesList.size());
-//		logger.info("TEST - testDeleteAllOk - Debug: newsLetterMessagesList size - "+ newsLetterMessagesList.size());
+		assertEquals(0,this.newsLetterMessageService.getAll().size());
 
-		logger.info("TEST - testDeleteAllOk - END");
-
-		
+		logger.info("TEST - testDeleteAllOk - END");		
 	}
 	
-//	public void listTest(String method, int size) {
-//		logger.info("TEST -listTest- START");
-//
-//		List<NewsLetterMessage> newsLetterMessagesList;
-//		newsLetterMessagesList = newsLetterMessageService.getAll();
-//		assertEquals(size, newsLetterMessagesList.size());
-//		logger.info("TEST - "+method+" - Debug: newsLetterMessagesList size - "+ newsLetterMessagesList.size());
-//		logger.info("TEST -listTest- END");
-//	}
-//	
-//	
-//	@Test
-//	public void testGetByIdOk() {
-//		logger.info("TEST - testGetByIdOk - START");
-//		
-//		listTest("testGetByIdOk",0);
-//		
-//
-//		logger.info("TEST - testDeleteAllOk - START");
-//	}
-//	
+	
+	@Test
+	public void testDeleteAllEmpty() {
+		logger.info("TEST - testDeleteAllEmpty - START");
+		
+		assertEquals(0,newsLetterMessageService.getAll().size());
+		this.newsLetterMessageService.deleteAll();
+		assertEquals(0, newsLetterMessageService.getAll().size());
+		
+		logger.info("TEST - testDeleteAllEmpty - END");		
+	}
+	
+	
+	@Test
+	public void testDeleteByIdOk() {
+		logger.info("TEST - testDeleteByIdOk - START");
+		
+		Optional<NewsLetterMessage> newsLetterMessageOptional;
+		assertEquals(0,newsLetterMessageService.getAll().size());
+		newsLetterMessageOptional=this.newsLetterMessageService.create(new NewsLetterMessage(MESSAGE_SUBJECT_TEST_FIRST,MESSAGE_TEXT_TEST_FIRST));
+		assertEquals(true,newsLetterMessageOptional.isPresent());
+		assertEquals(1,newsLetterMessageService.getAll().size());
+		this.newsLetterMessageService.delete(newsLetterMessageOptional.get().getId());
+		assertEquals(0, newsLetterMessageService.getAll().size());
+		
+		logger.info("TEST - testDeleteByIdOk - END");		
+	}
+	
+	
+	@Test
+	public void testDeleteByIdKo() {
+		logger.info("TEST - testDeleteByIdKo - START");
+		
+		assertEquals(0,newsLetterMessageService.getAll().size());
+		
+		Optional<NewsLetterMessage> newsLetterMessageOptional=this.newsLetterMessageService.delete(ID_Empty_TEST);
+		assertEquals(true,newsLetterMessageOptional.isEmpty());
+		
+		assertEquals(0, newsLetterMessageService.getAll().size());
+
+		logger.info("TEST - testDeleteByIdKo - END");		
+	}
+	
 	
 	
 	
@@ -131,7 +162,6 @@ public class NewsLetterMessageServiceIntegrationTest {
 	@Test
 	public void testFullOk() {
 		logger.info("TEST - testFullOk - START");
-		List<NewsLetterMessage> newsLetterMessagesList;
 		NewsLetterMessage newsLetterMessageFirst = new NewsLetterMessage(MESSAGE_SUBJECT_TEST_FIRST,MESSAGE_TEXT_TEST_FIRST);
 		NewsLetterMessage newsLetterMessageSecond = new NewsLetterMessage(MESSAGE_SUBJECT_TEST_SECOND,MESSAGE_TEXT_TEST_SECOND);
 		Optional<NewsLetterMessage> newsLetterMessageOptionalFirst ;
@@ -141,14 +171,11 @@ public class NewsLetterMessageServiceIntegrationTest {
 
 		// id controllare come resettare il contatore automatico del db cosi inizia con 1 e 2 
 		
-		newsLetterMessagesList = newsLetterMessageService.getAll();
 		
 		/*
 		 * list size 0
 		 */
-		logger.info("TEST - testFullOk - Debug: newsLetterMessagesList size - "+newsLetterMessagesList.size()+"");
-		logger.info("TEST - testFullOk - test: test newsLetterMessagesList size - [0]==["+newsLetterMessagesList.size()+"]");
-		assertEquals(0, newsLetterMessagesList.size());
+		assertEquals(0, this.newsLetterMessageService.getAll().size());
 		
 		/*
 		 *create 1 
@@ -160,10 +187,7 @@ public class NewsLetterMessageServiceIntegrationTest {
 		/*
 		 * list size 1
 		 */
-		newsLetterMessagesList = newsLetterMessageService.getAll();
-		logger.info("TEST - testFullOk - Debug: newsLetterMessagesList size - "+newsLetterMessagesList.size()+"");
-		logger.info("TEST - testFullOk - test: test newsLetterMessagesList size - [1]==["+newsLetterMessagesList.size()+"]");
-		assertEquals(1, newsLetterMessagesList.size());
+		assertEquals(1, this.newsLetterMessageService.getAll().size());
 		
 		
 		/**
@@ -194,10 +218,7 @@ public class NewsLetterMessageServiceIntegrationTest {
 		/*
 		 * list size 2
 		 */
-		newsLetterMessagesList = newsLetterMessageService.getAll();
-		logger.info("TEST - testFullOk - Debug: newsLetterMessagesList size - "+newsLetterMessagesList.size()+"");
-		logger.info("TEST - testFullOk - test: test newsLetterMessagesList size - [2]==["+newsLetterMessagesList.size()+"]");
-		assertEquals(2, newsLetterMessagesList.size());
+		assertEquals(2, this.newsLetterMessageService.getAll().size());
 		
 		/*
 		 * test newsLetterMessageOptionalSecond

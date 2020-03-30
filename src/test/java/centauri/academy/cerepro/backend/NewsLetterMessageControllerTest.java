@@ -25,14 +25,57 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
+import centauri.academy.cerepro.persistence.entity.NewsLetterMessage;
 import centauri.academy.cerepro.persistence.entity.NoteTemplate;
 import centauri.academy.cerepro.persistence.repository.NoteTemplateRepository;
 //
 //@RunWith(SpringRunner.class)
 //@SpringBootTest(classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+import centauri.academy.cerepro.service.NewsLetterMessageService;
+
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class NewsLetterMessageControllerTest {
 
 	public static final Logger logger = LoggerFactory.getLogger(NewsLetterMessageControllerTest.class);
-
-
+	
+	
+	@Spy
+	private NewsLetterMessageController newsLetterMessageController;
+	
+	
+	@Mock
+	private NewsLetterMessageService newsLetterMessageService;
+	
+	
+	
+	@Before
+	public void setup() {
+		newsLetterMessageController = new NewsLetterMessageController();
+		ReflectionTestUtils.setField(newsLetterMessageController, "newsLetterMessageService", newsLetterMessageService);
+	}
+	
+	
+	@Test
+	public void testGetAllEmpty() {
+		List<NewsLetterMessage> newsLetterMessagesList = new ArrayList<NewsLetterMessage>();
+		when(this.newsLetterMessageService.getAll()).thenReturn(newsLetterMessagesList);
+		ResponseEntity<List<NewsLetterMessage>> responseEntity = this.newsLetterMessageController.getAll();
+		
+		Assert.assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+		Assert.assertEquals(0, responseEntity.getBody().size());
+		Assert.assertEquals(true, responseEntity.getBody().isEmpty());
+		
+	}
+	
+	
+	
+	
+	@After
+	public void teardown() {
+		newsLetterMessageController = null;
+	}
+	
+	
 }
