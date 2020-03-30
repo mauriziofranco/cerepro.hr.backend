@@ -19,8 +19,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import centauri.academy.cerepro.service.LoginService;
 
-@Configuration
-@EnableWebSecurity
+//@Configuration
+//@EnableWebSecurity
 public class SecurityConfig3 extends WebSecurityConfigurerAdapter {
 
 	@Autowired
