@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -49,13 +50,13 @@ public class TraineeControllerTest {
 	private TraineeController traineeController;
 
 	@Mock
-	private TraineeService TraineeService;
+	private TraineeService traineeService;
 
 	@Before
 	public void initialize() {
 
 		traineeController = new TraineeController();
-		ReflectionTestUtils.setField(traineeController, "TraineeService", TraineeService);
+		ReflectionTestUtils.setField(traineeController, "traineeService", traineeService);
 	}
 
 	@Test
@@ -63,7 +64,7 @@ public class TraineeControllerTest {
 		logger.info("### testListAllTrainees - START - ###");
 		List<Trainee> traineeList = new ArrayList<Trainee>();
 		traineeList.add(new Trainee());
-		when(this.TraineeService.getAll()).thenReturn(traineeList);
+		when(this.traineeService.getAll()).thenReturn(traineeList);
 		ResponseEntity<List<Trainee>> responseEntity = this.traineeController.listAllTrainees();
 		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		Assert.assertEquals(1, responseEntity.getBody().size());
@@ -75,10 +76,11 @@ public class TraineeControllerTest {
 		Trainee trainee = new Trainee();
 		trainee.setId(1l);
 		trainee.setEmail(EMAIL_TEST);
-		when(this.TraineeService.insert(trainee)).thenReturn(trainee);
+		when(this.traineeService.getByEmail(EMAIL_TEST)).thenReturn(null);
+		when(this.traineeService.insert(trainee)).thenReturn(trainee);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = traineeController.createTraineeByEmail(trainee);
-		Assert.assertEquals(HttpStatus.CREATED,responseEntity.getStatusCode());
 		Assert.assertEquals(EMAIL_TEST,((Trainee)responseEntity.getBody()).getEmail());
+		Assert.assertEquals(HttpStatus.CREATED,responseEntity.getStatusCode());
 	}
 	
 	@Test
@@ -90,7 +92,8 @@ public class TraineeControllerTest {
 		trainee.setFirstname(NAME_TEST);
 		trainee.setLastname(SURNAME_TEST);
 		trainee.setPassword(PASSWORD_TEST);
-		when(this.TraineeService.update(trainee)).thenReturn(trainee);
+		when(this.traineeService.getById(ID_TEST)).thenReturn(Optional.of(new Trainee()));
+		when(this.traineeService.update(trainee)).thenReturn(trainee);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = traineeController.addFormToTrainee(ID_TEST, trainee);
 		Assert.assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
 		Assert.assertEquals(NAME_TEST,((Trainee)responseEntity.getBody()).getFirstname());
@@ -105,7 +108,8 @@ public class TraineeControllerTest {
 		trainee.setId(1l);
 		trainee.setEmail(EMAIL_TEST);
 		trainee.setEnabled(TEST_INT_ONE);
-		when(this.TraineeService.update(trainee)).thenReturn(trainee);
+		when(this.traineeService.getById(ID_TEST)).thenReturn(Optional.of(new Trainee()));
+		when(this.traineeService.update(trainee)).thenReturn(trainee);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = traineeController.updateEnabledTrainee(ID_TEST, trainee);
 		Assert.assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
 		Assert.assertEquals(TEST_INT_ONE,((Trainee)responseEntity.getBody()).getEnabled());
@@ -118,7 +122,8 @@ public class TraineeControllerTest {
 		trainee.setId(1l);
 		trainee.setEmail(EMAIL_TEST);
 		trainee.setHaspassword(TEST_INT_ONE);
-		when(this.TraineeService.update(trainee)).thenReturn(trainee);
+		when(this.traineeService.getById(ID_TEST)).thenReturn(Optional.of(new Trainee()));
+		when(this.traineeService.update(trainee)).thenReturn(trainee);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = traineeController.updateHasspasswordTrainee(ID_TEST, trainee);
 		Assert.assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
 		Assert.assertEquals(TEST_INT_ONE,((Trainee)responseEntity.getBody()).getHaspassword());
@@ -129,7 +134,7 @@ public class TraineeControllerTest {
 		logger.info("### testListAllByEnabledTrainees - START - ###");
 		List<Trainee> traineeList = new ArrayList<Trainee>();
 		traineeList.add(new Trainee());
-		when(this.TraineeService.getListByEnabled()).thenReturn(traineeList);
+		when(this.traineeService.getListByEnabled()).thenReturn(traineeList);
 		ResponseEntity<List<Trainee>> responseEntity = this.traineeController.listAllByEnabledTrainees();
 		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		Assert.assertEquals(1, responseEntity.getBody().size());
@@ -140,7 +145,7 @@ public class TraineeControllerTest {
 		logger.info("### TestListAllFilledTrainees - START - ###");
 		List<Trainee> traineeList = new ArrayList<Trainee>();
 		traineeList.add(new Trainee());
-		when(this.TraineeService.getAllFilled()).thenReturn(traineeList);
+		when(this.traineeService.getAllFilled()).thenReturn(traineeList);
 		ResponseEntity<List<Trainee>> responseEntity = this.traineeController.listAllFilledTrainees();
 		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		Assert.assertEquals(1, responseEntity.getBody().size());
