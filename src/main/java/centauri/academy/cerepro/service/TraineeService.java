@@ -33,13 +33,23 @@ public class TraineeService {
 	 * @return List<Trainee>
 	 */
 	public List<Trainee> getAll() {
-		log.info("Trainee.getAll - START");
+		log.info("TraineeService.getAll - START");
 		return traineeRepository.findAll();
+	}
+	
+	/**
+	 * Delete all trainees
+	 * 
+	 */
+	public void deleteAll() {
+		log.info("TraineeService.deleteAll - START");
+		traineeRepository.deleteAll();
 	}
 
 	/**
 	 * Insert new Trainee entity
-	 * 
+	 * @param Trainee entity
+	 * @return Trainee entity
 	 */
 	public Trainee insert(Trainee trainee) {
 		log.info("TraineeService.insert START with given trainee {}", trainee);
@@ -48,7 +58,8 @@ public class TraineeService {
 
 	/**
 	 * Update Trainee entity
-	 * 
+	 * @param Trainee entity
+	 * @return Trainee entity
 	 */
 	public Trainee update(Trainee trainee) {
 		log.info("TraineeService.update START with given trainee {}", trainee);
@@ -80,7 +91,7 @@ public class TraineeService {
 	 * Retrieve Trainee by email
 	 * 
 	 * @param email of the Trainee to retrieve
-	 * @return Trainee entity
+	 * @return Optional Trainee entity
 	 */
 	public Optional<Trainee> getByEmail(String email) {
 		log.info("TraineeService.getByEmail START with given email {}", email);
@@ -91,7 +102,7 @@ public class TraineeService {
 	 * Retrieve Enabled by enabled value
 	 * 
 	 * @param enabled value of the Trainee to retrieve
-	 * @return Trainee entity
+	 * @return Optional Trainee entity
 	 */
 	public Optional<Trainee> getByEnabled(int enabled) {
 		log.info("TraineeService.getByEnabled START with given enabled value {}", enabled);
@@ -100,7 +111,7 @@ public class TraineeService {
 
 	/**
 	 * Gets all Trainee entries filled with email, password, firstname, lastname and
-	 * enabled = 0
+	 * hasspassword = 0
 	 * 
 	 * @return List<Trainee>
 	 */
