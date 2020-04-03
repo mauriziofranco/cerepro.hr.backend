@@ -275,7 +275,7 @@
 		<dependency>
 			<groupId>centauri.academy</groupId>
 			<artifactId>cerepro.mail.manager</artifactId>
-			<version>0.8</version>
+			<version>0.9</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
