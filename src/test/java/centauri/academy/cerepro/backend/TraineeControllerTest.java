@@ -1,6 +1,7 @@
 package centauri.academy.cerepro.backend;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class TraineeControllerTest {
 	public static final String PASSWORD_TEST = "testPassword";
 	public static final int TEST_INT_ZERO = 0;
 	public static final int TEST_INT_ONE = 1;
-	public static final long ID_TEST = 1L;
+	public static final Long ID_TEST = 1L;
 
 	public static final Logger logger = LoggerFactory.getLogger(TraineeControllerTest.class);
 
@@ -68,6 +69,58 @@ public class TraineeControllerTest {
 		ResponseEntity<List<Trainee>> responseEntity = this.traineeController.listAllTrainees();
 		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		Assert.assertEquals(1, responseEntity.getBody().size());
+	}
+	
+	
+	@Test
+	public void testCreateTrainee() {
+		logger.info("### testCreateTrainee - START - ###");
+		Trainee trainee = new Trainee();
+		trainee.setId(1l);
+		trainee.setEmail(EMAIL_TEST);
+		when(this.traineeService.getByEmail(EMAIL_TEST)).thenReturn(null);
+		when(this.traineeService.insert(trainee)).thenReturn(trainee);
+		ResponseEntity<CeReProAbstractEntity> responseEntity = traineeController.createTraineeByEmail(trainee);
+		Assert.assertEquals(EMAIL_TEST,((Trainee)responseEntity.getBody()).getEmail());
+		Assert.assertEquals(HttpStatus.CREATED,responseEntity.getStatusCode());
+	}
+	
+	@Test
+	public void testGetTraineeById() {
+		logger.info("### testGetTraineeById - START - ###");
+		Trainee trainee = new Trainee();
+		trainee.setEmail(EMAIL_TEST);
+		trainee.setId(ID_TEST);
+		Optional<Trainee> optTrainee = Optional.of(trainee);
+		when(this.traineeService.getById(ID_TEST)).thenReturn(optTrainee);
+		ResponseEntity<CeReProAbstractEntity> responseEntity = traineeController.getTraineeById(ID_TEST);
+		Assert.assertEquals(ID_TEST,((Trainee)responseEntity.getBody()).getId());
+		Assert.assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+	}
+	
+	@Test
+	public void testDeleteTraineeById() {
+		logger.info("### testDeleteTraineeById - START - ###");
+		Trainee trainee = new Trainee();
+		trainee.setEmail(EMAIL_TEST);
+		trainee.setId(ID_TEST);
+		Optional<Trainee> optTrainee = Optional.of(trainee);
+		when(this.traineeService.getById(ID_TEST)).thenReturn(optTrainee);
+		doNothing().when(this.traineeService).deleteById(ID_TEST);
+		ResponseEntity<CeReProAbstractEntity> responseEntity = traineeController.deleteTraineeById(ID_TEST);
+		Assert.assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
+	}
+	
+	@Test
+	public void testDeleteAllTrainees() {
+		logger.info("### testDeleteAllTrainees - START - ###");
+		Trainee trainee = new Trainee();
+		List<Trainee> traineeList = new ArrayList<Trainee>();
+		traineeList.add(trainee);
+		when(this.traineeService.getAll()).thenReturn(traineeList);
+		doNothing().when(this.traineeService).deleteAll();
+		ResponseEntity<CeReProAbstractEntity> responseEntity = traineeController.deleteAllTrainees();
+		Assert.assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
 	}
 	
 	@Test
