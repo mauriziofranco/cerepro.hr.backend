@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.Trainee;
@@ -57,11 +58,90 @@ public class TraineeController {
 	}
 	
 	
+	//create
+	/**
+	 * createTrainee method creates a Trainee
+	 * 
+	 * @param trainee to be created
+	 * @return a new ResponseEntity with the given status code
+	 */
+	@PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<CeReProAbstractEntity> createTrainee(@Valid @RequestBody final Trainee trainee){
+		logger.info("Creating Trainee : {}", trainee);
+		if (traineeService.getByEmail(trainee.getEmail()) != null) {
+			logger.error("Unable to create. A Trainee with email {} already exist",
+					trainee.getEmail());
+			return new ResponseEntity<>(
+					new CustomErrorType(
+							"Unable to create new Trainee. A Trainee with email " + trainee.getEmail() + " already exist."),
+					HttpStatus.CONFLICT);
+		}
+		traineeService.insert(trainee);
+		return new ResponseEntity<CeReProAbstractEntity>(trainee, HttpStatus.CREATED);
+	}
+	
+	
+	//getById
+	/**
+	 * getTraineeById method gets a trainee by id
+	 * 
+	 * @param id of the trainee to get
+	 * @return a new ResponseEntity with the given status code
+	 */
+	@GetMapping("/getById/{id}")
+	public ResponseEntity<CeReProAbstractEntity> getTraineeById(@PathVariable("id") final Long id){
+		Trainee trainee;
+		Optional<Trainee> optTrainee = traineeService.getById(id);
+		if (!optTrainee.isPresent()) {
+			return new ResponseEntity<>(new CustomErrorType("Trainee with id " + id + " not found"),
+					HttpStatus.NOT_FOUND);
+		} else
+			trainee = optTrainee.get();
+		return new ResponseEntity<>(trainee, HttpStatus.OK);
+	}
+	
+	
+	//deleteById
+	/**
+	 * deleteTraineeById method deletes a trainee
+	 * 
+	 * @param id of the trainee to be canceled
+	 * @return a new ResponseEntity with the given status code
+	 */
+	@DeleteMapping("/deleteById/{id}")
+	public ResponseEntity<CeReProAbstractEntity> deleteTraineeById(@PathVariable("id") final Long id){
+		Optional<Trainee> optTrainee = traineeService.getById(id);
+		if (!optTrainee.isPresent()) {
+			return new ResponseEntity<>(
+					new CustomErrorType("Unable to delete Trainee with id " + id + ". Not found."),
+					HttpStatus.NOT_FOUND);
+		}
+		traineeService.deleteById(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	
+	// deleteAll
+	/**
+	 * deleteAllTrainees method deletes all the trainees
+	 * 
+	 * @return a new ResponseEntity with the given status code
+	 */
+	@DeleteMapping("/{id}")
+	public ResponseEntity<CeReProAbstractEntity>  deleteAllTrainees(){
+		List<Trainee> trainees = traineeService.getAll();
+		if (trainees.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		traineeService.deleteAll();
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
 	// use insert() - POST - insert a Trainee entity which contains an email ****
 	/**
 	 * createTraineeByEmail creates a new Trainee entity with a given email 
 	 * 
-	 * @return a boolean
+	 * @return a trainee entity created
 	 */
 	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CeReProAbstractEntity> createTraineeByEmail(@Valid @RequestBody final Trainee trainee) {
