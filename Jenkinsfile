@@ -67,7 +67,7 @@ pipeline {
         stage("Prepare DEV package") {
             environment {
                 NAME = "dev"
-                PACKAGE_FULL_FILE_NAME = ${PACKAGE_FILE_NAME}.${PACKAGING}
+                PACKAGE_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
             }
             steps {
             
