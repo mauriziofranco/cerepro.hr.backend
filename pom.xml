@@ -18,17 +18,18 @@
 	<description>Backend module for CeRePro project designed by milan centauri academy number 3, 4 and 5</description>
 
 	<packaging>war</packaging>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.release>11</maven.compiler.release>
 		<default.properties.file.name>application.properties</default.properties.file.name>
 		<checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
+		<package.file.name>cerepro.hr.backend</package.file.name>
 	</properties>
-	
+
 	<build>
-		<finalName>cerepro.hr.backend</finalName>
+		<finalName>${package.file.name}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -42,7 +43,7 @@
 					</webResources>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -123,7 +124,7 @@
 		</plugins>
 	</build>
 
-    <reporting>
+	<reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -146,7 +147,7 @@
 	</reporting>
 
 
-	
+
 
 	<profiles>
 		<profile>
@@ -170,12 +171,19 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<echo>selected dev profile, properties file: ${env.properties.file.name}</echo>
-										<delete file="${project.build.outputDirectory}/${default.properties.file.name}" />
-										<copy file="src/main/resources/application.dev.properties" tofile="${project.build.outputDirectory}/${default.properties.file.name}" />
-										<delete	file="${project.build.outputDirectory}/application.stage.properties" />
-										<delete file="${project.build.outputDirectory}/application.test.properties" />
-										<delete file="${project.build.outputDirectory}/application.dev.properties" />										
+										<echo>selected dev profile, properties file:
+											${env.properties.file.name}</echo>
+										<delete
+											file="${project.build.outputDirectory}/${default.properties.file.name}" />
+										<copy
+											file="src/main/resources/application.dev.properties"
+											tofile="${project.build.outputDirectory}/${default.properties.file.name}" />
+										<delete
+											file="${project.build.outputDirectory}/application.stage.properties" />
+										<delete
+											file="${project.build.outputDirectory}/application.test.properties" />
+										<delete
+											file="${project.build.outputDirectory}/application.dev.properties" />
 										<echo>Using application.dev.properties</echo>
 									</tasks>
 								</configuration>
@@ -396,6 +404,21 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.7.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jackson-annotations</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-core</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
