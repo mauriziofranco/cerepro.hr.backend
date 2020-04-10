@@ -63,6 +63,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.release>11</maven.compiler.release>
+		<default.properties.file.name>application.properties</default.properties.file.name>
 	</properties>
 
 	<profiles>
@@ -79,7 +80,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
-						<!-- <version>1.8</version> -->
 						<executions>
 							<execution>
 								<phase>test</phase>
@@ -88,23 +88,12 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<echo>selected dev profile, properties file:
-											${env.properties.file.name}</echo>
-
-										<delete
-											file="${project.build.outputDirectory}/application.properties" />
-										<copy
-											file="src/main/resources/application.dev.properties"
-											tofile="${project.build.outputDirectory}/application.properties" />
-										<delete
-											file="${project.build.outputDirectory}/application.stage.properties" />
-										<delete
-											file="${project.build.outputDirectory}/application.test.properties" />
-										<delete
-											file="${project.build.outputDirectory}/application.dev.properties" />
-										<!-- <delete -->
-										<!-- file="${project.build.outputDirectory}/application.prod.properties" 
-											/> -->
+										<echo>selected dev profile, properties file: ${env.properties.file.name}</echo>
+										<delete file="${project.build.outputDirectory}/${default.properties.file.name}" />
+										<copy file="src/main/resources/application.dev.properties" tofile="${project.build.outputDirectory}/${default.properties.file.name}" />
+										<delete	file="${project.build.outputDirectory}/application.stage.properties" />
+										<delete file="${project.build.outputDirectory}/application.test.properties" />
+										<delete file="${project.build.outputDirectory}/application.dev.properties" />										
 										<echo>Using application.dev.properties</echo>
 									</tasks>
 								</configuration>
@@ -135,10 +124,10 @@
 									<tasks>
 										<echo>selected test profile</echo>
 										<delete
-											file="${project.build.outputDirectory}/application.properties" />
+											file="${project.build.outputDirectory}/${default.properties.file.name}" />
 										<copy
 											file="src/main/resources/application.test.properties"
-											tofile="${project.build.outputDirectory}/application.properties" />
+											tofile="${project.build.outputDirectory}/${default.properties.file.name}" />
 										<delete
 											file="${project.build.outputDirectory}/application.stage.properties" />
 										<delete
@@ -178,10 +167,10 @@
 									<tasks>
 										<echo>selected stage profile</echo>
 										<delete
-											file="${project.build.outputDirectory}/application.properties" />
+											file="${project.build.outputDirectory}/${default.properties.file.name}" />
 										<copy
 											file="src/main/resources/application.stage.properties"
-											tofile="${project.build.outputDirectory}/application.properties" />
+											tofile="${project.build.outputDirectory}/${default.properties.file.name}" />
 										<delete
 											file="${project.build.outputDirectory}/application.stage.properties" />
 										<delete
@@ -221,12 +210,12 @@
 									<tasks>
 										<echo>selected prod profile</echo>
 										<delete
-											file="${project.build.outputDirectory}/application.properties" />
+											file="${project.build.outputDirectory}/${default.properties.file.name}" />
 										<echo>copyng
 											${project.build.outputDirectory}/application.prod.properties</echo>
 										<copy
 											file="${project.build.outputDirectory}/application.prod.properties"
-											tofile="${project.build.outputDirectory}/application.properties" />
+											tofile="${project.build.outputDirectory}/${default.properties.file.name}" />
 										<delete
 											file="${project.build.outputDirectory}/application.stage.properties" />
 										<delete
