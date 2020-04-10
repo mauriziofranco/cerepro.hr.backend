@@ -63,13 +63,16 @@ pipeline {
         } 
         */
         stage("Prepare DEV package") {
+            environment {
+                NAME = "dev"
+            }
             steps {
                 echo "${POM_APP}"
                 sh "./mvnw package -P dev -DskipTests"
-	            sh "mkdir -p ./dist/${BUILD_NUMBER}/dev" 
-	            sh "cp ./target/cerepro.hr.backend.war ./dist/${BUILD_NUMBER}/dev"
-	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
-	            sh "cp ./dist/${BUILD_NUMBER}/dev/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
+	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
+	            sh "cp ./target/cerepro.hr.backend.war ./dist/${BUILD_NUMBER}/${env.NAME}"
+	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
+	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
 	        }
         }
     }
