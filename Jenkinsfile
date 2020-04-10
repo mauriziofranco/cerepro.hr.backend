@@ -67,12 +67,14 @@ pipeline {
         stage("Prepare DEV package") {
             environment {
                 NAME = "dev"
+                PACKAGE_FULL_FILE_NAME = ${PACKAGE_FILE_NAME}.${PACKAGING}
             }
             steps {
-                echo "########### ${PACKAGE_FILE_NAME}.${PACKAGING}"
+            
+                echo "########### ${PACKAGE_FULL_FILE_NAME}"
                 sh "./mvnw package -P dev -DskipTests"
 	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
-	            sh "cp ./target/${PACKAGE_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
+	            sh "cp ./target/${PACKAGE_FULL_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
 	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
 	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
 	        }
