@@ -1,8 +1,9 @@
 pipeline {
     agent any
     environment {
-        POM_APP = readMavenPom().getProperties().getProperty('checkstyle-maven-plugin.version')
-        PACKAGE_FILE_NAME = 'cerepro.hr.backend.war'
+        PACKAGE_FILE_NAME = readMavenPom().getProperties().getProperty('package.file.name')
+        MAVEN_FILE = readMavenPom()
+        PACKAGING = readMavenPom().getPackaging()
     }
     stages {        
         stage("Compile") {
@@ -68,7 +69,7 @@ pipeline {
                 NAME = "dev"
             }
             steps {
-                echo "########### ${POM_APP}"
+                echo "########### ${PACKAGE_FILE_NAME}.${PACKAGING}"
                 sh "./mvnw package -P dev -DskipTests"
 	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
 	            sh "cp ./target/${PACKAGE_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
