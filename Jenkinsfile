@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         POM_APP = readMavenPom().getProperties().getProperty('checkstyle-maven-plugin.version')
+        PACKAGE_FILE_NAME = cerepro.hr.backend.war
     }
     stages {        
         stage("Compile") {
@@ -67,10 +68,10 @@ pipeline {
                 NAME = "dev"
             }
             steps {
-                echo "${POM_APP}"
+                echo "########### ${POM_APP}"
                 sh "./mvnw package -P dev -DskipTests"
 	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
-	            sh "cp ./target/cerepro.hr.backend.war ./dist/${BUILD_NUMBER}/${env.NAME}"
+	            sh "cp ./target/${PACKAGE_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
 	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
 	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
 	        }
