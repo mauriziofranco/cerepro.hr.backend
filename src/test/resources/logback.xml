@@ -1,0 +1,24 @@
+<configuration scan="true" debug="true">
+
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+	<file>/cerepro/logs/backend.log</file>
+<!-- 		 <file>c:\\logs\\cerepro\\backend.log</file>  -->
+		<encoder>
+			<pattern>%date %level %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date %level %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<root level="trace">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
