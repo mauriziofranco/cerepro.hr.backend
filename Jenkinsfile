@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        POM_APP = readMavenPom().getProperties().getProperty('checkstyle-maven-plugin.version')
+    }
     stages {        
         stage("Compile") {
             steps {
@@ -7,7 +10,7 @@ pipeline {
             }
         }
         stage("Provides application property file for Integration tests") {
-            steps {
+            steps {                
                 sh "rm ./src/main/resources/mail.properties"
                 //sh "rm ./src/main/resources/application.properties"
                 //echo "Original ./src/test/resources/mail.properties and ./src/test/resources/application.properties successfully removed!!"
@@ -60,10 +63,14 @@ pipeline {
         } 
         */
         stage("Prepare DEV package") {
-            sh "mkdir -p ./dist/${BUILD_NUMBER}/dev" 
-            sh "cp ./target/cerepro.hr.backend.war ./dist/${BUILD_NUMBER}/dev"
-            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
-            sh "cp ./dist/${BUILD_NUMBER}/dev/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
+            steps {
+                echo ${POM_APP}
+                sh "./mvnw package -P dev -DskipTests"
+	            sh "mkdir -p ./dist/${BUILD_NUMBER}/dev" 
+	            sh "cp ./target/cerepro.hr.backend.war ./dist/${BUILD_NUMBER}/dev"
+	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
+	            sh "cp ./dist/${BUILD_NUMBER}/dev/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
+	        }
         }
     }
     post {
