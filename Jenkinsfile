@@ -64,7 +64,7 @@ pipeline {
         */
         stage("Prepare DEV package") {
             steps {
-                echo ${POM_APP}
+                echo "${POM_APP}"
                 sh "./mvnw package -P dev -DskipTests"
 	            sh "mkdir -p ./dist/${BUILD_NUMBER}/dev" 
 	            sh "cp ./target/cerepro.hr.backend.war ./dist/${BUILD_NUMBER}/dev"
