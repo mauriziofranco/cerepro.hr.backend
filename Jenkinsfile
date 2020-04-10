@@ -13,7 +13,8 @@ pipeline {
                 //echo "Original ./src/test/resources/mail.properties and ./src/test/resources/application.properties successfully removed!!"
                 //sh "cp /cerepro_resources/properties/cerepro.mail.manager/mail.test.properties ./src/test/resources/mail.properties"
                 sh "cp /cerepro_resources/properties/cerepro.mail.manager/mail.test.properties ./src/main/resources/mail.properties"
-                sh "cp /cerepro_resources/properties/cerepro.hr.backend/application.test.properties ./src/test/resources/application.properties.properties"
+                sh "cp /cerepro_resources/properties/cerepro.hr.backend/application.test.properties ./src/test/resources/application.properties"
+
             }
         } 
         stage("Unit test") {
