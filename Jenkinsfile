@@ -60,10 +60,12 @@ pipeline {
         } 
         */
         stage("Prepare DEV package") {
-            sh "mkdir -p ./dist/${BUILD_NUMBER}/dev" 
-            sh "cp ./target/cerepro.hr.backend.war ./dist/${BUILD_NUMBER}/dev"
-            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
-            sh "cp ./dist/${BUILD_NUMBER}/dev/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
+            steps {
+	            sh "mkdir -p ./dist/${BUILD_NUMBER}/dev" 
+	            sh "cp ./target/cerepro.hr.backend.war ./dist/${BUILD_NUMBER}/dev"
+	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
+	            sh "cp ./dist/${BUILD_NUMBER}/dev/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/dev"
+	        }
         }
     }
     post {
