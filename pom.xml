@@ -18,6 +18,15 @@
 	<description>Backend module for CeRePro project designed by milan centauri academy number 3, 4 and 5</description>
 
 	<packaging>war</packaging>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.release>11</maven.compiler.release>
+		<default.properties.file.name>application.properties</default.properties.file.name>
+		<checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
+	</properties>
+	
 	<build>
 		<finalName>cerepro.hr.backend</finalName>
 		<plugins>
@@ -137,12 +146,7 @@
 	</reporting>
 
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.release>11</maven.compiler.release>
-		<default.properties.file.name>application.properties</default.properties.file.name>
-	</properties>
+	
 
 	<profiles>
 		<profile>
