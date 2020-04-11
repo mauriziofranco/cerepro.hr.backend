@@ -4,6 +4,8 @@ pipeline {
         PACKAGE_FILE_NAME = readMavenPom().getProperties().getProperty('package.file.name')
         MAVEN_FILE = readMavenPom()
         PACKAGING = readMavenPom().getPackaging()
+        PACKAGE_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
+        DEV_ENVIRONMENT_HOSTNAME = "eltanin"
     }
     stages {        
         stage("Compile") {
@@ -67,7 +69,7 @@ pipeline {
         stage("Prepare DEV package") {
             environment {
                 NAME = "dev"
-                PACKAGE_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
+                
             }
             steps {
             
@@ -78,6 +80,18 @@ pipeline {
 	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
 	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
 	        }
+        }
+        stage ("DEPLOY ON DEV ENVIRONMENT") {
+            environment {
+                NAME = "dev"
+                
+            }
+            steps {
+                echo "STARTING TO PROMOTE TO DEVELOPMENT ENVIRONMENT"
+				sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
+				sh "/cerepro_resources/delivery@env.sh ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME} tomcat_webapps"
+				echo "PROMOTION TO DEVELOPMENT ENVIRONMENT SUCCESSFULLY EXECUTED" 
+            }
         }
     }
     post {
