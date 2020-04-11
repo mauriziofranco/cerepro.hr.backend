@@ -24,12 +24,12 @@ pipeline {
 
             }
         } 
-        stage("Unit test") {
+        stage("Unit tests") {
             steps {
                 sh "./mvnw test"
             }
         }
-        stage("Code coverage") {
+        stage("Publish code coverage(JaCoCo) code report") {
             steps {              
 				jacoco(execPattern: 'target/jacoco.exec')
 				publishHTML (target: [
@@ -40,7 +40,7 @@ pipeline {
 				)
             }
         }
-        stage("Build and publish code check-style report") {
+        stage("Publish checkstyle code report") {
             steps {
                 sh "./mvnw site"
                 publishHTML (target: [
@@ -88,7 +88,8 @@ pipeline {
             }
             steps {
                 echo "STARTING TO PROMOTE TO DEVELOPMENT ENVIRONMENT"
-				sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
+				//sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
+				sh "/cerepro_resources/scp_put@env.sh ${JOB_NAME} ${BUILD_NUMBER} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
 				sh "/cerepro_resources/delivery@env.sh ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME} tomcat_webapps"
 				echo "PROMOTION TO DEVELOPMENT ENVIRONMENT SUCCESSFULLY EXECUTED" 
             }
