@@ -1,7 +1,7 @@
 /**
  * 
  */
-package centauri.academy.cerepro.integration.service;
+package centauri.academy.cerepro.integration.tests.service;
 
 import static org.junit.Assert.assertTrue;
 

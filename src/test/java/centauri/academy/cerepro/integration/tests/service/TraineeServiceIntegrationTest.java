@@ -1,4 +1,4 @@
-package centauri.academy.cerepro.integration.service;
+package centauri.academy.cerepro.integration.tests.service;
 
 import java.util.List;
 import java.util.Optional;
