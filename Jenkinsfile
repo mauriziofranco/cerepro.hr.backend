@@ -86,7 +86,11 @@ pipeline {
         stage ("DELIVERY ON DEV ENVIRONMENT") {
             environment {
                 NAME = "dev"                
+<<<<<<< HEAD
                 ENVIRONMENT_HOSTNAME = "${DEV_ENVIRONMENT_HOSTNAME}"
+=======
+                ENVIRONMENT_HOSTNAME = ${DEV_ENVIRONMENT_HOSTNAME}
+>>>>>>> branch 'master' of https://github.com/MaurizioFranco/cerepro.hr.backend
             }
             steps {
                 echo "Preparing ${PACKAGE_FULL_FILE_NAME} for ${env.NAME} environment"
