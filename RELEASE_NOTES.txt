@@ -1,5 +1,5 @@
 REQUIREMENTS:
-1) Following libraries needs to be installed:
+1) Following libraries needs to be installed: -----> TO MOVE UNDER centauri.library.backend
    - imagemagick
    - calibre
    
@@ -16,11 +16,3 @@ REQUIREMENTS:
  sudo chmod 777 -R /cerepro
  
  )
-
-3) Following symbolik link needs to be created(after folders creation)
-
-    - ln -sf /cerepro/candidates/img /home/maurizio/apache-tomcat-9.0.14/webapps/canimg
-    - ln -sf /cerepro/candidates/cv  /home/maurizio/apache-tomcat-9.0.14/webapps/cancv
-    - ln -sf /cerepro/itconsultants/img /home/maurizio/apache-tomcat-9.0.14/webapps/itcimg
-    - ln -sf /cerepro/itconsultants/cv /home/maurizio/apache-tomcat-9.0.14/webapps/itccv
-    - ln -sf /cerepro/thumbnails /home/maurizio/apache-tomcat-9.0.14/webapps/thumbnails
