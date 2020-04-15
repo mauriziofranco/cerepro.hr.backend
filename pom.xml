@@ -26,6 +26,7 @@
 		<default.properties.file.name>application.properties</default.properties.file.name>
 		<checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
 		<package.file.name>cerepro.hr.backend</package.file.name>
+		<maven-surefire-plugin-version>2.22.2</maven-surefire-plugin-version>
 	</properties>
 
 	<build>
