@@ -69,7 +69,7 @@ pipeline {
                 cp /cerepro_resources/properties/cerepro.mail.manager/mail.test.properties $WORKSPACE/src/main/resources/mail.properties
             }
         } 
-        */
+       
         stage("Prepare DEV package") {
             environment {
                 NAME = "dev"
@@ -84,6 +84,7 @@ pipeline {
 	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
 	        }
         }
+         */
         stage ("DELIVERY ON DEV ENVIRONMENT") {
             environment {
                 NAME = "dev"                
@@ -119,6 +120,20 @@ pipeline {
 				sh "/cerepro_resources/delivery@env.sh ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME} ${ENVIRONMENT_DEPLOY_DIR}"
 				echo "PROMOTION TO ${env.NAME} ENVIRONMENT SUCCESSFULLY EXECUTED" 
             }
+        }
+        stage("Prepare PROD package") {
+            environment {
+                NAME = "prod"
+            }
+            steps {
+            
+                echo "Preparing ${PACKAGE_FULL_FILE_NAME} for ${env.NAME} environment"
+                sh "./mvnw package -P ${env.NAME} -DskipTests"
+	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
+	            sh "cp ./target/${PACKAGE_FULL_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
+	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
+	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"                
+	        }
         }
     }
     post {
