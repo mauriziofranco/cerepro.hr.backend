@@ -4,11 +4,18 @@ REQUIREMENTS:
    - calibre
    
 2) Following folders needs to be created:
+    - /cerepro/logs
     - /cerepro/candidates/img
     - /cerepro/candidates/cv
     - /cerepro/itconsultants/img
     - /cerepro/itconsultants/cv 
     - /cerepro/thumbnails 
+    
+ (suggested command:
+ sudo mkdir -p /cerepro/logs /cerepro/candidates/img /cerepro/candidates/cv /cerepro/itconsultants/img /cerepro/itconsultants/cv /cerepro/thumbnails
+ sudo chmod 777 -R /cerepro
+ 
+ )
 
 3) Following symbolik link needs to be created(after folders creation)
 
