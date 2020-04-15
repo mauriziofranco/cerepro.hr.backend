@@ -53,38 +53,6 @@ pipeline {
 				])
             }
         }
-        /*
-        
-        stage("Install for All Environments") {
-            steps {              
-				sh "./mvnw install -DskipTests"
-            }
-        }
-        stage("Provides application property files for ?????? Integration tests(trying to send mails))") {
-            steps {
-                sh "rm ./src/test/resources/mail.properties"
-                echo "Original ./src/test/resources/mail.properties successfully removed!!"
-                sh "cp /cerepro_resources/properties/cerepro.mail.manager/mail.test.properties ./src/test/resources/mail.properties"
-                cp /cerepro_resources/properties/cerepro.hr.backend/application.prod.properties $WORKSPACE/src/main/resources
-                cp /cerepro_resources/properties/cerepro.mail.manager/mail.test.properties $WORKSPACE/src/main/resources/mail.properties
-            }
-        } 
-       
-        stage("Prepare DEV package") {
-            environment {
-                NAME = "dev"
-            }
-            steps {
-            
-                echo "########### ${PACKAGE_FULL_FILE_NAME}"
-                sh "./mvnw package -P dev -DskipTests"
-	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
-	            sh "cp ./target/${PACKAGE_FULL_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-	        }
-        }
-         */
         stage ("DELIVERY ON DEV ENVIRONMENT") {
             environment {
                 NAME = "dev"                
@@ -126,7 +94,8 @@ pipeline {
                 NAME = "prod"
             }
             steps {
-            
+                echo "Provides application.prod.properties"
+                cp /cerepro_resources/properties/cerepro.hr.backend/application.prod.properties $WORKSPACE/src/main/resources
                 echo "Preparing ${PACKAGE_FULL_FILE_NAME} for ${env.NAME} environment"
                 sh "./mvnw package -P ${env.NAME} -DskipTests"
 	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
