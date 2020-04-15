@@ -60,89 +60,21 @@ pipeline {
             }
         }
         stage ("PREPARE FULL PACKAGE") {
-            environment {
-            /*
-                NAME = "dev"                
-                ENVIRONMENT_HOSTNAME = "${DEV_ENVIRONMENT_HOSTNAME}"
-            */
-            }
             steps {
                 echo "Provides application.{env}.properties files"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-dev.properties ./src/main/resources/application-dev.properties"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-stage.properties ./src/main/resources/application-stage.properties"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-prod.properties ./src/main/resources/application-prod.properties"
                 echo "Preparing ${PACKAGE_FULL_FILE_NAME} for all environments"
-                sh "./mvnw package -DskipTests"
-                /*
-	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
-	            sh "cp ./target/${PACKAGE_FULL_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-                echo "STARTING TO PROMOTE TO ${env.NAME} ENVIRONMENT"
-				sh "/cerepro_resources/scp_put@env.sh ${JOB_NAME} ${BUILD_NUMBER} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME}"
-				sh "/cerepro_resources/delivery@env.sh ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME} ${ENVIRONMENT_DEPLOY_DIR}"
-				echo "PROMOTION TO ${env.NAME} ENVIRONMENT SUCCESSFULLY EXECUTED"
-				*/ 
+                sh "./mvnw package -DskipTests" 
             }
-        }
-        /*
-        stage ("DELIVERY ON DEV ENVIRONMENT") {
-            environment {
-                NAME = "dev"                
-                ENVIRONMENT_HOSTNAME = "${DEV_ENVIRONMENT_HOSTNAME}"
-            }
+        } 
+        stage ("DOCKERIZE APPLICATION") {
             steps {
-                echo "Preparing ${PACKAGE_FULL_FILE_NAME} for ${env.NAME} environment"
-                sh "./mvnw package -P ${env.NAME} -DskipTests"
-	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
-	            sh "cp ./target/${PACKAGE_FULL_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-                echo "STARTING TO PROMOTE TO ${env.NAME} ENVIRONMENT"
-				sh "/cerepro_resources/scp_put@env.sh ${JOB_NAME} ${BUILD_NUMBER} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME}"
-				sh "/cerepro_resources/delivery@env.sh ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME} ${ENVIRONMENT_DEPLOY_DIR}"
-				echo "PROMOTION TO ${env.NAME} ENVIRONMENT SUCCESSFULLY EXECUTED" 
+                echo "Dockerizing application..."
+                sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
             }
-        }
-        stage ("DELIVERY ON STAGE ENVIRONMENT") {
-            environment {
-                NAME = "stage"
-                ENVIRONMENT_HOSTNAME = "${STAGE_ENVIRONMENT_HOSTNAME}"
-            }
-            steps {
-                echo "Preparing ${PACKAGE_FULL_FILE_NAME} for ${env.NAME} environment"
-                sh "./mvnw package -P ${env.NAME} -DskipTests"
-	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
-	            sh "cp ./target/${PACKAGE_FULL_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-                echo "STARTING TO PROMOTE TO ${env.NAME} ENVIRONMENT"
-				sh "/cerepro_resources/scp_put@env.sh ${JOB_NAME} ${BUILD_NUMBER} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME}"
-				sh "/cerepro_resources/delivery@env.sh ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME} ${ENVIRONMENT_DEPLOY_DIR}"
-				echo "PROMOTION TO ${env.NAME} ENVIRONMENT SUCCESSFULLY EXECUTED" 
-            }
-        }
-        stage("DELIVERY ON PRODUCTION ENVIRONMENT") {
-            environment {
-                NAME = "prod"
-                ENVIRONMENT_HOSTNAME = "${PROD_ENVIRONMENT_HOSTNAME}"
-            }
-            steps {
-                echo "Provides application.prod.properties"                
-                sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-prod.properties ./src/main/resources/application-prod.properties"
-                echo "Preparing ${PACKAGE_FULL_FILE_NAME} for ${env.NAME} environment"
-                sh "./mvnw package -P ${env.NAME} -DskipTests"
-	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
-	            sh "cp ./target/${PACKAGE_FULL_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"     
-	            echo "STARTING TO PROMOTE TO ${env.NAME} ENVIRONMENT"
-				sh "/cerepro_resources/scp_put@env.sh ${JOB_NAME} ${BUILD_NUMBER} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME}"
-				sh "/cerepro_resources/delivery@env.sh ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME} ${ENVIRONMENT_DEPLOY_DIR}"
-				echo "PROMOTION TO ${env.NAME} ENVIRONMENT SUCCESSFULLY EXECUTED"            
-	        }
-        }
-        */
+        }        
     }
     post {
 		always {
