@@ -4,10 +4,10 @@ pipeline {
         PACKAGE_FILE_NAME = readMavenPom().getProperties().getProperty('package.file.name')
         MAVEN_FILE = readMavenPom()
         PACKAGING = readMavenPom().getPackaging()
-        PACKAGE_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
-        DEV_ENVIRONMENT_HOSTNAME = "eltanin"
-        STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
-        PROD_ENVIRONMENT_HOSTNAME = "thuban"
+        PACKAGE_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"        
+        //DEV_ENVIRONMENT_HOSTNAME = "eltanin"
+        //STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
+        //PROD_ENVIRONMENT_HOSTNAME = "thuban"
         ENVIRONMENT_TARGET_DIR = "cerepro_resources"
         ENVIRONMENT_DEPLOY_DIR = "tomcat_webapps"
     }
@@ -96,8 +96,8 @@ pipeline {
                 ENVIRONMENT_HOSTNAME = "${PROD_ENVIRONMENT_HOSTNAME}"
             }
             steps {
-                echo "Provides application.prod.properties"
-                cp /cerepro_resources/properties/cerepro.hr.backend/application.prod.properties $WORKSPACE/src/main/resources
+                echo "Provides application.prod.properties"                
+                sh "cp /cerepro_resources/properties/cerepro.hr.backend/application.prod.properties ./src/main/resources/application.prod.properties"
                 echo "Preparing ${PACKAGE_FULL_FILE_NAME} for ${env.NAME} environment"
                 sh "./mvnw package -P ${env.NAME} -DskipTests"
 	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
