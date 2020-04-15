@@ -5,9 +5,9 @@ pipeline {
         MAVEN_FILE = readMavenPom()
         PACKAGING = readMavenPom().getPackaging()
         PACKAGE_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"        
-        //DEV_ENVIRONMENT_HOSTNAME = "eltanin"
-        //STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
-        //PROD_ENVIRONMENT_HOSTNAME = "thuban"
+        DEV_ENVIRONMENT_HOSTNAME = "eltanin"
+        STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
+        PROD_ENVIRONMENT_HOSTNAME = "thuban"
         ENVIRONMENT_TARGET_DIR = "cerepro_resources"
         ENVIRONMENT_DEPLOY_DIR = "tomcat_webapps"
     }
