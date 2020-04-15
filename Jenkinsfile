@@ -7,6 +7,7 @@ pipeline {
         PACKAGE_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
         DEV_ENVIRONMENT_HOSTNAME = "eltanin"
         STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
+        PROD_ENVIRONMENT_HOSTNAME = "thuban"
         ENVIRONMENT_TARGET_DIR = "cerepro_resources"
         ENVIRONMENT_DEPLOY_DIR = "tomcat_webapps"
     }
@@ -92,6 +93,7 @@ pipeline {
         stage("Prepare PROD package") {
             environment {
                 NAME = "prod"
+                ENVIRONMENT_HOSTNAME = "${PROD_ENVIRONMENT_HOSTNAME}"
             }
             steps {
                 echo "Provides application.prod.properties"
@@ -101,7 +103,11 @@ pipeline {
 	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
 	            sh "cp ./target/${PACKAGE_FULL_FILE_NAME} ./dist/${BUILD_NUMBER}/${env.NAME}"
 	            sh "mkdir -p ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"
-	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"                
+	            sh "cp ./dist/${BUILD_NUMBER}/${env.NAME}/*.* ${JENKINS_HOME}/jobs/${JOB_NAME}/dist/${BUILD_NUMBER}/${env.NAME}"     
+	            echo "STARTING TO PROMOTE TO ${env.NAME} ENVIRONMENT"
+				sh "/cerepro_resources/scp_put@env.sh ${JOB_NAME} ${BUILD_NUMBER} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME}"
+				sh "/cerepro_resources/delivery@env.sh ${PACKAGE_FULL_FILE_NAME} ${ENVIRONMENT_TARGET_DIR} ${ENVIRONMENT_HOSTNAME} ${ENVIRONMENT_DEPLOY_DIR}"
+				echo "PROMOTION TO ${env.NAME} ENVIRONMENT SUCCESSFULLY EXECUTED"            
 	        }
         }
     }
