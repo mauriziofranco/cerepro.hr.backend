@@ -97,7 +97,7 @@ pipeline {
             }
             steps {
                 echo "Provides application.prod.properties"                
-                sh "cp /cerepro_resources/properties/cerepro.hr.backend/application.prod.properties ./src/main/resources/application.prod.properties"
+                sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-prod.properties ./src/main/resources/application-prod.properties"
                 echo "Preparing ${PACKAGE_FULL_FILE_NAME} for ${env.NAME} environment"
                 sh "./mvnw package -P ${env.NAME} -DskipTests"
 	            sh "mkdir -p ./dist/${BUILD_NUMBER}/${env.NAME}" 
