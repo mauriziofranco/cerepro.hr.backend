@@ -22,7 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.release>11</maven.compiler.release>
-		<default.properties.file.name>application.properties</default.properties.file.name>
+<!-- 		<default.properties.file.name>application.properties</default.properties.file.name> -->
 		<checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
 		<package.file.name>cerepro.hr.backend</package.file.name>
 		<maven-surefire-plugin-version>2.22.2</maven-surefire-plugin-version>
@@ -434,21 +434,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- <artifactId>jackson-databind</artifactId> -->
-		<!-- <version>2.7.3</version> -->
-		<!-- <exclusions> -->
-		<!-- <exclusion> -->
-		<!-- <artifactId>jackson-annotations</artifactId> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- </exclusion> -->
-		<!-- <exclusion> -->
-		<!-- <artifactId>jackson-core</artifactId> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- </exclusion> -->
-		<!-- </exclusions> -->
-		<!-- </dependency> -->
+
 	</dependencies>
 
 
