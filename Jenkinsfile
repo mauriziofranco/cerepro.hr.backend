@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    options { timeout(time: 5) }
+    parameters {
+        booleanParam(name: 'PROMOTE_ON_PRODUCTION', defaultValue: false,
+            description: 'Al termine di questa pipeline, vuoi consentire la promozione in ambiente di Produzione?')
+    }
     environment {
         PACKAGE_FILE_NAME = readMavenPom().getProperties().getProperty('package.file.name')
         MAVEN_FILE = readMavenPom()
@@ -74,7 +79,15 @@ pipeline {
                 echo "Dockerizing application..."
                 sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
             }
-        }        
+        }
+        stage ("DELIVERY") {
+            when { expression { return params.PROMOTE_ON_PRODUCTION } }
+            steps {
+                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
+                //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
+            }
+        } 
+        
     }
     post {
 		always {
