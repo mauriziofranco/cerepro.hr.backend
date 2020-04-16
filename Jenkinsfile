@@ -9,7 +9,7 @@ pipeline {
         PACKAGE_FILE_NAME = readMavenPom().getProperties().getProperty('package.file.name')
         MAVEN_FILE = readMavenPom()
         PACKAGING = readMavenPom().getPackaging()
-        PACKAGE_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
+        ARTIFACT_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
         /*        
         DEV_ENVIRONMENT_HOSTNAME = "eltanin"
         STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
@@ -70,8 +70,11 @@ pipeline {
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-dev.properties ./src/main/resources/application-dev.properties"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-stage.properties ./src/main/resources/application-stage.properties"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-prod.properties ./src/main/resources/application-prod.properties"
-                echo "Preparing ${PACKAGE_FULL_FILE_NAME} for all environments"
-                sh "./mvnw install -DskipTests" 
+                echo "Preparing artifact: ${ARTIFACT_FULL_FILE_NAME}"
+                sh "./mvnw package -DskipTests"
+                echo "Archiving artifact: ${ARTIFACT_FULL_FILE_NAME}"
+                archiveArtifacts artifacts: "target/${ARTIFACT_FULL_FILE_NAME}", onlyIfSuccessful: true
+                
             }
         } 
         stage ("DOCKERIZE APPLICATION") {
@@ -81,12 +84,11 @@ pipeline {
             }
         }
         stage ("DELIVERY ON DEV") {
-            when { expression { return params.PROMOTE_ON_PRODUCTION } }
             steps {
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
-                //sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
-                //sh "/cerepro_resources/delivery_on_docker_host.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${PACKAGE_FULL_FILE_NAME} cerepro_resources "
+                //sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
+                //sh "/cerepro_resources/delivery_on_docker_host.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources "
             }
         }
         stage ("DELIVERY ON PRODUCTION") {
@@ -94,7 +96,7 @@ pipeline {
             steps {
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
-                sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
+                sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
             }
         } 
         
