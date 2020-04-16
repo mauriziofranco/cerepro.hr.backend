@@ -77,7 +77,7 @@ pipeline {
         stage ("DOCKERIZE APPLICATION") {
             steps {
                 echo "Dockerizing application..."
-                sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
+                //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
             }
         }
         stage ("DELIVERY") {
