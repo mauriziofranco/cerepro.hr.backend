@@ -71,7 +71,7 @@ pipeline {
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-stage.properties ./src/main/resources/application-stage.properties"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-prod.properties ./src/main/resources/application-prod.properties"
                 echo "Preparing ${PACKAGE_FULL_FILE_NAME} for all environments"
-                sh "./mvnw package -DskipTests" 
+                sh "./mvnw install -DskipTests" 
             }
         } 
         stage ("DOCKERIZE APPLICATION") {
@@ -80,11 +80,21 @@ pipeline {
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
             }
         }
-        stage ("DELIVERY") {
+        stage ("DELIVERY ON DEV") {
             when { expression { return params.PROMOTE_ON_PRODUCTION } }
             steps {
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
+                //sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
+                //sh "/cerepro_resources/delivery_on_docker_host.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${PACKAGE_FULL_FILE_NAME} cerepro_resources "
+            }
+        }
+        stage ("DELIVERY ON PRODUCTION") {
+            when { expression { return params.PROMOTE_ON_PRODUCTION } }
+            steps {
+                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
+                //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
+                sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${PACKAGE_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
             }
         } 
         
