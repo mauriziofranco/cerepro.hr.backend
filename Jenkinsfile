@@ -74,7 +74,9 @@ pipeline {
                 echo "Preparing artifact: ${ARTIFACT_FULL_FILE_NAME}"
                 sh "./mvnw package -DskipTests"
                 echo "Archiving artifact: ${ARTIFACT_FULL_FILE_NAME}"
-                archiveArtifacts artifacts: "target/${ARTIFACT_FULL_FILE_NAME}", onlyIfSuccessful: true
+                sh "cp ./target/${ARTIFACT_FULL_FILE_NAME} ./${ARTIFACT_FULL_FILE_NAME}"
+                archiveArtifacts artifacts: "${ARTIFACT_FULL_FILE_NAME}", onlyIfSuccessful: true
+                archiveArtifacts artifacts: "Dockerfile", onlyIfSuccessful: true
                 
             }
         } 
@@ -88,7 +90,9 @@ pipeline {
             steps {
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
+                //sh "/cerepro_resources/delivery_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DOCKER_HOST}"
                 sh "/cerepro_resources/delivery_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DOCKER_HOST}"
+                sh "/cerepro_resources/delivery_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} Dockerfile cerepro_resources ${DOCKER_HOST}"
             }
         }
         stage ("DELIVERY ON PRODUCTION") {
