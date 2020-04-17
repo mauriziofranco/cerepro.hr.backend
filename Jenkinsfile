@@ -115,9 +115,9 @@ pipeline {
                 echo "waiting for services startup...."
                 sleep 60
                 echo "testing dev. Health and status....."
-                bash "/cerepro_resources/health_test.sh ${DEV_info_app_environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${DEV_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
+                sh "/cerepro_resources/health_test.sh ${DEV_info_app_environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${DEV_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
                 echo "testing stage. Health and status....."
-                bash "/cerepro_resources/health_test.sh ${STAGE_info_app_environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${STAGE_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
+                sh "/cerepro_resources/health_test.sh ${STAGE_info_app_environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${STAGE_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
             }
         } 
         stage ("DELIVERY ON PRODUCTION") {
