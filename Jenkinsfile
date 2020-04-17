@@ -10,10 +10,13 @@ pipeline {
         MAVEN_FILE = readMavenPom()
         PACKAGING = readMavenPom().getPackaging()
         ARTIFACT_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
-        DOCKER_HOST = "rastaban"
+        APPLICATION_DOCKER_HOST = "rastaban"
         DEV_SERVICES_EXPOSED_PORT="9051"
         STAGE_SERVICES_EXPOSED_PORT="9052"
+        APPLICATION_CONTEXT_ROOT="cerepro.hr.backend"
         DOCKER_HOST_CONTAINER_NAME_PREFIX="${PACKAGE_FILE_NAME}"
+        DEV_info.app.environment_PROPERTY="DEV"
+        STAGE_info.app.environment_PROPERTY="STAGE"
         /*        
         DEV_ENVIRONMENT_HOSTNAME = "eltanin"
         STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
@@ -104,6 +107,16 @@ pipeline {
                 //sh "/cerepro_resources/delivery_on_docker@env.sh ${DEV_SERVICES_EXPOSED_PORT} dev ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}__${BUILD_TIMESTAMP}"
                 sh "/cerepro_resources/delivery_on_docker@env.sh ${DEV_SERVICES_EXPOSED_PORT} dev ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"
                 sh "/cerepro_resources/delivery_on_docker@env.sh ${STAGE_SERVICES_EXPOSED_PORT} stage ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"
+            }
+        }         
+        stage ("HEALTH TEST ON DEV AND STAGE ENVIRONMENTS") {
+            steps {
+                echo "waiting for services startup...."
+                sleep 60
+                echo "testing dev. Health and status....."
+                sh "/cerepro_resources/health_test.sh ${DEV_info.app.environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${DEV_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
+                echo "testing stage. Health and status....."
+                sh "/cerepro_resources/health_test.sh ${STAGE_info.app.environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${STAGE_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
             }
         } 
         stage ("DELIVERY ON PRODUCTION") {
