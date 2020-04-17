@@ -11,6 +11,9 @@ pipeline {
         PACKAGING = readMavenPom().getPackaging()
         ARTIFACT_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
         DOCKER_HOST = "rastaban"
+        DEV_SERVICES_EXPOSED_PORT="9051"
+        STAGE_SERVICES_EXPOSED_PORT="9052"
+        DOCKER_HOST_CONTAINER_NAME_PREFIX="${PACKAGE_FILE_NAME}"
         /*        
         DEV_ENVIRONMENT_HOSTNAME = "eltanin"
         STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
@@ -88,13 +91,20 @@ pipeline {
         }
         stage ("DELIVERY ON DOCKER HOST") {
             steps {
-                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
+                echo "MOVING files on docker host"
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
-                //sh "/cerepro_resources/delivery_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DOCKER_HOST}"
-                sh "/cerepro_resources/delivery_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DOCKER_HOST}"
-                sh "/cerepro_resources/delivery_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} Dockerfile cerepro_resources ${DOCKER_HOST}"
+                //sh "/cerepro_resources/scp_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DOCKER_HOST}"
+                sh "/cerepro_resources/scp_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DOCKER_HOST}"
+                sh "/cerepro_resources/scp_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} Dockerfile cerepro_resources ${DOCKER_HOST}"
             }
         }
+        stage ("PROMOTE DEV AND STAGE ENVIRONMENTS") {
+            steps {
+                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
+                sh "/cerepro_resources/delivery_on_docker@env.sh ${DEV_SERVICES_EXPOSED_PORT} dev ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}__${BUILD_TIMESTAMP}"
+                sh "/cerepro_resources/delivery_on_docker@env.sh ${STAGE_SERVICES_EXPOSED_PORT} stage ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}__${BUILD_TIMESTAMP}"
+            }
+        } 
         stage ("DELIVERY ON PRODUCTION") {
             when { expression { return params.PROMOTE_ON_PRODUCTION } }
             steps {
