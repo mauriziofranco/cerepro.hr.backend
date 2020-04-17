@@ -112,6 +112,7 @@ pipeline {
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
                 //sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
+               
             }
         } 
         
