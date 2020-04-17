@@ -14,5 +14,11 @@ REQUIREMENTS:
  (suggested command:
  sudo mkdir -p /cerepro/logs /cerepro/candidates/img /cerepro/candidates/cv /cerepro/itconsultants/img /cerepro/itconsultants/cv /cerepro/thumbnails
  sudo chmod 777 -R /cerepro
+ FOR DOCKER....:
+ sudo mkdir -p ./cerepro_dev/logs ./cerepro_dev/candidates/img ./cerepro_dev/candidates/cv ./cerepro_dev/itconsultants/img ./cerepro_dev/itconsultants/cv ./cerepro_dev/thumbnails
+ sudo chmod 777 -R ./cerepro_dev
+ sudo mkdir -p ./cerepro_stage/logs ./cerepro_stage/candidates/img ./cerepro_stage/candidates/cv ./cerepro_stage/itconsultants/img ./cerepro_stage/itconsultants/cv ./cerepro_stage/thumbnails
+ sudo chmod 777 -R ./cerepro_stage
+ 
  
  )
