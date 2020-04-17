@@ -10,6 +10,7 @@ pipeline {
         MAVEN_FILE = readMavenPom()
         PACKAGING = readMavenPom().getPackaging()
         ARTIFACT_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
+        DOCKER_HOST = "rastaban"
         /*        
         DEV_ENVIRONMENT_HOSTNAME = "eltanin"
         STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
@@ -83,12 +84,12 @@ pipeline {
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
             }
         }
-        stage ("DELIVERY ON DEV") {
+        stage ("DELIVERY ON DOCKER HOST") {
             steps {
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
                 //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
                 //sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
-                //sh "/cerepro_resources/delivery_on_docker_host.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources "
+                sh "/cerepro_resources/delivery_on_docker_host.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DOCKER_HOST}"
             }
         }
         stage ("DELIVERY ON PRODUCTION") {
