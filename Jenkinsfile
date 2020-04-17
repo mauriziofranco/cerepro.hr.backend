@@ -6,6 +6,7 @@ pipeline {
             description: 'Al termine di questa pipeline, vuoi consentire la promozione in ambiente di Produzione?')
     }
     environment {
+    
         PACKAGE_FILE_NAME = readMavenPom().getProperties().getProperty('package.file.name')
         MAVEN_FILE = readMavenPom()
         PACKAGING = readMavenPom().getPackaging()
@@ -15,8 +16,8 @@ pipeline {
         STAGE_SERVICES_EXPOSED_PORT="9052"
         APPLICATION_CONTEXT_ROOT="cerepro.hr.backend"
         DOCKER_HOST_CONTAINER_NAME_PREFIX="${PACKAGE_FILE_NAME}"
-        DEV_info.app.environment_PROPERTY="DEV"
-        STAGE_info.app.environment_PROPERTY="STAGE"
+        DEV_info_app_environment_PROPERTY="DEV"
+        STAGE_info_app_environment_PROPERTY="STAGE"
         /*        
         DEV_ENVIRONMENT_HOSTNAME = "eltanin"
         STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
@@ -114,18 +115,15 @@ pipeline {
                 echo "waiting for services startup...."
                 sleep 60
                 echo "testing dev. Health and status....."
-                sh "/cerepro_resources/health_test.sh ${DEV_info.app.environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${DEV_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
+                sh "/cerepro_resources/health_test.sh ${DEV_info_app_environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${DEV_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
                 echo "testing stage. Health and status....."
-                sh "/cerepro_resources/health_test.sh ${STAGE_info.app.environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${STAGE_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
+                sh "/cerepro_resources/health_test.sh ${STAGE_info_app_environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${STAGE_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
             }
         } 
         stage ("DELIVERY ON PRODUCTION") {
             when { expression { return params.PROMOTE_ON_PRODUCTION } }
             steps {
-                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
-                //sh "docker build -f Dockerfile -t centauriacademy/cerepro.hr.backend:${BUILD_NUMBER}_${BUILD_TIMESTAMP} ."
-                //sh "/cerepro_resources/scp_put@env.sh ${PROMOTED_JOB_FULL_NAME} ${PROMOTED_ID} ${env.NAME} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${DEV_ENVIRONMENT_HOSTNAME}"
-               
+                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"               
             }
         } 
         
