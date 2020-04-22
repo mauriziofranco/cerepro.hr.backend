@@ -14,6 +14,7 @@ pipeline {
         APPLICATION_DOCKER_HOST = "rastaban"
         DEV_SERVICES_EXPOSED_PORT="9051"
         STAGE_SERVICES_EXPOSED_PORT="9052"
+        PROD_SERVICES_EXPOSED_PORT="9053"
         APPLICATION_CONTEXT_ROOT="cerepro.hr.backend"
         DOCKER_HOST_CONTAINER_NAME_PREFIX="${PACKAGE_FILE_NAME}"
         DEV_info_app_environment_PROPERTY="DEV"
@@ -104,9 +105,9 @@ pipeline {
         }
         stage ("PROMOTE DEV AND STAGE ENVIRONMENTS") {
             steps {
-                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
-                //sh "/cerepro_resources/delivery_on_docker@env.sh ${DEV_SERVICES_EXPOSED_PORT} dev ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}__${BUILD_TIMESTAMP}"
+                echo "EXECUTING DEV ENVIRONEMNT PROMOTION"
                 sh "/cerepro_resources/delivery_on_docker@env.sh ${DEV_SERVICES_EXPOSED_PORT} dev ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"
+                echo "EXECUTING STAGE ENVIRONEMNT PROMOTION"
                 sh "/cerepro_resources/delivery_on_docker@env.sh ${STAGE_SERVICES_EXPOSED_PORT} stage ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"
             }
         }         
@@ -123,7 +124,9 @@ pipeline {
         stage ("DELIVERY ON PRODUCTION") {
             when { expression { return params.PROMOTE_ON_PRODUCTION } }
             steps {
-                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"               
+                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"   
+                echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
+                sh "/cerepro_resources/delivery_on_docker@env.sh ${PROD_SERVICES_EXPOSED_PORT} prod ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"            
             }
         } 
         
