@@ -19,6 +19,7 @@ pipeline {
         DOCKER_HOST_CONTAINER_NAME_PREFIX="${PACKAGE_FILE_NAME}"
         DEV_info_app_environment_PROPERTY="DEV"
         STAGE_info_app_environment_PROPERTY="STAGE"
+        PROD_info_app_environment_PROPERTY="PROD"
         /*        
         DEV_ENVIRONMENT_HOSTNAME = "eltanin"
         STAGE_ENVIRONMENT_HOSTNAME = "ndraconis"
@@ -127,6 +128,15 @@ pipeline {
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"   
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
                 sh "/cerepro_resources/delivery_on_docker@env.sh ${PROD_SERVICES_EXPOSED_PORT} prod ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"            
+            }
+        } 
+        stage ("HEALTH TEST ON PROD ENVIRONMENT") {
+            when { expression { return params.PROMOTE_ON_PRODUCTION } }
+            steps {
+                echo "waiting for services startup...."
+                sleep 60                
+                echo "testing stage. Health and status....."
+                sh "/cerepro_resources/health_test.sh ${PROD_info_app_environment_PROPERTY} ${APPLICATION_DOCKER_HOST} ${PROD_SERVICES_EXPOSED_PORT} ${APPLICATION_CONTEXT_ROOT}"
             }
         } 
         
