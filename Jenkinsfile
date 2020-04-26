@@ -35,15 +35,7 @@ pipeline {
             }
         }
         stage("Provides application property file for Integration tests --> for mvn:test goal purpose only!!!") {
-            steps {  
-                /*              
-                sh "rm ./src/main/resources/mail.properties"
-                sh "rm ./src/main/resources/application.properties"
-                echo "Original ./src/main/resources/mail.properties and ./src/main/resources/application.properties successfully removed!!"
-                sh "cp /cerepro_resources/properties/cerepro.mail.manager/mail.test.properties ./src/main/resources/mail.properties"
-                //TO UNCOMMENT
-                //sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-test.properties ./src/test/resources/application.properties"
-                */
+            steps {                  
                 sh "cp /cerepro_resources/properties/cerepro.mail.manager/mail.test.properties      ./src/test/resources/mail.properties"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-test.properties ./src/test/resources/application.properties"
             }
