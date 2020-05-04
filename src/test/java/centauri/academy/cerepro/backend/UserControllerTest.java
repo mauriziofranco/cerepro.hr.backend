@@ -61,8 +61,8 @@ public class UserControllerTest {
 	private UserController userController;
 	@Mock
 	private UserRepository userRepository;
-	@Mock
-	private CandidateService candidateService;
+//	@Mock
+//	private CandidateService candidateService;
 	@Mock
 	private RoleRepository roleRepository;
 	@Mock
@@ -85,7 +85,7 @@ public class UserControllerTest {
 	public void setup() {
 		userController = new UserController();
 		ReflectionTestUtils.setField(userController, "userRepository", userRepository);
-		ReflectionTestUtils.setField(userController, "candidateService", candidateService);
+//		ReflectionTestUtils.setField(userController, "candidateService", candidateService);
 		ReflectionTestUtils.setField(userController, "roleRepository", roleRepository);
 		ReflectionTestUtils.setField(userController, "candidateRepository", candidateRepository);
 		ReflectionTestUtils.setField(userController, "employeeRepository", employeeRepository);
@@ -320,13 +320,13 @@ public class UserControllerTest {
 
 		Optional<User> currOpt = Optional.of(user);
 
-		List<Candidate> candidateList = new ArrayList<Candidate>();
+//		List<Candidate> candidateList = new ArrayList<Candidate>();
 		List<Employee> employeeList = new ArrayList<Employee>();
 		List<UserTokenSurvey> userSurveyTokenList = new ArrayList<UserTokenSurvey>();
 		List<SurveyReply> surveyReplyList = new ArrayList<SurveyReply>();
 
 		when(this.userRepository.findById(100L)).thenReturn(currOpt);
-		when(this.candidateRepository.findByUserId(100L)).thenReturn(candidateList);
+//		when(this.candidateRepository.findByUserId(100L)).thenReturn(candidateList);
 		when(this.employeeRepository.findByUserId(100L)).thenReturn(employeeList);
 		when(this.userSurveyTokenRepository.findByUserId(100L)).thenReturn(userSurveyTokenList);
 		when(this.surveyReplyRepository.findByUserId(100L)).thenReturn(surveyReplyList);
@@ -336,15 +336,15 @@ public class UserControllerTest {
 	}
 
 	/**
-	 * testDeleteUserKOForCandidateUserId() method tests if the method deleteUser()
+	 * testDeleteUserKOForUserSurveyTokenPresent() method tests if the method deleteUser()
 	 * is really able for foreign key (user_id) references users(id) into
-	 * candidates' table
+	 * userSurveyToken table
 	 * 
 	 */
 	@Test
-	public void testDeleteUserKOForCandidateUserId() {
+	public void testDeleteUserKOForUserSurveyTokenPresent() {
 
-		logger.info("testDeleteUserKOForCandidateUserId()  ---------------------- START");
+		logger.info("testDeleteUserKOForUserSurveyTokenPresent() - START");
 		User user = new User();
 		user.setId(100L);
 		user.setEmail("pippo@prova.com");
@@ -358,15 +358,17 @@ public class UserControllerTest {
 
 		Optional<User> currOpt = Optional.of(user);
 
-		List<Candidate> candidateList = new ArrayList<Candidate>();
-		candidateList.add(new Candidate());
+//		List<Candidate> candidateList = new ArrayList<Candidate>();
+//		candidateList.add(new Candidate());
 
 		when(this.userRepository.findById(100L)).thenReturn(currOpt);
-		when(this.candidateRepository.findByUserId(100L)).thenReturn(candidateList);
+		List<UserTokenSurvey> userTokenSurveyList = new ArrayList<UserTokenSurvey>() ;
+		userTokenSurveyList.add(new UserTokenSurvey());
+		when(this.userSurveyTokenRepository.findByUserId(100L)).thenReturn(userTokenSurveyList);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = this.userController.deleteUser(100L);
 
 		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-		logger.info("testDeleteUserKOForCandidateUserId()  ---------------------- END");
+		logger.info("testDeleteUserKOForUserSurveyTokenPresent() - END");
 	}
 
 	/**
@@ -479,72 +481,72 @@ public class UserControllerTest {
 		userController = null;
 	}
 
-	@Test
-	public void getUserRegistratedTodayTest() {
-		logger.info("getUserRegistratedTodayTest - START");
-		LocalDate date = LocalDate.now();
-//		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-//		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-//		Long objL = 1L;
-		long l = 1l;
-
-		when(this.candidateService.getRegisteredCandidatesInDate(date)).thenReturn(l);
-		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedToday();
-		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertTrue(((Long) responseEntity.getBody()).equals(l));
-		logger.info("getUserRegistratedTodayTest - END");
-	}
-
-	@Test
-	public void getUserRegistratedYesterdayTest() {
-		logger.info("getUserRegistratedToday()  ---------------------- START");
-		LocalDate date = LocalDate.now();
-		date = date.minusDays(1);
-//		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-//		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-//		Long objL = 1L;
-		long l = 1l;
-
-//		when(this.userRepository.getUserRegdateInPeriod(start, end )).thenReturn(l);
-		when(this.candidateService.getRegisteredCandidatesInDate(date)).thenReturn(l);
-		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedYesterday();
-		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertTrue(((Long) responseEntity.getBody()).equals(l));
-		logger.info("getUserRegistratedToday()  ---------------------- end");
-	}
-
-	@Test
-	public void getUserRegistratedLastSevenDaysTest() {
-		logger.info("getUserRegistratedLastSevenDays()  ---------------------- START");
+//	@Test
+//	public void getUserRegistratedTodayTest() {
+//		logger.info("getUserRegistratedTodayTest - START");
 //		LocalDate date = LocalDate.now();
-//		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-//		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-//		Long objL = 1L;
-		long l = 1l;
-
-//		when(this.userRepository.getUserRegdateInPeriod(start, end)).thenReturn(l);
-        when(this.candidateService.getRegisteredCandidatesFromDaysAgo(7)).thenReturn(l);
-		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedLastSevenDays();
-		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertTrue(((Long) responseEntity.getBody()).equals(l));
-		logger.info("getUserRegistratedLastSevenDays()  ---------------------- end");
-	}
-
-	@Test
-	public void getUserRegistratedLastWeekTest() {
-		logger.info("getUserRegistratedLastWeek()  ---------------------- START");
+////		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
+////		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
+////		Long objL = 1L;
+//		long l = 1l;
+//
+//		when(this.candidateService.getRegisteredCandidatesInDate(date)).thenReturn(l);
+//		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedToday();
+//		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//		assertTrue(((Long) responseEntity.getBody()).equals(l));
+//		logger.info("getUserRegistratedTodayTest - END");
+//	}
+//
+//	@Test
+//	public void getUserRegistratedYesterdayTest() {
+//		logger.info("getUserRegistratedToday()  ---------------------- START");
 //		LocalDate date = LocalDate.now();
-//		date = date.minusDays(7);
-//		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-//		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-//		Long objL = 1L;
-		long l = 1l;
-//		when(this.userRepository.getUserRegdateInPeriod(start, end)).thenReturn(l);
-        when(this.candidateService.getRegisteredCandidatesFromDaysAgo(14)).thenReturn(l);
-		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedLastWeek();
-		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertTrue(((Long) responseEntity.getBody()).equals(l));
-		logger.info("getUserRegistratedLastWeek()  ---------------------- end");
-	}
+//		date = date.minusDays(1);
+////		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
+////		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
+////		Long objL = 1L;
+//		long l = 1l;
+//
+////		when(this.userRepository.getUserRegdateInPeriod(start, end )).thenReturn(l);
+//		when(this.candidateService.getRegisteredCandidatesInDate(date)).thenReturn(l);
+//		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedYesterday();
+//		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//		assertTrue(((Long) responseEntity.getBody()).equals(l));
+//		logger.info("getUserRegistratedToday()  ---------------------- end");
+//	}
+//
+//	@Test
+//	public void getUserRegistratedLastSevenDaysTest() {
+//		logger.info("getUserRegistratedLastSevenDays()  ---------------------- START");
+////		LocalDate date = LocalDate.now();
+////		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
+////		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
+////		Long objL = 1L;
+//		long l = 1l;
+//
+////		when(this.userRepository.getUserRegdateInPeriod(start, end)).thenReturn(l);
+//        when(this.candidateService.getRegisteredCandidatesFromDaysAgo(7)).thenReturn(l);
+//		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedLastSevenDays();
+//		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//		assertTrue(((Long) responseEntity.getBody()).equals(l));
+//		logger.info("getUserRegistratedLastSevenDays()  ---------------------- end");
+//	}
+//
+//	@Test
+//	public void getUserRegistratedLastWeekTest() {
+//		logger.info("getUserRegistratedLastWeek()  ---------------------- START");
+////		LocalDate date = LocalDate.now();
+////		date = date.minusDays(7);
+////		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
+////		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
+////		Long objL = 1L;
+//		long l = 1l;
+////		when(this.userRepository.getUserRegdateInPeriod(start, end)).thenReturn(l);
+//        when(this.candidateService.getRegisteredCandidatesFromDaysAgo(14)).thenReturn(l);
+//		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedLastWeek();
+//		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//		assertTrue(((Long) responseEntity.getBody()).equals(l));
+//		logger.info("getUserRegistratedLastWeek()  ---------------------- end");
+//	}
 
 }

@@ -1,5 +1,6 @@
 package centauri.academy.cerepro.backend;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public class CandidateController {
 	 */
 	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Candidate> createCandidate(@Valid @RequestBody final Candidate candidate) {
-		logger.info("Creating Candidate : {}", candidate);		
+		logger.info("Creating Candidate : {}", candidate);
 		candidateService.insert(candidate);
 		return new ResponseEntity<>(candidate, HttpStatus.CREATED);
 	}
@@ -145,6 +146,57 @@ public class CandidateController {
 		candidateService.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
+
+	/**
+	 * Provides number of registered candidates on today
+	 * @return
+	 */
+	@GetMapping("/todayRegistrated")
+	public ResponseEntity<Long> getTodayRegistratedCandidates() {
+		logger.info("getTodayRegistratedCandidates() - START");
+		LocalDate today = LocalDate.now();
+		long count = candidateService.getRegisteredCandidatesInDate(today);
+		logger.info("getTodayRegistratedCandidates() - END - with count: " + count);
+		return new ResponseEntity<Long>(count, HttpStatus.OK);
+	}
+
+	/**
+	 * Provides number of registered candidates on yesterday
+	 * @return
+	 */
+	@GetMapping("/yesterdayRegistrated")
+	public ResponseEntity<Long> getYesterdayRegistratedCandidates() {
+		logger.info("getYesterdayRegistratedCandidates() - START");
+		LocalDate yesterday = LocalDate.now();
+		yesterday = yesterday.minusDays(1);
+		long count = candidateService.getRegisteredCandidatesInDate(yesterday);
+		logger.info("getYesterdayRegistratedCandidates() - END - with count: " + count);
+		return new ResponseEntity<Long>(count, HttpStatus.OK);
+	}
+
+	/**
+	 * Provides number of registered candidates on last 7 days
+	 * @return
+	 */
+	@GetMapping("/lastSevenDaysRegistrated")
+	public ResponseEntity<Long> getLastSevenDaysRegistratedCandidates() {
+		logger.info("getLastSevenDaysRegistratedCandidates - START");
+		long count = candidateService.getRegisteredCandidatesFromDaysAgo(7);
+		logger.info("getLastSevenDaysRegistratedCandidates() - END - with count: " + count);
+		return new ResponseEntity<Long>(count, HttpStatus.OK);
+	}
+
+
+	/**
+	 * Provides number of registered candidates on last 14 days
+	 * @return
+	 */
+	@GetMapping("/lastWeekRegistrated")
+	public ResponseEntity<Long> getRegistratedCandidatesOnLastTwoWeeks() {
+		logger.info("getRegistratedCandidatesOnLastTwoWeeks() - START");
+		long count = candidateService.getRegisteredCandidatesFromDaysAgo(14);
+		logger.info("getRegistratedCandidatesOnLastTwoWeeks() - END - with count: " + count);
+		return new ResponseEntity<Long>(count, HttpStatus.OK);
+	}
 
 }

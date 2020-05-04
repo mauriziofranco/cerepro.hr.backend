@@ -58,7 +58,11 @@ public class UserService {
 //		return (List<User>)userRepository.findAll(sort);
 //	}
 //	
-//	public List<User> getAllUsers () {
-//		return (List<User>)userRepository.findAll();
-//	}
+	/**
+	 * Provides list of user entities from repository
+	 * @return List<User>, list of User entity objects
+	 */
+	public List<User> getAllUsers () {
+		return (List<User>)userRepository.findAll();
+	}
 }
