@@ -1,4 +1,5 @@
 package centauri.academy.cerepro.service;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,23 +9,37 @@ import org.springframework.stereotype.Service;
 
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
+
 /**
  * 
- * @author maurizio - m.franco@proximanetwork.it
+ * @author maurizio.franco@ymail.com
  *
  */
 @Service
 public class RoleService {
-	
-	public static final Logger logger = LoggerFactory.getLogger(RoleService.class);	
-	
+
+	public static final Logger logger = LoggerFactory.getLogger(RoleService.class);
+
 	@Autowired
 	RoleRepository roleRepository;
-	
-	public List<Role> getAll () {
+
+	/**
+	 * Provides list of role entities from repository
+	 * 
+	 * @return List<Role>, list of Role entity objects
+	 */
+	public List<Role> getAll() {
 		logger.info("getAll - START");
 		List<Role> roles = roleRepository.findAll();
 		logger.info("getAll - END - returning " + roles.size() + " roles.");
-		return roles ;
+		return roles;
+	}
+
+	/**
+	 * Try to delete all entities from role table
+	 */
+	public void deleteAll() {
+		logger.debug("deleteAll - START");
+		roleRepository.deleteAll();
 	}
 }

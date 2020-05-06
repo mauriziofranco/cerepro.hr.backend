@@ -31,11 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.Employee;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
+import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.EmployeeRepository;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
@@ -78,7 +78,7 @@ public class UserController {
 	 */
 	@GetMapping("/")
 	public ResponseEntity<List<User>> getUsers() {
-		List<User> user = userService.getAllUsers();
+		List<User> user = userService.getAll();
 		if (user.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}

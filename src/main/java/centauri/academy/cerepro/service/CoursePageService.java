@@ -1,6 +1,3 @@
-/**
- * 
- */
 package centauri.academy.cerepro.service;
 
 import org.slf4j.LoggerFactory;
@@ -13,7 +10,8 @@ import centauri.academy.cerepro.persistence.entity.CoursePage;
 import centauri.academy.cerepro.persistence.repository.CoursePageRepository;
 
 /**
- * @author m.franco@proximainformatica.com
+ * 
+ * @author maurizio.franco@ymail.com
  *
  */
 @Service 
@@ -21,10 +19,10 @@ public class CoursePageService {
 	public static final Logger logger = LoggerFactory.getLogger(CoursePageService.class);
 	
 	@Autowired
-	private CoursePageRepository cpRepository;
+	private CoursePageRepository coursePageRepository;
 	
     public CoursePage getCoursePageByCode(String code) {
-        return cpRepository.findByCode(code);
+        return coursePageRepository.findByCode(code);
     }
 	
 	/**
@@ -38,12 +36,20 @@ public class CoursePageService {
 		{
 			return CoursePage.GENERIC_CANDIDATURE_CODE ;
 			}
-        CoursePage current = cpRepository.findByCode(code);
+        CoursePage current = coursePageRepository.findByCode(code);
         if (current!=null) 
         	return current.getCode();
 //        else return cpRepository.findByCode(CoursePage.GENERIC_CANDIDATURE_CODE).getCode() ;
         else 
         	return CoursePage.GENERIC_CANDIDATURE_CODE ;
+	}
+	
+	/**
+	 * Try to delete all entities from course page table
+	 */
+	public void deleteAll() {
+		logger.debug("deleteAll - START");
+		coursePageRepository.deleteAll();
 	}
 	
 }

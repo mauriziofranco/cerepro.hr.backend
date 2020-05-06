@@ -27,11 +27,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import centauri.academy.cerepro.persistence.entity.CandidateCustom;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.CourseResume;
-import centauri.academy.cerepro.persistence.entity.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.Employee;
+import centauri.academy.cerepro.persistence.entity.custom.CandidateCustom;
+import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.CourseResumeRepository;
 
 @RestController

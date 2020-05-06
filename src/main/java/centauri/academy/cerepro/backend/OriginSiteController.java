@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.CustomErrorType;
-import centauri.academy.cerepro.persistence.entity.ItConsultantCustom;
 import centauri.academy.cerepro.persistence.entity.OriginSite;
+import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
+import centauri.academy.cerepro.persistence.entity.custom.ItConsultantCustom;
 import centauri.academy.cerepro.persistence.repository.originsite.OriginSiteRepository;
 
 

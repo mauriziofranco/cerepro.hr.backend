@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.SurveyInterview;
+import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.InterviewRepository;
 import centauri.academy.cerepro.persistence.repository.SurveyInterviewRepository;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;

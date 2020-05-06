@@ -45,13 +45,13 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.ItConsultant;
-import centauri.academy.cerepro.persistence.entity.ItConsultantCustom;
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
+import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
+import centauri.academy.cerepro.persistence.entity.custom.ItConsultantCustom;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.SurveyInterviewRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;

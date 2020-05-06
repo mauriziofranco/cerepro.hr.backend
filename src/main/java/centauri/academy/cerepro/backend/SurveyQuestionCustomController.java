@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import centauri.academy.cerepro.persistence.entity.SurveyQuestionCustom;
+import centauri.academy.cerepro.persistence.entity.custom.SurveyQuestionCustom;
 import centauri.academy.cerepro.persistence.repository.surveyquestion.SurveyQuestionRepository;
 
 /**

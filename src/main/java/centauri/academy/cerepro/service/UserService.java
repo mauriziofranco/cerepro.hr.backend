@@ -1,32 +1,28 @@
 package centauri.academy.cerepro.service;
-/**
- * 
- * @author anna
- *
- */
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 
+/**
+ * 
+ * @author maurizio.franco@ymail.com
+ *
+ */
 @Service
 public class UserService {
 	
 	public static final Logger logger = LoggerFactory.getLogger(UserService.class);	
 	
 	@Autowired
-	UserRepository userRepository;
-	@Autowired
-	UserService userService;
+	private UserRepository userRepository;
+//	@Autowired
+//	private UserService userService;
 	
 //	@Autowired
 //	private UserRepository userRepository;
@@ -62,7 +58,16 @@ public class UserService {
 	 * Provides list of user entities from repository
 	 * @return List<User>, list of User entity objects
 	 */
-	public List<User> getAllUsers () {
+	public List<User> getAll () {
+		logger.debug("getAll - START");
 		return (List<User>)userRepository.findAll();
+	}
+	
+	/**
+	 * Try to delete all entities from user table
+	 */
+	public void deleteAll () {
+		logger.debug("deleteAll - START");
+		userRepository.deleteAll();
 	}
 }

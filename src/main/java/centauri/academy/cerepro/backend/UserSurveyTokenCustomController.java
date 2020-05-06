@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import centauri.academy.cerepro.persistence.entity.UserSurveyTokenCustom;
+import centauri.academy.cerepro.persistence.entity.custom.UserSurveyTokenCustom;
 import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
 
 /**

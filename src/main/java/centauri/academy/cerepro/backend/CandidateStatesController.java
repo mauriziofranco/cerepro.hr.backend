@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.CandidateStates;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.CustomErrorType;
+import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.CandidateStatesRepository;
 
 /**

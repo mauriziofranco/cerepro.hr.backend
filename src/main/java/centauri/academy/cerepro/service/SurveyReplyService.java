@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import centauri.academy.cerepro.persistence.entity.SurveyReplyCustom;
+import centauri.academy.cerepro.persistence.entity.custom.SurveyReplyCustom;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 
 /**

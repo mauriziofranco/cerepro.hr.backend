@@ -16,8 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import centauri.academy.cerepro.persistence.entity.Candidate;
-import centauri.academy.cerepro.persistence.entity.CandidateCustom;
 import centauri.academy.cerepro.persistence.entity.CandidateStates;
+import centauri.academy.cerepro.persistence.entity.custom.CandidateCustom;
+import centauri.academy.cerepro.persistence.entity.custom.ListedCandidateCustom;
 import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 
 /**
@@ -43,6 +44,16 @@ public class CandidateService {
 		return candidateRepository.findAll();
 	}
 	
+	/**
+	 * Try to delete all instances into candidate table
+	 * 
+	 * @return long
+	 */
+	public void deleteAll () {
+		logger.info("deleteAll - START");
+		candidateRepository.deleteAll();
+	}
+	
 //	/**
 //	 * Gets all candidates custom(Candidates + Users)
 //	 * COMMENTED ON 24/01/20 because no more used!!!!!!!! by maurizio
@@ -65,13 +76,13 @@ public class CandidateService {
 //	}
 	
 	/**
-	 * Gets all candidates custom(Candidates + Users) in paginated version list, by course code field
+	 * Gets all candidates custom(Candidates + Users) in paginated version list, filtering by course code field
 	 * 
 	 * @param Pageable p, page info
 	 * @param String courseCode, string value for course code field
-	 * @return Page<CandidateCustom>
+	 * @return Page<ListedCandidateCustom>
 	 */
-	public Page<CandidateCustom> getAllCustomPaginatedByCourseCode (Pageable p, String courseCode) {
+	public Page<ListedCandidateCustom> getAllCustomPaginatedByCourseCode (Pageable p, String courseCode) {
 		logger.info("CandidateService.getAllCustomPaginatedByCourseCode - START - with pageable info {0} and course code: {1}", p, courseCode);
 		return candidateRepository.getAllCustomCandidatesPaginatedByCourseCode(p, courseCode);
 	}
@@ -81,20 +92,19 @@ public class CandidateService {
 	 * 
 	 * @return List<CandidateCustom>
 	 */
-	public List<CandidateCustom> getAllByCourseCode (String courseCode) {
+	public List<ListedCandidateCustom> getAllByCourseCode (String courseCode) {
 		logger.info("CandidateService.getAllByCourseCode - START with given course code {}", courseCode);
-		List<CandidateCustom> items = candidateRepository.findByCourseCode(courseCode);
+		List<ListedCandidateCustom> items = candidateRepository.findByCourseCode(courseCode);
 		return items;
 	}
 	
 	/**
 	 * Insert new candidate entity 
-	 * 
 	 */
 	public Candidate insert (Candidate c) {
-		logger.info("CandidateService.insert START with given candidate {}", c);
-		c.setCandidacyDateTime(LocalDateTime.now());
-		c.setCandidateStatesId(CandidateStates.DEFAULT_INSERTING_STATUS_CODE);
+		logger.info("insert() - START - with given candidate {}", c);
+//		c.setCandidacyDateTime(LocalDateTime.now());
+//		c.setCandidateStatesId(CandidateStates.DEFAULT_INSERTING_STATUS_CODE);
 		logger.info("CandidateService.insert DEBUG with given candidate {}", c);
 		return candidateRepository.save(c);
 	}
@@ -104,8 +114,7 @@ public class CandidateService {
 	 * 
 	 */
 	public Candidate update (Candidate c) {
-		logger.info("CandidateService.update START with given candidate {}", c);
-		//TO DO: check all form files mandatory and legacy....
+		logger.info("update() - START -with given candidate {}", c);
 		return candidateRepository.save(c);
 	}
 	
@@ -116,7 +125,7 @@ public class CandidateService {
 	 * @return candidate entity
 	 */
 	public Optional<Candidate> getById(long id) {
-		logger.info("CandidateService.getById START with given id {}", id);
+		logger.info("getById() - START with given id {}", id);
 		return candidateRepository.findById(id);
 		
 	}
@@ -128,7 +137,7 @@ public class CandidateService {
 	 * @return candidate entity
 	 */
 	public CandidateCustom getCustomById(long id) {
-		logger.info("CandidateService.getCustomById START with given id {}", id);
+		logger.info("getCustomById() - START - with given id {}", id);
 		return candidateRepository.getSingleCustomCandidate(id);
 		
 	}
@@ -141,7 +150,6 @@ public class CandidateService {
 	public void deleteById(long id) {
 		logger.info("CandidateService.deleteById START with given id {}", id);
 		candidateRepository.deleteById(id);
-		
 	}
 	
 //	/**

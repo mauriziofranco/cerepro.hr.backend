@@ -40,13 +40,14 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import centauri.academy.cerepro.persistence.entity.Candidate;
-import centauri.academy.cerepro.persistence.entity.CandidateCustom;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
+import centauri.academy.cerepro.persistence.entity.custom.CandidateCustom;
+import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
+import centauri.academy.cerepro.persistence.entity.custom.ListedCandidateCustom;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
@@ -120,14 +121,14 @@ public class CandidateCustomController {
 	 * @author maurizio.franco
 	 */
 	@GetMapping("/paginated/{size}/{number}/")
-	public ResponseEntity<Page<CandidateCustom>> getPaginatedCandidate(@PathVariable("size") final int size,
+	public ResponseEntity<Page<ListedCandidateCustom>> getPaginatedCandidate(@PathVariable("size") final int size,
 			@PathVariable("number") final int number) {
 		//Page<CandidateCustom> cC = candidateService.getAllCustomPaginated(PageRequest.of(number, size, Sort.Direction.ASC, "id"));
-		Page<CandidateCustom> cC = candidateService.getAllCustomPaginatedByCourseCode(PageRequest.of(number, size), null);
+		Page<ListedCandidateCustom> cC = candidateService.getAllCustomPaginatedByCourseCode(PageRequest.of(number, size), null);
 		if (cC.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>(cC, HttpStatus.OK);
+		return new ResponseEntity<Page<ListedCandidateCustom>>(cC, HttpStatus.OK);
 	}
 	
 	/**
@@ -143,15 +144,15 @@ public class CandidateCustomController {
 	 * @author maurizio.franco
 	 */
 	@GetMapping("/paginated/{size}/{number}/{code}")
-	public ResponseEntity<Page<CandidateCustom>> getAllCustomCandidatesPaginatedByCode(@PathVariable("size") final int size,
+	public ResponseEntity<Page<ListedCandidateCustom>> getAllCustomCandidatesPaginatedByCode(@PathVariable("size") final int size,
 			@PathVariable("number") final int number,@PathVariable("code") final String code) {
 		//commented to allow ordering by candidacy_date_time
 		//Page<CandidateCustom> cC = candidateService.getAllCustomPaginatedByCourseCode(PageRequest.of(number, size, Sort.Direction.ASC, "id"),courseCode);
-		Page<CandidateCustom> cC = candidateService.getAllCustomPaginatedByCourseCode(PageRequest.of(number, size),code);
+		Page<ListedCandidateCustom> cC = candidateService.getAllCustomPaginatedByCourseCode(PageRequest.of(number, size),code);
 		if (cC.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>(cC, HttpStatus.OK);
+		return new ResponseEntity<Page<ListedCandidateCustom>>(cC, HttpStatus.OK);
 	}
 
 	/******** PAGEABLE *******/
@@ -175,14 +176,14 @@ public class CandidateCustomController {
 	
 	
 	@GetMapping("/code/{code}")
-	public ResponseEntity<List<CandidateCustom>> listAllCandidateByCode(@PathVariable("code") final String code) {
+	public ResponseEntity<List<ListedCandidateCustom>> listAllCandidateByCode(@PathVariable("code") final String code) {
 		logger.info("started");
-		List<CandidateCustom> candidates = candidateService.getAllByCourseCode(code);
+		List<ListedCandidateCustom> candidates = candidateService.getAllByCourseCode(code);
 //		logger.info(candidates.get(0).getCourseCode());
 		if (candidates.isEmpty()) {     			
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else
-			return new ResponseEntity<>(candidates, HttpStatus.OK);
+			return new ResponseEntity<List<ListedCandidateCustom>>(candidates, HttpStatus.OK);
 	}
 	
 	

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.CustomErrorType;
+import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.service.CandidateService;
 
 /**
@@ -81,7 +81,7 @@ public class CandidateController {
 		Optional<Candidate> c = candidateService.getById(id);
 		if (!c.isPresent()) {
 			return new ResponseEntity<>(new CustomErrorType("Candidate with id " + id + " not found"),
-					HttpStatus.NOT_FOUND);
+					HttpStatus.NO_CONTENT);
 		} else
 			candidate = c.get();
 		return new ResponseEntity<>(candidate, HttpStatus.OK);
