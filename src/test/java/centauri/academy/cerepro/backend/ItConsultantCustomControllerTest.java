@@ -24,7 +24,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.ItConsultantCustom;
+import centauri.academy.cerepro.persistence.entity.custom.ItConsultantCustom;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.itconsultant.ItConsultantRepository;

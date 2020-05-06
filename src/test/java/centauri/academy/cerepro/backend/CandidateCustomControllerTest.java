@@ -22,9 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import centauri.academy.cerepro.CeReProBackendApplication; 
-import centauri.academy.cerepro.persistence.entity.CandidateCustom;
-import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity; 
+import centauri.academy.cerepro.CeReProBackendApplication;
+import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
+import centauri.academy.cerepro.persistence.entity.custom.CandidateCustom;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
