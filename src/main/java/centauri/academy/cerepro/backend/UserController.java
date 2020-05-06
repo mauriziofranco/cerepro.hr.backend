@@ -3,7 +3,6 @@
  */
 package centauri.academy.cerepro.backend;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Employee;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
@@ -39,7 +37,6 @@ import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.EmployeeRepository;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
-import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
 import centauri.academy.cerepro.service.UserService;
@@ -63,8 +60,8 @@ public class UserController {
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
-	@Autowired
-	private CandidateRepository  candidateRepository;
+//	@Autowired
+//	private CandidateRepository  candidateRepository;
 	@Autowired
 	private EmployeeRepository  employeeRepository;
 	@Autowired

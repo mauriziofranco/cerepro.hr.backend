@@ -1,5 +1,6 @@
 package centauri.academy.cerepro.rest.request;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -85,6 +86,9 @@ public class RequestCustom {
 	@Length(min =50, max = 2000)
 	protected String note;
 	
+	@NotNull
+	protected Long insertedBy ;
+	
 	
 	private MultipartFile[] files;
 	
@@ -94,7 +98,7 @@ public class RequestCustom {
 
 	public RequestCustom(Long id, Long userId, String domicileCity, String studyQualification, Boolean graduate, Boolean highGraduate,
 			Boolean stillHighStudy, String mobile, String cvExternalPath, String email, String firstname,
-			String lastname, Date dateOfBirth, String imgpath, String courseCode, String note) {
+			String lastname, Date dateOfBirth, String imgpath, String courseCode, String note, long insertedBy) {
 		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -113,14 +117,16 @@ public class RequestCustom {
 		this.imgpath = imgpath;
 		this.courseCode = courseCode;
 		this.note = note;
+		this.insertedBy=insertedBy;
 	}
 	
 	public RequestCustom(Long id, Long userId, String domicileCity, String studyQualification, Boolean graduate, Boolean highGraduate,
 			Boolean stillHighStudy, String mobile, String cvExternalPath, String email, String firstname,
-			String lastname, Date dateOfBirth, String imgpath) {
+			String lastname, Date dateOfBirth, String imgpath, long insertedBy) {
 		this(id, userId, domicileCity, studyQualification, graduate, highGraduate,
-				stillHighStudy, mobile, cvExternalPath, email, firstname, lastname, dateOfBirth, imgpath, null, null);
+				stillHighStudy, mobile, cvExternalPath, email, firstname, lastname, dateOfBirth, imgpath, null, null, insertedBy);
 	}
+//	
 
 	/**
 	 * @return the id
@@ -355,5 +361,42 @@ public class RequestCustom {
 	public void setNote(String note) {
 		this.note = note;
 	}
+
+	/**
+	 * @return the insertedBy
+	 */
+	public Long getInsertedBy() {
+		return insertedBy;
+	}
+
+	/**
+	 * @param insertedBy the insertedBy to set
+	 */
+	public void setInsertedBy(Long insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+
+	@Override
+	public String toString() {
+		return "RequestCustom [firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", id=" + id
+				+ ", userId=" + userId + ", domicileCity=" + domicileCity + ", studyQualification=" + studyQualification
+				+ ", graduate=" + graduate + ", highGraduate=" + highGraduate + ", stillHighStudy=" + stillHighStudy
+				+ ", mobile=" + mobile + ", cvExternalPath=" + cvExternalPath + ", dateOfBirth=" + dateOfBirth
+				+ ", imgpath=" + imgpath + ", courseCode=" + courseCode + ", note=" + note + ", insertedBy="
+				+ insertedBy + ", files=" + Arrays.toString(files) + ", getId()=" + getId() + ", getUserId()="
+				+ getUserId() + ", getDomicileCity()=" + getDomicileCity() + ", getStudyQualification()="
+				+ getStudyQualification() + ", getGraduate()=" + getGraduate() + ", getHighGraduate()="
+				+ getHighGraduate() + ", getStillHighStudy()=" + getStillHighStudy() + ", getMobile()=" + getMobile()
+				+ ", getCvExternalPath()=" + getCvExternalPath() + ", getDateOfBirth()=" + getDateOfBirth()
+				+ ", getImgpath()=" + getImgpath() + ", getFirstname()=" + getFirstname() + ", getLastname()="
+				+ getLastname() + ", getEmail()=" + getEmail() + ", getFiles()=" + Arrays.toString(getFiles())
+				+ ", getCourseCode()=" + getCourseCode() + ", getNote()=" + getNote() + ", getInsertedBy()="
+				+ getInsertedBy() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
+				+ super.toString() + "]";
+	}
+
+	
+	
+	
 	
 }

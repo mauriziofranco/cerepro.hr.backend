@@ -1,6 +1,5 @@
 package centauri.academy.cerepro.backend;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -26,7 +25,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
-import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Employee;
 import centauri.academy.cerepro.persistence.entity.Role;
@@ -39,7 +37,6 @@ import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
-import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.UserService;
 
 /**
@@ -50,7 +47,8 @@ import centauri.academy.cerepro.service.UserService;
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+//@SpringBootTest(classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = CeReProBackendApplication.class)
 public class UserControllerTest {
 
 	public static final Logger logger = LoggerFactory.getLogger(UserControllerTest.class);
@@ -65,8 +63,8 @@ public class UserControllerTest {
 //	private CandidateService candidateService;
 	@Mock
 	private RoleRepository roleRepository;
-	@Mock
-	private CandidateRepository candidateRepository;
+//	@Mock
+//	private CandidateRepository candidateRepository;
 	@Mock
 	private EmployeeRepository employeeRepository;
 	@Mock
@@ -87,13 +85,13 @@ public class UserControllerTest {
 		ReflectionTestUtils.setField(userController, "userRepository", userRepository);
 //		ReflectionTestUtils.setField(userController, "candidateService", candidateService);
 		ReflectionTestUtils.setField(userController, "roleRepository", roleRepository);
-		ReflectionTestUtils.setField(userController, "candidateRepository", candidateRepository);
+//		ReflectionTestUtils.setField(userController, "candidateRepository", candidateRepository);
 		ReflectionTestUtils.setField(userController, "employeeRepository", employeeRepository);
 		ReflectionTestUtils.setField(userController, "userSurveyTokenRepository", userSurveyTokenRepository);
 		ReflectionTestUtils.setField(userController, "surveyReplyRepository", surveyReplyRepository);
 		ReflectionTestUtils.setField(userController, "userService", userService);
 		ReflectionTestUtils.setField(userService, "userRepository", userRepository);
-		ReflectionTestUtils.setField(userService, "userService", userService);
+//		ReflectionTestUtils.setField(userService, "userService", userService);
 	}
 
 	/**

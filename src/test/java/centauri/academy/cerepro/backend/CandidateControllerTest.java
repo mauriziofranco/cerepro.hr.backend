@@ -62,95 +62,99 @@ public class CandidateControllerTest extends AbstractMockModelGenerator {
       * testListAllCandidate() method tests if the method listAllCandidate()
       * is really able to select all tuples from the candidates' table
       */
-     @Test
-     public void testListAllCandidate() {
-    	 logger.info("##### Test-testListAllCandidate() ---- Start #####");
-	     List<Candidate> candidateList = new ArrayList<Candidate>();
-	     candidateList.add(getFakeMockCandidate());
-	     when(this.candidateService.getAll()).thenReturn(candidateList);
-	     ResponseEntity<List<Candidate>> responseEntity = this.candidateController.listAllCandidate();
-	     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-	     assertEquals(1, responseEntity.getBody().size());
-	     candidateList.remove(0);
-	     when(this.candidateService.getAll()).thenReturn(candidateList);
-	     ResponseEntity<List<Candidate>> responseEntityEmpty = this.candidateController.listAllCandidate();
-	     assertEquals(HttpStatus.NO_CONTENT, responseEntityEmpty.getStatusCode());
-	     assertEquals(0, responseEntity.getBody().size());
-	     logger.info("##### Test-testListAllCandidate() ---- End #####");
-     }
+//     COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//     @Test
+//     public void testListAllCandidate() {
+//    	 logger.info("##### Test-testListAllCandidate() ---- Start #####");
+//	     List<Candidate> candidateList = new ArrayList<Candidate>();
+//	     candidateList.add(getFakeMockCandidate());
+//	     when(this.candidateService.getAll()).thenReturn(candidateList);
+//	     ResponseEntity<List<Candidate>> responseEntity = this.candidateController.listAllCandidate();
+//	     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//	     assertEquals(1, responseEntity.getBody().size());
+//	     candidateList.remove(0);
+//	     when(this.candidateService.getAll()).thenReturn(candidateList);
+//	     ResponseEntity<List<Candidate>> responseEntityEmpty = this.candidateController.listAllCandidate();
+//	     assertEquals(HttpStatus.NO_CONTENT, responseEntityEmpty.getStatusCode());
+//	     assertEquals(0, responseEntity.getBody().size());
+//	     logger.info("##### Test-testListAllCandidate() ---- End #####");
+//     }
      
      /**
       * testGetCandidateById() method tests if the method getCandidateById()
       * is really able to select a tuple from the candidates' table based on the Id passed as parameter
       */
-     @Test
-     public void testGetCandidateById() {
-    	 logger.info("##### Test-testGetCandidateById() ---- Start #####");
-	     Candidate c = getFakeMockCandidate();
-	     
-	     c.setId(FAKE_CANDIDATE_ID);
-	     Optional<Candidate> currCandidate = Optional.of(c);
-	     when(this.candidateService.getById(1l)).thenReturn(currCandidate);
-	     ResponseEntity<CeReProAbstractEntity> responseEntity = this.candidateController.getCandidateById(1l);
-	     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-	     assertEquals(FAKE_CANDIDATE_ID,((Candidate)responseEntity.getBody()).getId().longValue());
-	     ResponseEntity<CeReProAbstractEntity> responseEntityNotFound = this.candidateController.getCandidateById(2l);
-	     assertEquals(HttpStatus.NOT_FOUND, responseEntityNotFound.getStatusCode());
-	     logger.info("##### Test-testGetCandidateById() ---- End #####");
-     }
+//     COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//     @Test
+//     public void testGetCandidateById() {
+//    	 logger.info("##### Test-testGetCandidateById() ---- Start #####");
+//	     Candidate c = getFakeMockCandidate();
+//	     
+//	     c.setId(FAKE_CANDIDATE_ID);
+//	     Optional<Candidate> currCandidate = Optional.of(c);
+//	     when(this.candidateService.getById(1l)).thenReturn(currCandidate);
+//	     ResponseEntity<CeReProAbstractEntity> responseEntity = this.candidateController.getCandidateById(1l);
+//	     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//	     assertEquals(FAKE_CANDIDATE_ID,((Candidate)responseEntity.getBody()).getId().longValue());
+//	     ResponseEntity<CeReProAbstractEntity> responseEntityNotFound = this.candidateController.getCandidateById(2l);
+//	     assertEquals(HttpStatus.NOT_FOUND, responseEntityNotFound.getStatusCode());
+//	     logger.info("##### Test-testGetCandidateById() ---- End #####");
+//     }
      
      /**
       * testCreateCandidate() method tests if the method createCandidate()
       * is really able to create a new tuple in the candidates' table
       */
-     @Test
-     public void testCreateCandidate() {
-    	 logger.info("##### Test-testCreateCandidate() ---- Start #####");
-	     Candidate c = getFakeMockCandidate();
-	     when(this.candidateService.insert(c)).thenReturn(c);
-	     ResponseEntity<Candidate> responseEntity = this.candidateController.createCandidate(c);
-	     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-	     assertEquals(c,((Candidate)responseEntity.getBody()));
-	     logger.info("##### Test-testCreateCandidate() ---- End #####");
-     }
-     
+//     COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//     @Test
+//     public void testCreateCandidate() {
+//    	 logger.info("##### Test-testCreateCandidate() ---- Start #####");
+//	     Candidate c = getFakeMockCandidate();
+//	     when(this.candidateService.insert(c)).thenReturn(c);
+//	     ResponseEntity<Candidate> responseEntity = this.candidateController.createCandidate(c);
+//	     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+//	     assertEquals(c,((Candidate)responseEntity.getBody()));
+//	     logger.info("##### Test-testCreateCandidate() ---- End #####");
+//     }
+//     
      /**
       * testUpdateCandidate() method tests if the method updateCandidate()
       * is really able to update fields in the candidates' table
       */
-     @Test
-     public void testUpdateCandidate() {
-    	 logger.info("##### Test-testUpdateCandidate() ---- Start #####");
-	     Candidate c = getFakeMockCandidate();
-	     c.setId(FAKE_CANDIDATE_ID);
-	     Optional<Candidate> currCandidate = Optional.of(c);
-	     when(this.candidateService.getById(FAKE_CANDIDATE_ID)).thenReturn(currCandidate);
-	     c.setCvExternalPath(FAKE_CANDIDATE_CV_EXTERNAL_PATH);
-	     ResponseEntity<CeReProAbstractEntity> responseEntityUpdated = this.candidateController.updateCandidate(1l, c);
-	     assertEquals(HttpStatus.OK, responseEntityUpdated.getStatusCode());
-	     assertEquals(FAKE_CANDIDATE_CV_EXTERNAL_PATH,((Candidate)responseEntityUpdated.getBody()).getCvExternalPath());
-	     ResponseEntity<CeReProAbstractEntity> responseEntityUpdatedNotFound = this.candidateController.updateCandidate(10l, c);
-	     assertEquals(HttpStatus.NOT_FOUND, responseEntityUpdatedNotFound.getStatusCode());
-	     logger.info("##### Test-testUpdateCandidate() ---- End #####");
-     }
+//     COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//     @Test
+//     public void testUpdateCandidate() {
+//    	 logger.info("##### Test-testUpdateCandidate() ---- Start #####");
+//	     Candidate c = getFakeMockCandidate();
+//	     c.setId(FAKE_CANDIDATE_ID);
+//	     Optional<Candidate> currCandidate = Optional.of(c);
+//	     when(this.candidateService.getById(FAKE_CANDIDATE_ID)).thenReturn(currCandidate);
+//	     c.setCvExternalPath(FAKE_CANDIDATE_CV_EXTERNAL_PATH);
+//	     ResponseEntity<CeReProAbstractEntity> responseEntityUpdated = this.candidateController.updateCandidate(1l, c);
+//	     assertEquals(HttpStatus.OK, responseEntityUpdated.getStatusCode());
+//	     assertEquals(FAKE_CANDIDATE_CV_EXTERNAL_PATH,((Candidate)responseEntityUpdated.getBody()).getCvExternalPath());
+//	     ResponseEntity<CeReProAbstractEntity> responseEntityUpdatedNotFound = this.candidateController.updateCandidate(10l, c);
+//	     assertEquals(HttpStatus.NOT_FOUND, responseEntityUpdatedNotFound.getStatusCode());
+//	     logger.info("##### Test-testUpdateCandidate() ---- End #####");
+//     }
      
      /**
       * testDeleteCandidate() method tests if the method deleteCandidate()
       * is really able to delete a tuple in the candidates' table based on the Id passed as parameter
       */
-     @Test
-     public void testDeleteCandidate() {
-    	 logger.info("##### Test-testDeleteCandidate() ---- Start #####");
-	     Candidate c = getFakeMockCandidate();
-	     c.setId(1l);
-	     Optional<Candidate> currCandidate = Optional.of(c);
-	     when(this.candidateService.getById(1l)).thenReturn(currCandidate);
-	     ResponseEntity<CeReProAbstractEntity> responseEntity = this.candidateController.deleteCandidate(1l);
-	     assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
-	     ResponseEntity<CeReProAbstractEntity> responseEntityNotFound = this.candidateController.deleteCandidate(10l);
-	     assertEquals(HttpStatus.NOT_FOUND, responseEntityNotFound.getStatusCode());
-	     logger.info("##### Test-testDeleteCandidate() ---- End ######");
-     }
+//     @Test
+//     public void testDeleteCandidate() {
+//    	 logger.info("##### Test-testDeleteCandidate() ---- Start #####");
+//	     Candidate c = getFakeMockCandidate();
+//	     c.setId(1l);
+//	     Optional<Candidate> currCandidate = Optional.of(c);
+//	     when(this.candidateService.getById(1l)).thenReturn(currCandidate);
+//	     ResponseEntity<CeReProAbstractEntity> responseEntity = this.candidateController.deleteCandidate(1l);
+//	     assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+//	     ResponseEntity<CeReProAbstractEntity> responseEntityNotFound = this.candidateController.deleteCandidate(10l);
+//	     assertEquals(HttpStatus.NOT_FOUND, responseEntityNotFound.getStatusCode());
+//	     logger.info("##### Test-testDeleteCandidate() ---- End ######");
+//     }
      
      /**
       * teardown() method sets candidateController to null

@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CandidateStates;
 import centauri.academy.cerepro.persistence.entity.CoursePage;
@@ -85,11 +87,11 @@ public abstract class AbstractIntegrationTests {
 	}
 
 	protected CoursePage getFakeCoursePage() {
-		return getFakeCoursePageWithCode("FakeFileName " + new Random().nextInt());
+		return getFakeCoursePageWithCode("Code_" + getRandomLongBetweenLimits());
 	}
 	
-	protected CandidateStates getFakeCandidateState() {
-		logger.info("getFakeCandidateState - START");
+	protected CandidateStates getFakeCandidateStateByCode(int statusCode) {
+		logger.info("getFakeCandidateStateByCode - START - with statusCode {}", statusCode);
 		CandidateStates  csTest = new CandidateStates();
 		List<Role> roles = roleRepository.findAll();
 		if(roles.isEmpty()) {
@@ -98,7 +100,7 @@ public abstract class AbstractIntegrationTests {
 		else {
 			csTest.setRoleId(roles.get(0).getId());
 		}
-		csTest.setStatusCode(1);
+		csTest.setStatusCode(statusCode);
 		csTest.setStatusLabel("a status label");
 		csTest.setStatusDescription("a status description");
 		csTest.setStatusColor("#FF0000");
@@ -106,13 +108,18 @@ public abstract class AbstractIntegrationTests {
 		logger.debug("getFakeCandidateState - END - candidate state inserted: {} ", csTest);
 		return csTest;
 	}
+	
+	protected CandidateStates getFakeCandidateState() {
+		logger.info("getFakeCandidateState - START");		
+		return getFakeCandidateStateByCode(CandidateStates.DEFAULT_INSERTING_STATUS_CODE);
+	}
 
 	protected Candidate getFakeCandidate() {
 		logger.info("getFakeCandidate - START");
 		long userId = getFakeUser(Role.JAVA_COURSE_CANDIDATE_LEVEL).getId();
 		String code = getFakeCoursePage().getCode();
-		long candidateStatesId=getFakeCandidateState().getId();
-		logger.debug("getFakeCandidate - DEBUG - candidateStatesId: " + candidateStatesId);
+		long candidateStatusCode=getFakeCandidateState().getStatusCode();
+		logger.debug("getFakeCandidate - DEBUG - candidateStatusCode: " + candidateStatusCode);
 		//Candidate testCandidate = new Candidate(userId, code,candidateStatesId);
 		LocalDateTime regdate = LocalDateTime.now();
 		long insertedBy = userId ;
@@ -120,7 +127,7 @@ public abstract class AbstractIntegrationTests {
 		String lastname = "Test_Lasstname" ;
 		String email = "test@email.com" ;
 		LocalDateTime candidacyDateTime = LocalDateTime.now();
-		Candidate testCandidate = new Candidate(userId, code,candidateStatesId, email, firstname, lastname, regdate, insertedBy, candidacyDateTime);
+		Candidate testCandidate = new Candidate(userId, code,candidateStatusCode, email, firstname, lastname, regdate, insertedBy, candidacyDateTime);
 		candidateService.insert(testCandidate);
 		return testCandidate;
 	}
@@ -150,5 +157,13 @@ public abstract class AbstractIntegrationTests {
 	    logger.trace("getRandomLongBetweenLimits GENERATED: " + generatedLong);
 		return generatedLong ;
 	}
+	
+//	public static String asJsonString(final Object obj) {
+//	    try {
+//	        return new ObjectMapper().writeValueAsString(obj);
+//	    } catch (Exception e) {
+//	        throw new RuntimeException(e);
+//	    }
+//	}
 	
 }

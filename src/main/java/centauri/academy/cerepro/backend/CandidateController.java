@@ -47,14 +47,15 @@ public class CandidateController {
 	 * 
 	 * @return a new ResponseEntity with the given status code
 	 */
-	@GetMapping("/")
-	public ResponseEntity<List<Candidate>> listAllCandidate() {
-		List<Candidate> candidates = candidateService.getAll();
-		if (candidates.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} else
-			return new ResponseEntity<>(candidates, HttpStatus.OK);
-	}
+//	* COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//	@GetMapping("/")
+//	public ResponseEntity<List<Candidate>> listAllCandidate() {
+//		List<Candidate> candidates = candidateService.getAll();
+//		if (candidates.isEmpty()) {
+//			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//		} else
+//			return new ResponseEntity<>(candidates, HttpStatus.OK);
+//	}
 
 	/**
 	 * createCandidate method creates a candidate
@@ -62,12 +63,13 @@ public class CandidateController {
 	 * @param candidate to be created
 	 * @return a new ResponseEntity with the given status code
 	 */
-	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Candidate> createCandidate(@Valid @RequestBody final Candidate candidate) {
-		logger.info("Creating Candidate : {}", candidate);
-		candidateService.insert(candidate);
-		return new ResponseEntity<>(candidate, HttpStatus.CREATED);
-	}
+//	COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<Candidate> createCandidate(@Valid @RequestBody final Candidate candidate) {
+//		logger.info("Creating Candidate : {}", candidate);
+//		candidateService.insert(candidate);
+//		return new ResponseEntity<>(candidate, HttpStatus.CREATED);
+//	}
 
 	/**
 	 * getUserById method gets a candidate by id
@@ -75,17 +77,18 @@ public class CandidateController {
 	 * @param id of the candidate to be selected
 	 * @return a new ResponseEntity with the given status code
 	 */
-	@GetMapping("/{id}")
-	public ResponseEntity<CeReProAbstractEntity> getCandidateById(@PathVariable("id") final Long id) {
-		Candidate candidate = null;
-		Optional<Candidate> c = candidateService.getById(id);
-		if (!c.isPresent()) {
-			return new ResponseEntity<>(new CustomErrorType("Candidate with id " + id + " not found"),
-					HttpStatus.NO_CONTENT);
-		} else
-			candidate = c.get();
-		return new ResponseEntity<>(candidate, HttpStatus.OK);
-	}
+//	COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//	@GetMapping("/{id}")
+//	public ResponseEntity<CeReProAbstractEntity> getCandidateById(@PathVariable("id") final Long id) {
+//		Candidate candidate = null;
+//		Optional<Candidate> c = candidateService.getById(id);
+//		if (!c.isPresent()) {
+//			return new ResponseEntity<>(new CustomErrorType("Candidate with id " + id + " not found"),
+//					HttpStatus.NO_CONTENT);
+//		} else
+//			candidate = c.get();
+//		return new ResponseEntity<>(candidate, HttpStatus.OK);
+//	}
 
 	/**
 	 * updateCandidate method updates a candidate
@@ -94,39 +97,40 @@ public class CandidateController {
 	 * @param candidate with the fields updated
 	 * @return a new ResponseEntity with the given status code
 	 */
-	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CeReProAbstractEntity> updateCandidate(@PathVariable("id") final Long id,
-			@RequestBody Candidate candidate) {
-		// fetch user based on id and set it to currentUser object of type UserDTO
-		Candidate currentCandidate = null;
-		Optional<Candidate> c = candidateService.getById(id);
-		if (c.isPresent()) {
-			currentCandidate = c.get();
-			String value = candidate.getUserId() + "";
-//			if (value.equals("null"))
-//				currentCandidate.setUserId(currentCandidate.getUserId());
-//			else
-			currentCandidate.setUserId(candidate.getUserId());
-			// update currentUser object data with user object data
-			currentCandidate.setDomicileCity(candidate.getDomicileCity());
-//			currentCandidate.setDomicileHouseNumber(candidate.getDomicileHouseNumber());
-//			currentCandidate.setDomicileStreetName(candidate.getDomicileStreetName());
-			currentCandidate.setStudyQualification(candidate.getStudyQualification());
-			currentCandidate.setGraduate(candidate.getGraduate());
-			currentCandidate.setHighGraduate(candidate.getHighGraduate());
-			currentCandidate.setStillHighStudy(candidate.getStillHighStudy());
-			currentCandidate.setMobile(candidate.getMobile());
-			currentCandidate.setCvExternalPath(candidate.getCvExternalPath());
-			// save currentUser object
-			candidateService.insert(currentCandidate);
-			// return ResponseEntity object
-			return new ResponseEntity<>(currentCandidate, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to update. Candidate with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
-		}
-	}
+//	COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<CeReProAbstractEntity> updateCandidate(@PathVariable("id") final Long id,
+//			@RequestBody Candidate candidate) {
+//		// fetch user based on id and set it to currentUser object of type UserDTO
+//		Candidate currentCandidate = null;
+//		Optional<Candidate> c = candidateService.getById(id);
+//		if (c.isPresent()) {
+//			currentCandidate = c.get();
+//			String value = candidate.getUserId() + "";
+////			if (value.equals("null"))
+////				currentCandidate.setUserId(currentCandidate.getUserId());
+////			else
+//			currentCandidate.setUserId(candidate.getUserId());
+//			// update currentUser object data with user object data
+//			currentCandidate.setDomicileCity(candidate.getDomicileCity());
+////			currentCandidate.setDomicileHouseNumber(candidate.getDomicileHouseNumber());
+////			currentCandidate.setDomicileStreetName(candidate.getDomicileStreetName());
+//			currentCandidate.setStudyQualification(candidate.getStudyQualification());
+//			currentCandidate.setGraduate(candidate.getGraduate());
+//			currentCandidate.setHighGraduate(candidate.getHighGraduate());
+//			currentCandidate.setStillHighStudy(candidate.getStillHighStudy());
+//			currentCandidate.setMobile(candidate.getMobile());
+//			currentCandidate.setCvExternalPath(candidate.getCvExternalPath());
+//			// save currentUser object
+//			candidateService.insert(currentCandidate);
+//			// return ResponseEntity object
+//			return new ResponseEntity<>(currentCandidate, HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to update. Candidate with id " + id + " not found."),
+//					HttpStatus.NOT_FOUND);
+//		}
+//	}
 
 	/**
 	 * deleteCandidate method deletes a candidate
@@ -134,18 +138,19 @@ public class CandidateController {
 	 * @param id of the candidate to be canceled
 	 * @return a new ResponseEntity with the given status code
 	 */
-	@DeleteMapping("/{id}")
-	public ResponseEntity<CeReProAbstractEntity> deleteCandidate(@PathVariable("id") final Long id) {
-		// logger.info("DELETE CANDIDATE - START");
-		Optional<Candidate> candidate = candidateService.getById(id);
-		if (!candidate.isPresent()) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to delete. Candidate with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
-		}
-		candidateService.deleteById(id);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
+//	COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//	@DeleteMapping("/{id}")
+//	public ResponseEntity<CeReProAbstractEntity> deleteCandidate(@PathVariable("id") final Long id) {
+//		// logger.info("DELETE CANDIDATE - START");
+//		Optional<Candidate> candidate = candidateService.getById(id);
+//		if (!candidate.isPresent()) {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to delete. Candidate with id " + id + " not found."),
+//					HttpStatus.NOT_FOUND);
+//		}
+//		candidateService.deleteById(id);
+//		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//	}
 
 	/**
 	 * Provides number of registered candidates on today

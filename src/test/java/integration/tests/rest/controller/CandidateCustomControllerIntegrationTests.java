@@ -2,11 +2,10 @@ package integration.tests.rest.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,9 +19,14 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.Candidate;
+import centauri.academy.cerepro.persistence.entity.CandidateStates;
+import centauri.academy.cerepro.persistence.entity.CoursePage;
+import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.CandidateStateService;
 import centauri.academy.cerepro.service.CoursePageService;
@@ -75,22 +79,27 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 	}
 	
 	@Test
-	public void whenGetCandidateById_andThereIsNot_thenStatus204() throws Exception {
+	public void whenGetCandidateCustomById_andThereIsNot_thenStatus204() throws Exception {
 		logger.trace("########################################################");
 		logger.trace("########################################################");
-		logger.trace("whenGetCandidateById_andThereIsNot_thenStatus204 - START");
+		logger.trace("whenGetCandidateCustomById_andThereIsNot_thenStatus204 - START");
 		logger.trace("########################################################");
 		logger.trace("########################################################");
-	    mvc.perform(get(SERVICE_URI + new Random().nextLong())
+	    mvc.perform(get(SERVICE_URI + getRandomLongBetweenLimits())
 	      .contentType(MediaType.APPLICATION_JSON))
 	      .andExpect(status().isNoContent());
+	    logger.trace("########################################################");
+		logger.trace("########################################################");
+		logger.trace("whenGetCandidateCustomById_andThereIsNot_thenStatus204 - END");
+		logger.trace("########################################################");
+		logger.trace("########################################################");
 	}
 	
 	@Test
-	public void whenGetCandidateById_andThereIsOne_thenStatus200() throws Exception {
+	public void whenGetCandidateCustomById_andThereIsOne_thenStatus200() throws Exception {
 		logger.trace("########################################################");
 		logger.trace("########################################################");
-		logger.trace("whenGetCandidateById_andThereIsOne_thenStatus200 - START");
+		logger.trace("whenGetCandidateCustomById_andThereIsOne_thenStatus200 - START");
 		logger.trace("########################################################");
 		logger.trace("########################################################");
 	 
@@ -108,10 +117,62 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 			      .andExpect(jsonPath("$.firstname", is(insertedCandidate.getFirstname())))
 		          .andExpect(jsonPath("$.lastname", is(insertedCandidate.getLastname())))
 		          .andExpect(jsonPath("$.email", is(insertedCandidate.getEmail())))
-		          .andExpect(jsonPath("$.candidateStatesId", is((int)insertedCandidate.getCandidateStatesId())))
+//		          .andExpect(jsonPath("$.candidateStatesId", is((int)insertedCandidate.getCandidateStatesId())))
 		          .andExpect(jsonPath("$.courseCode", is(insertedCandidate.getCourseCode())))
-		          .andExpect(jsonPath("$.regdate", is(insertedCandidate.getRegdate())))
-		          .andExpect(jsonPath("$.insertedBy", is(insertedCandidate.getInsertedBy())));
+//		          .andExpect(jsonPath("$.regdate", is(insertedCandidate.getRegdate())))
+//		          .andExpect(jsonPath("$.insertedBy", is(insertedCandidate.getInsertedBy())))
+		          ;
+		logger.trace("########################################################");
+		logger.trace("########################################################");
+		logger.trace("whenGetCandidateCustomById_andThereIsOne_thenStatus200 - END");
+		logger.trace("########################################################");
+		logger.trace("########################################################");
+	}
+	
+	@Test
+	public void whenPostNewSimpleCandidateCustom_thenStatus201() throws Exception {
+		logger.trace("########################################################");
+		logger.trace("########################################################");
+		logger.trace("whenPostNewSimpleCandidateCustom_thenStatus201 - START");
+		logger.trace("########################################################");
+		logger.trace("########################################################");
+		User userThatProvidesToInsert = getFakeUser();
+		CoursePage testCoursePage = getFakeCoursePage();
+		CandidateStates testCandidateState = getFakeCandidateState();
+		String testEmail = "aaa@aaa.it" ;
+		String testFirstname = "Giuseppe" ;
+		String testLastname = "Rossi" ;
+        /*
+		mvc.perform( MockMvcRequestBuilders
+			      .post(SERVICE_URI)
+			      .content(asJsonString(new RequestCandidateCustom(userThatProvidesToInsert.getId(), testEmail, testFirstname, testLastname, testCoursePage.getCode(), userThatProvidesToInsert.getId())))
+			      .contentType(MediaType.APPLICATION_JSON)
+			      .accept(MediaType.APPLICATION_JSON))
+			      .andExpect(status().isCreated())
+//			      .andExpect(MockMvcResultMatchers.jsonPath("$.employeeId").exists())
+			      ;
+		*/
+		RequestBuilder request = post(SERVICE_URI)
+		        .param("email", testEmail)
+		        .param("firstname",testFirstname)
+		        .param("lastname",testLastname)
+		        .param("userId",""+userThatProvidesToInsert.getId().longValue())
+		        .param("insertedBy",""+userThatProvidesToInsert.getId().longValue())
+		        .param("courseCode",testCoursePage.getCode())
+//		        .with(csrf())
+		        ;
+
+		    mvc
+		        .perform(request)
+		        .andDo(MockMvcResultHandlers.print())
+		        .andExpect(status().isCreated())
+//		        .andExpect(redirectedUrl("/"))
+		        ;
+		logger.trace("########################################################");
+		logger.trace("########################################################");
+		logger.trace("whenPostNewSimpleCandidateCustom_thenStatus201 - END");
+		logger.trace("########################################################");
+		logger.trace("########################################################");
 	}
 	
 	

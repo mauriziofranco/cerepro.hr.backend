@@ -72,10 +72,7 @@ public class CandidateCustomController {
 	@Autowired
 	private CandidateService candidateService;
 
-	@Value("${app.folder.candidate.profile.img}")
-	private String IMG_DIR;
-	@Value("${app.folder.candidate.cv}")
-	private String CV_DIR;	
+	
 
 
 	public static final Logger logger = LoggerFactory.getLogger(CandidateCustomController.class);
@@ -87,8 +84,7 @@ public class CandidateCustomController {
 	private UserSurveyTokenRepository userSurveyTokenRepository;
 	@Autowired
 	private SurveyReplyRepository surveyReplyRepository;
-	@Autowired
-	private CoursePageService coursePageService ;
+	
 
 //	/**
 //	 * getAllCandidateCustom method gets all candidates custom
@@ -155,8 +151,6 @@ public class CandidateCustomController {
 		return new ResponseEntity<Page<ListedCandidateCustom>>(cC, HttpStatus.OK);
 	}
 
-	/******** PAGEABLE *******/
-
 	/**
 	 * getCandidateCustomById method gets a candidateCustom by id
 	 * 
@@ -165,16 +159,19 @@ public class CandidateCustomController {
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<CeReProAbstractEntity> getCandidateCustomById(@PathVariable("id") final Long id) {
+		logger.info("getCandidateCustomById - START - with id: {}", id);
 		CandidateCustom candidateCustom = candidateService.getCustomById(id);
 		if (candidateCustom == null) {
-			return new ResponseEntity<>(new CustomErrorType("candidateCustom with id " + id + " not found"),
-					HttpStatus.NOT_FOUND);
+//			return new ResponseEntity<>(new CustomErrorType("candidateCustom with id " + id + " not found"),
+//					HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 
 		return new ResponseEntity<>(candidateCustom, HttpStatus.OK);
 	}
 	
-	
+	/*
+	 * COMMENTED BECAUSE FOR NOW, NOT USED ---> maurizio
 	@GetMapping("/code/{code}")
 	public ResponseEntity<List<ListedCandidateCustom>> listAllCandidateByCode(@PathVariable("code") final String code) {
 		logger.info("started");
@@ -185,7 +182,7 @@ public class CandidateCustomController {
 		}else
 			return new ResponseEntity<List<ListedCandidateCustom>>(candidates, HttpStatus.OK);
 	}
-	
+	*/
 	
 	
 
@@ -195,178 +192,123 @@ public class CandidateCustomController {
 	 * @param candidate to be created
 	 * @return a new ResponseEntity with the given status code
 	 */
+	//COMENTED----> OLD VERSION
+//	@Transactional
+//	@PostMapping(value = "/")
+//	public ResponseEntity<CeReProAbstractEntity> createCandidateCustom(@ModelAttribute final RequestCandidateCustom candidateCustom) {
+//		logger.info("Creating candidateCustom : {}", candidateCustom);
+//		
+//		if (roleRepository.findByLevel(Role.JAVA_COURSE_CANDIDATE_LEVEL) == null) {
+//
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to create new Candidate. Level " + Role.JAVA_COURSE_CANDIDATE_LEVEL + " is not present in database."),
+//					HttpStatus.CONFLICT);
+//		}
+//		User user = null ;
+//		Optional<User> optUser = userRepository.findByEmail(candidateCustom.getEmail()) ;
+//		if (optUser.isPresent()) {
+//			user = optUser.get();
+//			return new ResponseEntity<>(new CustomErrorType("Unable to create new user. A Candidate with email "
+//					+ candidateCustom.getEmail() + " already exist."), HttpStatus.CONFLICT);
+//		} else { 
+//
+//
+//			user = new User();
+//	
+//			user.setEmail(candidateCustom.getEmail());
+//			user.setFirstname(candidateCustom.getFirstname());
+//			user.setLastname(candidateCustom.getLastname());
+//			user.setNote(candidateCustom.getNote());
+//			System.out.println("Local date time: " + candidateCustom.getDateOfBirth());
+//			Date inputDate = candidateCustom.getDateOfBirth();
+//	
+//			if (inputDate != null) {
+//				SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+//				String inputStringDate = formatter.format(inputDate);
+//				System.out.println("inputStringDate " + inputStringDate);
+//	
+//				if (inputStringDate.equals("11-nov-1111")) {
+//					user.setDateOfBirth(null);
+//				} else {
+//					LocalDate dateToDB = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//					user.setDateOfBirth(dateToDB);
+//				}
+//			}
+//			user.setRegdate(LocalDateTime.now());
+//			user.setRole(Role.JAVA_COURSE_CANDIDATE_LEVEL);
+//	
+//			//User userforCandidate = userRepository.save(user);
+//			userRepository.save(user);
+//		}
+//
+//		if (candidateCustom.getImgpath() != null) {
+//
+//			try {
+//				String[] nameIdData = saveUploadedFiles(candidateCustom.getFiles(), user.getId().toString());
+//				logger.info("nameIdData:" + nameIdData[0]);
+//				user.setImgpath(nameIdData[0]);
+//				//userforCandidate = userRepository.save(user);
+//				userRepository.save(user);
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
+//
+//		Candidate candidate = new Candidate();
+//
+////		candidate.setUserId(userforCandidate.getId());
+//		candidate.setUserId(user.getId());
+//		candidate.setDomicileCity(candidateCustom.getDomicileCity());
+////		candidate.setDomicileHouseNumber(candidateCustom.getDomicileHouseNumber());
+////		candidate.setDomicileStreetName(candidateCustom.getDomicileStreetName());
+//		candidate.setStudyQualification(candidateCustom.getStudyQualification());
+//		candidate.setGraduate(candidateCustom.getGraduate());
+//		candidate.setHighGraduate(candidateCustom.getHighGraduate());
+//		candidate.setStillHighStudy(candidateCustom.getStillHighStudy());
+//		candidate.setMobile(candidateCustom.getMobile());
+//		candidate.setCourseCode(coursePageService.checkCoursePageCode(candidateCustom.getCourseCode()));
+//		//TODO: AGGIUNGERE UN CONTROLLO SUL COURSE CODE SE NON è PRESENTE NEL DATABASE METTERNE UNO DI DEFAULT --> candidatura generica!!!!
+////		candidate.setNote(candidateCustom.getNote());
+//		candidate.setCandidacyDateTime(LocalDateTime.now());
+//		if (candidateCustom.getCvExternalPath() != null) {
+//
+//			try {
+//
+//				String[] nameIdData = saveUploadedFiles(candidateCustom.getFiles(), user.getId().toString());
+//				logger.info("nameIdData:" + nameIdData[1]);
+//				candidate.setCvExternalPath(nameIdData[1]);
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//		}
+//
+//		candidateService.insert(candidate);
+//
+//		logger.info("END POST");
+//		return new ResponseEntity<>(candidate, HttpStatus.CREATED);
+//
+//	}	
 	@Transactional
 	@PostMapping(value = "/")
-	public ResponseEntity<CeReProAbstractEntity> createCandidateCustom(@ModelAttribute final RequestCandidateCustom candidateCustom) {
-		logger.info("Creating candidateCustom : {}", candidateCustom);
-		
-		if (roleRepository.findByLevel(Role.JAVA_COURSE_CANDIDATE_LEVEL) == null) {
+	//public ResponseEntity<CeReProAbstractEntity> insert(@ModelAttribute final RequestCandidateCustom requestCandidateCustom) {
+	public ResponseEntity insert(@ModelAttribute RequestCandidateCustom requestCandidateCustom) {
+		logger.info("insert : {}", requestCandidateCustom);
 
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to create new Candidate. Level " + Role.JAVA_COURSE_CANDIDATE_LEVEL + " is not present in database."),
-					HttpStatus.CONFLICT);
-		}
-		User user = null ;
-		Optional<User> optUser = userRepository.findByEmail(candidateCustom.getEmail()) ;
-		if (optUser.isPresent()) {
-			user = optUser.get();
-			return new ResponseEntity<>(new CustomErrorType("Unable to create new user. A Candidate with email "
-					+ candidateCustom.getEmail() + " already exist."), HttpStatus.CONFLICT);
-		} else { 
-
-
-			user = new User();
-	
-			user.setEmail(candidateCustom.getEmail());
-			user.setFirstname(candidateCustom.getFirstname());
-			user.setLastname(candidateCustom.getLastname());
-			user.setNote(candidateCustom.getNote());
-			System.out.println("Local date time: " + candidateCustom.getDateOfBirth());
-			Date inputDate = candidateCustom.getDateOfBirth();
-	
-			if (inputDate != null) {
-				SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-				String inputStringDate = formatter.format(inputDate);
-				System.out.println("inputStringDate " + inputStringDate);
-	
-				if (inputStringDate.equals("11-nov-1111")) {
-					user.setDateOfBirth(null);
-				} else {
-					LocalDate dateToDB = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-					user.setDateOfBirth(dateToDB);
-				}
-			}
-			user.setRegdate(LocalDateTime.now());
-			user.setRole(Role.JAVA_COURSE_CANDIDATE_LEVEL);
-	
-			//User userforCandidate = userRepository.save(user);
-			userRepository.save(user);
+		try {
+			candidateService.createNewCandidate(requestCandidateCustom);
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			logger.error("ERROR in inserting new candidate: ", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		if (candidateCustom.getImgpath() != null) {
-
-			try {
-				String[] nameIdData = saveUploadedFiles(candidateCustom.getFiles(), user.getId().toString());
-				logger.info("nameIdData:" + nameIdData[0]);
-				user.setImgpath(nameIdData[0]);
-				//userforCandidate = userRepository.save(user);
-				userRepository.save(user);
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
-
-		Candidate candidate = new Candidate();
-
-//		candidate.setUserId(userforCandidate.getId());
-		candidate.setUserId(user.getId());
-		candidate.setDomicileCity(candidateCustom.getDomicileCity());
-//		candidate.setDomicileHouseNumber(candidateCustom.getDomicileHouseNumber());
-//		candidate.setDomicileStreetName(candidateCustom.getDomicileStreetName());
-		candidate.setStudyQualification(candidateCustom.getStudyQualification());
-		candidate.setGraduate(candidateCustom.getGraduate());
-		candidate.setHighGraduate(candidateCustom.getHighGraduate());
-		candidate.setStillHighStudy(candidateCustom.getStillHighStudy());
-		candidate.setMobile(candidateCustom.getMobile());
-		candidate.setCourseCode(coursePageService.checkCoursePageCode(candidateCustom.getCourseCode()));
-		//TODO: AGGIUNGERE UN CONTROLLO SUL COURSE CODE SE NON è PRESENTE NEL DATABASE METTERNE UNO DI DEFAULT --> candidatura generica!!!!
-//		candidate.setNote(candidateCustom.getNote());
-		candidate.setCandidacyDateTime(LocalDateTime.now());
-		if (candidateCustom.getCvExternalPath() != null) {
-
-			try {
-
-				String[] nameIdData = saveUploadedFiles(candidateCustom.getFiles(), user.getId().toString());
-				logger.info("nameIdData:" + nameIdData[1]);
-				candidate.setCvExternalPath(nameIdData[1]);
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-		}
-
-		candidateService.insert(candidate);
-
-		logger.info("END POST");
-		return new ResponseEntity<>(candidate, HttpStatus.CREATED);
+//		logger.info("END POST");
+		// return new ResponseEntity<>(candidate, HttpStatus.CREATED);
 
 	}	
 
-	// Save Files
-	private String[] saveUploadedFiles(MultipartFile[] files, String userId) throws IOException {
-		logger.info("saveUploadedFiles - START");
-		// Make sure directory exists!
-		File uploadImgDir = new File(IMG_DIR);
-		uploadImgDir.mkdirs();
-		File uploadCvDir = new File(CV_DIR);
-		uploadCvDir.mkdirs();
-
-		StringBuilder sb = new StringBuilder();
-		logger.info("saveUploadedFiles - DEBUG 1");
-		String[] nameIdData = new String[2];
-		for (MultipartFile file : files) {
-
-			if (file.isEmpty()) {
-				continue;
-			}
-			String uploadFilePath = null;
-			logger.info("saveUploadedFiles - DEBUG 2");
-			StringTokenizer st = new StringTokenizer(file.getOriginalFilename(), ".");
-			String name = st.nextToken();
-			String extension = st.nextToken();
-			String fileName = file.getOriginalFilename();
-
-			if (fileName.endsWith("jpg")) {
-				extension = ".jpg";
-				uploadFilePath = IMG_DIR + File.pathSeparator + userId + file.getOriginalFilename();
-				nameIdData[0] = userId + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.1 - nameIdData[0]: " + nameIdData[0]);
-				uploadFilePath = IMG_DIR + File.separatorChar + nameIdData[0];
-			}
-			if (fileName.endsWith("jpeg")) {
-				extension = ".jpeg";
-				uploadFilePath = IMG_DIR + File.pathSeparator + userId + file.getOriginalFilename();
-				nameIdData[0] = userId + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.2 - nameIdData[0]: " + nameIdData[0]);
-				uploadFilePath = IMG_DIR + File.separatorChar + nameIdData[0];
-			}
-			if (fileName.endsWith("png")) {
-				extension = ".png";
-				uploadFilePath = IMG_DIR + File.pathSeparator + userId + file.getOriginalFilename();
-				nameIdData[0] = userId + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.3 - nameIdData[0]: " + nameIdData[0]);
-				uploadFilePath = IMG_DIR + File.separatorChar + nameIdData[0];
-			}
-			if (fileName.endsWith("docx")) {
-				extension = ".docx";
-				nameIdData[1] = userId + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.4 - nameIdData[1]: " + nameIdData[1]);
-				uploadFilePath = CV_DIR + File.separatorChar + nameIdData[1];
-			}
-			if (fileName.endsWith("doc")) {
-				extension = ".doc";
-				nameIdData[1] = userId + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.5 - nameIdData[1]: " + nameIdData[1]);
-				uploadFilePath = CV_DIR + File.separatorChar + nameIdData[1];
-			}
-			if (fileName.endsWith("pdf")) {
-				extension = ".pdf";
-				nameIdData[1] = userId + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.6 - nameIdData[1]: " + nameIdData[1]);
-				uploadFilePath = CV_DIR + File.separatorChar + nameIdData[1];
-			}
-
-			logger.info("saveUploadedFiles - DEBUG 3 - uploadFilePath: " + uploadFilePath);
-			byte[] bytes = file.getBytes();
-			logger.info("saveUploadedFiles - DEBUG 3.5 - bytes.length: " + bytes.length);
-			FileOutputStream fos = new FileOutputStream(uploadFilePath);
-			fos.write(bytes);
-
-			logger.info("saveUploadedFiles - DEBUG 5");
-		}
-		logger.info("saveUploadedFiles - DEBUG 6");
-		return nameIdData;
-	}
 
 	/**
 	 * updateCandidateCustom method updates a candidate custom
@@ -426,13 +368,13 @@ public class CandidateCustomController {
 			try {
 
 				// save newImg
-				String[] nameIdData = saveUploadedFiles(candidateCustom.getFiles(),
+				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
 						candidateCustom.getUserId().toString());
 				logger.info("nameIdData:" + nameIdData[0]);
 				currentUser.setImgpath(nameIdData[0]);
 
 				// delete oldImg
-				String sPath = IMG_DIR + File.separatorChar + candidateCustom.getOldImg();
+				String sPath = candidateService.IMG_DIR + File.separatorChar + candidateCustom.getOldImg();
 				Path path = Paths.get(sPath);
 				Files.delete(path);
 
@@ -450,7 +392,7 @@ public class CandidateCustomController {
 			try {
 
 				// save firstNewImg
-				String[] nameIdData = saveUploadedFiles(candidateCustom.getFiles(),
+				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
 						candidateCustom.getUserId().toString());
 				logger.info("nameIdData:" + nameIdData[0]);
 				currentUser.setImgpath(nameIdData[0]);
@@ -475,7 +417,7 @@ public class CandidateCustomController {
 		currentCandidate.setHighGraduate(candidateCustom.getHighGraduate());
 		currentCandidate.setStillHighStudy(candidateCustom.getStillHighStudy());
 		currentCandidate.setMobile(candidateCustom.getMobile());
-		currentCandidate.setCandidateStatesId(candidateCustom.getCandidateStatesId());
+		currentCandidate.setCandidateStatusCode(candidateCustom.getCandidateStatesId());
 		
 		//System.out.println("candidateStatesId: "+currentCandidate.getCandidateStatesId());
 		//System.out.println("OLDCV: " + candidateCustom.getOldCV());
@@ -491,13 +433,13 @@ public class CandidateCustomController {
 			try {
 
 				// save newCv
-				String[] nameIdData = saveUploadedFiles(candidateCustom.getFiles(),
+				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
 						candidateCustom.getUserId().toString());
 				logger.info("nameIdData:" + nameIdData[1]);
 				currentCandidate.setCvExternalPath(nameIdData[1]);
 
 				// delete oldCV
-				String sPath = CV_DIR + File.separatorChar + candidateCustom.getOldCV();
+				String sPath = candidateService.CV_DIR + File.separatorChar + candidateCustom.getOldCV();
 				Path path = Paths.get(sPath);
 				Files.delete(path);
 
@@ -515,7 +457,7 @@ public class CandidateCustomController {
 			try {
 
 				// save firstCV
-				String[] nameIdData = saveUploadedFiles(candidateCustom.getFiles(),
+				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
 						candidateCustom.getUserId().toString());
 				logger.info("nameIdData:" + nameIdData[1]);
 				currentCandidate.setCvExternalPath(nameIdData[1]);
@@ -586,7 +528,7 @@ public class CandidateCustomController {
 
 			if (userOpt.get().getImgpath() != null) {
 
-				String sPath = IMG_DIR + File.separatorChar + userOpt.get().getImgpath();
+				String sPath = candidateService.IMG_DIR + File.separatorChar + userOpt.get().getImgpath();
 				Path path = Paths.get(sPath);
 				try {
 					Files.delete(path);
@@ -597,7 +539,7 @@ public class CandidateCustomController {
 
 			if (currentCandidate.getCvExternalPath() != null) {
 
-				String sPath = CV_DIR + File.separatorChar + currentCandidate.getCvExternalPath();
+				String sPath = candidateService.CV_DIR + File.separatorChar + currentCandidate.getCvExternalPath();
 				Path path = Paths.get(sPath);
 				try {
 					Files.delete(path);

@@ -9,27 +9,26 @@ import java.util.Date;
 public class RequestCandidateCustom extends RequestCustom {
 
 	
+	/**
+	 * Need for Spring auto conversion in controller methods input
+	 */
 	public RequestCandidateCustom() {
 
 	}
 
 	public RequestCandidateCustom(Long id, Long userId, String domicileCity, String studyQualification, Boolean graduate, Boolean highGraduate,
 			Boolean stillHighStudy, String mobile, String cvExternalPath, String email, String firstname,
-			String lastname, Date dateOfBirth, String imgpath, String courseCode, String note) {
+			String lastname, Date dateOfBirth, String imgpath, String courseCode, String note, Long insertedBy) {
 		super(id, userId, domicileCity, studyQualification, graduate, highGraduate,
-				stillHighStudy, mobile, cvExternalPath, email, firstname, lastname, dateOfBirth, imgpath, courseCode, note);
+				stillHighStudy, mobile, cvExternalPath, email, firstname, lastname, dateOfBirth, imgpath, courseCode, note, insertedBy);
 	}
-
-	@Override
-	public String toString() {
-		return "RequestCandidateCustom [firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
-				+ ", id=" + id + ", userId=" + userId + ", domicileCity=" + domicileCity + ", studyQualification="
-				+ studyQualification + ", graduate=" + graduate + ", highGraduate=" + highGraduate + ", stillHighStudy="
-				+ stillHighStudy + ", mobile=" + mobile + ", cvExternalPath=" + cvExternalPath + ", dateOfBirth="
-				+ dateOfBirth + ", imgpath=" + imgpath + ", courseCode=" + courseCode + ", note=" + note + "]";
+	
+	/**
+	 *  For test: whenPostNewSimpleCandidateCustom_thenStatus201
+	 */
+	public RequestCandidateCustom(Long userId, String email, String firstname, String lastname, String courseCode, Long insertedBy) {
+		super(null, userId, null, null, null, null, null, null, null, email, firstname, lastname, null, null, courseCode, null, insertedBy);
 	}
-
-
 	
 	
 

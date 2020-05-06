@@ -37,7 +37,7 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 	protected String imgpath;
 	protected String oldImg;
 	protected String oldCV;
-	protected Long candidateStatesId;
+	protected Long candidateStatusCode;
 
 	public RequestUpdateCustom() {
 
@@ -47,7 +47,7 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 			String domicileHouseNumber, String studyQualification, Boolean graduate, Boolean highGraduate,
 			Boolean stillHighStudy, String mobile, String cvExternalPath, String email, String firstname,
 			String lastname, Date dateOfBirth, String note, String imgpath, String oldImg, String oldCV,
-			MultipartFile[] files, Long candidateStatesId) {
+			MultipartFile[] files, Long candidateStatusCode) {
 		super();
 		this.id = id;
 		this.userId = userId;
@@ -69,7 +69,7 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 		this.oldImg = oldImg;
 		this.oldCV = oldCV;
 		this.files = files;
-		this.candidateStatesId = candidateStatesId;
+		this.candidateStatusCode = candidateStatusCode;
 	}
 
 	/**
@@ -352,14 +352,14 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 	 * @return the candidateStatesId
 	 */
 	public Long getCandidateStatesId() {
-		return candidateStatesId;
+		return candidateStatusCode;
 	}
 
 	/**
 	 * @param candidateStatesId the candidateStatesId to set
 	 */
 	public void setCandidateStatesId(Long candidateStatesId) {
-		this.candidateStatesId = candidateStatesId;
+		this.candidateStatusCode = candidateStatesId;
 	}
 
 	/* (non-Javadoc)
@@ -373,7 +373,7 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 				+ highGraduate + ", stillHighStudy=" + stillHighStudy + ", mobile=" + mobile + ", cvExternalPath="
 				+ cvExternalPath + ", email=" + email + ", firstname=" + firstname + ", lastname=" + lastname
 				+ ", note=" + note + ", dateOfBirth=" + dateOfBirth + ", imgpath=" + imgpath + ", oldImg=" + oldImg
-				+ ", oldCV=" + oldCV + ", candidateStatesId=" + candidateStatesId + ", files=" + Arrays.toString(files)
+				+ ", oldCV=" + oldCV + ", candidateStatesId=" + candidateStatusCode + ", files=" + Arrays.toString(files)
 				+ "]";
 	}
 

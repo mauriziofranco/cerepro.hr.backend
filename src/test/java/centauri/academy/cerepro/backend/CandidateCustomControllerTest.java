@@ -65,6 +65,14 @@ public class CandidateCustomControllerTest {
  		
 	}
 	
+	/**
+	 * teardown() method sets userController to null
+	 */
+	@After
+	public void teardown() {
+		candidateCustomController = null;
+	}
+	
 //	/**
 //     * testGetAllCandidateCustom() method tests if the method getAllCandidateCustom()
 //     * is really able to select all tuples from the candidates' and user table
@@ -296,11 +304,4 @@ public class CandidateCustomControllerTest {
 //		logger.info("testUpdateUserKOForRole()  ---------------------- END");
 //	}
 	 
-	/**
-     * teardown() method sets userController to null
-     */
-	@After
-	public void teardown() {
-		candidateCustomController = null;
-	}
 }
