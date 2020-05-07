@@ -195,7 +195,7 @@ public class ItConsultantCustomController {
 
 	@Transactional
 	@PostMapping(value = "/")
-	public ResponseEntity<?> createItConsultantCustom(@Valid @RequestBody  @ModelAttribute final RequestItConsultantCustom itConsultantCustom) {
+	public ResponseEntity<Object> createItConsultantCustom(@Valid @RequestBody  @ModelAttribute RequestItConsultantCustom itConsultantCustom) {
 		logger.info("Creating itConsultantCustom : {}", itConsultantCustom);
 //		boolean imgIsPresent = false;
 //		boolean cvIsPresent = false;
@@ -369,159 +369,160 @@ public class ItConsultantCustomController {
 	 * @param user with the fields updated
 	 * @return a new ResponseEntity with the given status code
 	 */
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<CeReProAbstractEntity> updateItConsultantCustom(@PathVariable("id") final Long id,
-			@ModelAttribute final RequestUpdateItConsultantCustom itConsultantCustom) {
-		System.out.println("####### Updating itConsultantCustom : {}" + itConsultantCustom);
-
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
-		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-
-//		boolean imgIsPresent = false;
-//		boolean cvIsPresent = false;
-
-		if (itConsultantCustom == null) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to update. itConsultantCustom with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
-		}
-
-		System.out.println("############ PUT ENTRATO: ");
-		System.out.println(itConsultantCustom.getUserId());
-
-//		ItConsultantCustom candidateCurrentCustom = candidateRepository.getSingleCustomItConsultant(id);
-
-		Optional<User> optUser = userRepository.findById(itConsultantCustom.getUserId());
-
-		User currentUser = optUser.get();
-
-		currentUser.setEmail(itConsultantCustom.getEmail());
-		currentUser.setFirstname(itConsultantCustom.getFirstname());
-		logger.info("itConsultantCustom.getFirstname() : {}", itConsultantCustom.getFirstname());
-		currentUser.setLastname(itConsultantCustom.getLastname());
-		Date inputDate = itConsultantCustom.getDateOfBirth();
-		if (inputDate != null) {
-			LocalDate dateToDB = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			currentUser.setDateOfBirth(dateToDB);
-		}
-
-		System.out.println("OLDIMG: " + itConsultantCustom.getOldImg());
-		System.out.println("NewIMG: " + itConsultantCustom.getImgpath());
-		String oldImg = itConsultantCustom.getOldImg();
-		String newImg = itConsultantCustom.getImgpath();
-
-		// se si oldImg e si newImg
-		if (newImg != null && !oldImg.equals("null") && !newImg.equals("null")) {
-//			imgIsPresent = true;
-//			String imgPath = "img/" +itConsultantCustom.getUserId()+itConsultantCustom.getImgpath();
-			try {
-
-				// save newImg
-				String[] nameIdData = saveUploadedFiles(itConsultantCustom.getFiles(),
-						itConsultantCustom.getUserId().toString());
-				logger.info("nameIdData:" + nameIdData[0]);
-				currentUser.setImgpath(nameIdData[0]);
-
-				// delete oldImg
-				String sPath = IMG_DIR + File.separatorChar + itConsultantCustom.getOldImg();
-				Path path = Paths.get(sPath);
-				Files.delete(path);
-
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
-
-		// se no oldImg si newImg
-		if (newImg != null && oldImg.equals("null") && !newImg.equals("null")) {
-//			imgIsPresent = true;
-//			String imgPath = "img/" +itConsultantCustom.getUserId()+ itConsultantCustom.getImgpath();
-
-			try {
-
-				// save firstNewImg
-				String[] nameIdData = saveUploadedFiles(itConsultantCustom.getFiles(),
-						itConsultantCustom.getUserId().toString());
-				logger.info("nameIdData:" + nameIdData[0]);
-				currentUser.setImgpath(nameIdData[0]);
-
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
-
-		logger.info("Update currentUser : {}", currentUser.toString());
-		userRepository.save(currentUser);
-
-		Optional<ItConsultant> candidate = itConsultantRepository.findById(id);
-
-		ItConsultant currentItConsultant = candidate.get();
-		currentItConsultant.setDomicileCity(itConsultantCustom.getDomicileCity());
-		currentItConsultant.setDomicileHouseNumber(itConsultantCustom.getDomicileHouseNumber());
-		currentItConsultant.setDomicileStreetName(itConsultantCustom.getDomicileStreetName());
-		currentItConsultant.setStudyQualification(itConsultantCustom.getStudyQualification());
-		currentItConsultant.setGraduate(itConsultantCustom.getGraduate());
-		currentItConsultant.setHighGraduate(itConsultantCustom.getHighGraduate());
-		currentItConsultant.setStillHighStudy(itConsultantCustom.getStillHighStudy());
-		currentItConsultant.setMobile(itConsultantCustom.getMobile());
-
-		System.out.println("OLDCV: " + itConsultantCustom.getOldCV());
-		System.out.println("NewCV: " + itConsultantCustom.getCvExternalPath());
-		String oldCV = itConsultantCustom.getOldCV();
-		String newCV = itConsultantCustom.getCvExternalPath();
-
-		// se si oldCV si newCV
-		if (newCV != null && !oldCV.equals("null") && !newCV.equals("null")) {
-//			cvIsPresent = true;
-//			String cvPath = "curriculumvitae/" +itConsultantCustom.getUserId()+ itConsultantCustom.getCvExternalPath();
-
-			try {
-
-				// save newCv
-				String[] nameIdData = saveUploadedFiles(itConsultantCustom.getFiles(),
-						itConsultantCustom.getUserId().toString());
-				logger.info("nameIdData:" + nameIdData[1]);
-				currentItConsultant.setCvExternalPath(nameIdData[1]);
-
-				// delete oldCV
-				String sPath = CV_DIR + File.separatorChar + itConsultantCustom.getOldCV();
-				Path path = Paths.get(sPath);
-				Files.delete(path);
-
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
-
-		// se no oldCV si newCV
-		if (newCV != null && oldCV.equals("null") && !newCV.equals("null")) {
-//			cvIsPresent = true;
-//			String cvPath = "curriculumvitae/" +itConsultantCustom.getUserId()+ itConsultantCustom.getCvExternalPath();
-
-			try {
-
-				// save firstCV
-				String[] nameIdData = saveUploadedFiles(itConsultantCustom.getFiles(),
-						itConsultantCustom.getUserId().toString());
-				logger.info("nameIdData:" + nameIdData[1]);
-				currentItConsultant.setCvExternalPath(nameIdData[1]);
-
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
-
-		itConsultantRepository.save(currentItConsultant);
-
-		logger.info("END PUT");
-		return new ResponseEntity<>(itConsultantCustom, HttpStatus.OK);
-	}
+//	COMMENTED BY MAURIZIO BECAUSE USERID_REMOVED FROM UPPER CUSTOM CLASS
+//	@PutMapping(value = "/{id}")
+//	public ResponseEntity<Object> updateItConsultantCustom(@PathVariable("id") final Long id,
+//			@ModelAttribute final RequestUpdateItConsultantCustom itConsultantCustom) {
+//		System.out.println("####### Updating itConsultantCustom : {}" + itConsultantCustom);
+//
+//		ObjectMapper objectMapper = new ObjectMapper();
+//
+//		objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
+//		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+//
+////		boolean imgIsPresent = false;
+////		boolean cvIsPresent = false;
+//
+//		if (itConsultantCustom == null) {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to update. itConsultantCustom with id " + id + " not found."),
+//					HttpStatus.NOT_FOUND);
+//		}
+//
+//		System.out.println("############ PUT ENTRATO: ");
+////		System.out.println(itConsultantCustom.getUserId());
+//
+////		ItConsultantCustom candidateCurrentCustom = candidateRepository.getSingleCustomItConsultant(id);
+//
+//		Optional<User> optUser = userRepository.findById(itConsultantCustom.getUserId());
+//
+//		User currentUser = optUser.get();
+//
+//		currentUser.setEmail(itConsultantCustom.getEmail());
+//		currentUser.setFirstname(itConsultantCustom.getFirstname());
+//		logger.info("itConsultantCustom.getFirstname() : {}", itConsultantCustom.getFirstname());
+//		currentUser.setLastname(itConsultantCustom.getLastname());
+//		Date inputDate = itConsultantCustom.getDateOfBirth();
+//		if (inputDate != null) {
+//			LocalDate dateToDB = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//			currentUser.setDateOfBirth(dateToDB);
+//		}
+//
+//		System.out.println("OLDIMG: " + itConsultantCustom.getOldImg());
+//		System.out.println("NewIMG: " + itConsultantCustom.getImgpath());
+//		String oldImg = itConsultantCustom.getOldImg();
+//		String newImg = itConsultantCustom.getImgpath();
+//
+//		// se si oldImg e si newImg
+//		if (newImg != null && !oldImg.equals("null") && !newImg.equals("null")) {
+////			imgIsPresent = true;
+////			String imgPath = "img/" +itConsultantCustom.getUserId()+itConsultantCustom.getImgpath();
+//			try {
+//
+//				// save newImg
+//				String[] nameIdData = saveUploadedFiles(itConsultantCustom.getFiles(),
+//						itConsultantCustom.getUserId().toString());
+//				logger.info("nameIdData:" + nameIdData[0]);
+//				currentUser.setImgpath(nameIdData[0]);
+//
+//				// delete oldImg
+//				String sPath = IMG_DIR + File.separatorChar + itConsultantCustom.getOldImg();
+//				Path path = Paths.get(sPath);
+//				Files.delete(path);
+//
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
+//
+//		// se no oldImg si newImg
+//		if (newImg != null && oldImg.equals("null") && !newImg.equals("null")) {
+////			imgIsPresent = true;
+////			String imgPath = "img/" +itConsultantCustom.getUserId()+ itConsultantCustom.getImgpath();
+//
+//			try {
+//
+//				// save firstNewImg
+//				String[] nameIdData = saveUploadedFiles(itConsultantCustom.getFiles(),
+//						itConsultantCustom.getUserId().toString());
+//				logger.info("nameIdData:" + nameIdData[0]);
+//				currentUser.setImgpath(nameIdData[0]);
+//
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
+//
+//		logger.info("Update currentUser : {}", currentUser.toString());
+//		userRepository.save(currentUser);
+//
+//		Optional<ItConsultant> candidate = itConsultantRepository.findById(id);
+//
+//		ItConsultant currentItConsultant = candidate.get();
+//		currentItConsultant.setDomicileCity(itConsultantCustom.getDomicileCity());
+//		currentItConsultant.setDomicileHouseNumber(itConsultantCustom.getDomicileHouseNumber());
+//		currentItConsultant.setDomicileStreetName(itConsultantCustom.getDomicileStreetName());
+//		currentItConsultant.setStudyQualification(itConsultantCustom.getStudyQualification());
+//		currentItConsultant.setGraduate(itConsultantCustom.getGraduate());
+//		currentItConsultant.setHighGraduate(itConsultantCustom.getHighGraduate());
+//		currentItConsultant.setStillHighStudy(itConsultantCustom.getStillHighStudy());
+//		currentItConsultant.setMobile(itConsultantCustom.getMobile());
+//
+//		System.out.println("OLDCV: " + itConsultantCustom.getOldCV());
+//		System.out.println("NewCV: " + itConsultantCustom.getCvExternalPath());
+//		String oldCV = itConsultantCustom.getOldCV();
+//		String newCV = itConsultantCustom.getCvExternalPath();
+//
+//		// se si oldCV si newCV
+//		if (newCV != null && !oldCV.equals("null") && !newCV.equals("null")) {
+////			cvIsPresent = true;
+////			String cvPath = "curriculumvitae/" +itConsultantCustom.getUserId()+ itConsultantCustom.getCvExternalPath();
+//
+//			try {
+//
+//				// save newCv
+//				String[] nameIdData = saveUploadedFiles(itConsultantCustom.getFiles(),
+//						itConsultantCustom.getUserId().toString());
+//				logger.info("nameIdData:" + nameIdData[1]);
+//				currentItConsultant.setCvExternalPath(nameIdData[1]);
+//
+//				// delete oldCV
+//				String sPath = CV_DIR + File.separatorChar + itConsultantCustom.getOldCV();
+//				Path path = Paths.get(sPath);
+//				Files.delete(path);
+//
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
+//
+//		// se no oldCV si newCV
+//		if (newCV != null && oldCV.equals("null") && !newCV.equals("null")) {
+////			cvIsPresent = true;
+////			String cvPath = "curriculumvitae/" +itConsultantCustom.getUserId()+ itConsultantCustom.getCvExternalPath();
+//
+//			try {
+//
+//				// save firstCV
+//				String[] nameIdData = saveUploadedFiles(itConsultantCustom.getFiles(),
+//						itConsultantCustom.getUserId().toString());
+//				logger.info("nameIdData:" + nameIdData[1]);
+//				currentItConsultant.setCvExternalPath(nameIdData[1]);
+//
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
+//
+//		itConsultantRepository.save(currentItConsultant);
+//
+//		logger.info("END PUT");
+//		return new ResponseEntity<>(itConsultantCustom, HttpStatus.OK);
+//	}
 
 	/**
 	 * deleteItConsultant method deletes a candidate and relative user

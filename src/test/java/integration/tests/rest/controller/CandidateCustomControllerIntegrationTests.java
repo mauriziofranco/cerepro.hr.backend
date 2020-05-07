@@ -34,19 +34,13 @@ import centauri.academy.cerepro.service.RoleService;
 import centauri.academy.cerepro.service.UserService;
 
 /**
- * Unit test for CandidateCustomControllerTest
+ * Integration tests CandidateCustomControllerTest methods
  * @author m.franco
  */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest (classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.MOCK)
-//@SpringBootTest (classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-//@SpringBootTest(
-//		  SpringBootTest.WebEnvironment.MOCK,
-//		  classes = Application.class)
-//@SpringBootTest(SpringBootTest.WebEnvironment.MOCK, classes = CeReProBackendApplication.class)
 @AutoConfigureMockMvc
-//@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 //@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class CandidateCustomControllerIntegrationTests extends AbstractIntegrationTests {
 	
@@ -102,7 +96,6 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		logger.trace("whenGetCandidateCustomById_andThereIsOne_thenStatus200 - START");
 		logger.trace("########################################################");
 		logger.trace("########################################################");
-	 
 		Candidate insertedCandidate = getFakeCandidate() ;
 //		RequestMatcher rm = jsonPath("$[0].firstname", is(insertedCandidate.getFirstname()));
 		long candidateId = insertedCandidate.getId().longValue() ;
@@ -142,16 +135,7 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		String testEmail = "aaa@aaa.it" ;
 		String testFirstname = "Giuseppe" ;
 		String testLastname = "Rossi" ;
-        /*
-		mvc.perform( MockMvcRequestBuilders
-			      .post(SERVICE_URI)
-			      .content(asJsonString(new RequestCandidateCustom(userThatProvidesToInsert.getId(), testEmail, testFirstname, testLastname, testCoursePage.getCode(), userThatProvidesToInsert.getId())))
-			      .contentType(MediaType.APPLICATION_JSON)
-			      .accept(MediaType.APPLICATION_JSON))
-			      .andExpect(status().isCreated())
-//			      .andExpect(MockMvcResultMatchers.jsonPath("$.employeeId").exists())
-			      ;
-		*/
+
 		RequestBuilder request = post(SERVICE_URI)
 		        .param("email", testEmail)
 		        .param("firstname",testFirstname)
@@ -166,6 +150,7 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		        .perform(request)
 		        .andDo(MockMvcResultHandlers.print())
 		        .andExpect(status().isCreated())
+		        .andExpect(jsonPath("$.firstname", is(testFirstname)))
 //		        .andExpect(redirectedUrl("/"))
 		        ;
 		logger.trace("########################################################");
@@ -176,20 +161,6 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 	}
 	
 	
-	/*
-	@Test
-	public void whenGetCandidateById_andThereIsOne_thenStatus201() throws Exception {
-		logger.trace("whenGetCandidateById_andThereIsOne_thenStatus201 - START");
-	 
-	    mvc.perform(post("/api/v1/candidate/")
-	    		  .param("id", "1")
-	    	      .param("name", "John Doe")
-//		  .with(user("admin1").roles("ADMIN"))
-//          .with(csrf())
-	      .contentType(MediaType.APPLICATION_JSON))
-	      .andExpect(status().isCreated());
-	      //.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-//	      .andExpect(jsonPath("$[0].name", is("bob")));
-	}
-	*/
+	
+	
 }

@@ -52,10 +52,11 @@ import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
-import centauri.academy.cerepro.rest.request.RequestCandidateCustom;
-import centauri.academy.cerepro.rest.request.RequestUpdateCandidateCustom;
+import centauri.academy.cerepro.rest.request.candidate.RequestCandidateCustom;
+import centauri.academy.cerepro.rest.request.candidate.RequestUpdateCandidateCustom;
 import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.CoursePageService;
+import centauri.academy.cerepro.service.exception.CandidateNotFoundException;
 
 /**
  * 
@@ -301,7 +302,8 @@ public class CandidateCustomController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			logger.error("ERROR in inserting new candidate: ", e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Unable to insert new candidate: " + requestCandidateCustom)  , HttpStatus.BAD_REQUEST);
 		}
 
 //		logger.info("END POST");
@@ -319,164 +321,182 @@ public class CandidateCustomController {
 	 */
 	@Transactional
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CeReProAbstractEntity> updateCandidateCustom(@PathVariable("id") final Long id,
-			@ModelAttribute final RequestUpdateCandidateCustom candidateCustom) {
-		System.out.println("####### Updating candidateCustom : {}" + candidateCustom);
-
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
-		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+	public ResponseEntity<CeReProAbstractEntity> update(@PathVariable("id") Long id,
+			@ModelAttribute RequestUpdateCandidateCustom candidateCustom) {
+//		System.out.println("####### Updating candidateCustom : {}" + candidateCustom);
+		logger.info("update: {} for id: {}", candidateCustom, id);
+		CeReProAbstractEntity objToReturn = null ;
+		try {
+			objToReturn = candidateService.updateCandidate(id, candidateCustom);
+			return new ResponseEntity<CeReProAbstractEntity>(objToReturn, HttpStatus.OK);
+		} catch (CandidateNotFoundException e) {
+			logger.error(e.getMessage());
+			logger.error("ERROR in updating candidate, Candidate not found: ", e);
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Candidate not found. Unable to update candidate: " + candidateCustom)  , HttpStatus.NO_CONTENT);		
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			logger.error("ERROR in updating candidate: ", e);
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Unable to update candidate: " + candidateCustom)  , HttpStatus.BAD_REQUEST);
+		}
+//		ObjectMapper objectMapper = new ObjectMapper();
+//
+//		objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
+//		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 
 //		boolean imgIsPresent = false;
 //		boolean cvIsPresent = false;
 
-		if (candidateCustom == null) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to update. candidateCustom with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
-		}
-
-		System.out.println("############ PUT ENTRATO: ");
-		System.out.println(candidateCustom.getUserId());
+//		if (candidateCustom == null) {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to update. candidateCustom with id " + id + " not found."),
+//					HttpStatus.NOT_FOUND);
+//		}
+//
+//		System.out.println("############ PUT ENTRATO: ");
+//		System.out.println(candidateCustom.getUserId());
 
 //		CandidateCustom candidateCurrentCustom = candidateRepository.getSingleCustomCandidate(id);
 
-		Optional<User> optUser = userRepository.findById(candidateCustom.getUserId());
+//		Optional<User> optUser = userRepository.findById(candidateCustom.getUserId());
 
-		User currentUser = optUser.get();
+//		User currentUser = optUser.get();
+//
+//		currentUser.setEmail(candidateCustom.getEmail());
+//		currentUser.setFirstname(candidateCustom.getFirstname());
+//		logger.info("candidateCustom.getFirstname() : {}", candidateCustom.getFirstname());
+//		currentUser.setLastname(candidateCustom.getLastname());
+//		currentUser.setNote(candidateCustom.getNote());
+//		Date inputDate = candidateCustom.getDateOfBirth();
+//		if (inputDate != null) {
+//			LocalDate dateToDB = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//			currentUser.setDateOfBirth(dateToDB);
+//		}
+//
+//		System.out.println("OLDIMG: " + candidateCustom.getOldImg());
+//		System.out.println("NewIMG: " + candidateCustom.getImgpath());
+//		String oldImg = candidateCustom.getOldImg();
+//		String newImg = candidateCustom.getImgpath();
+//
+//		// se si oldImg e si newImg
+//		if (newImg != null && !oldImg.equals("null") && !newImg.equals("null")) {
+////			imgIsPresent = true;
+////			String imgPath = "img/" +candidateCustom.getUserId()+candidateCustom.getImgpath();
+//			try {
+//
+//				// save newImg
+//				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
+//						candidateCustom.getUserId().toString());
+//				logger.info("nameIdData:" + nameIdData[0]);
+//				currentUser.setImgpath(nameIdData[0]);
+//
+//				// delete oldImg
+//				String sPath = candidateService.IMG_DIR + File.separatorChar + candidateCustom.getOldImg();
+//				Path path = Paths.get(sPath);
+//				Files.delete(path);
+//
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
+//
+//		// se no oldImg si newImg
+//		if (newImg != null && oldImg.equals("null") && !newImg.equals("null")) {
+////			imgIsPresent = true;
+////			String imgPath = "img/" +candidateCustom.getUserId()+ candidateCustom.getImgpath();
+//
+//			try {
+//
+//				// save firstNewImg
+//				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
+//						candidateCustom.getUserId().toString());
+//				logger.info("nameIdData:" + nameIdData[0]);
+//				currentUser.setImgpath(nameIdData[0]);
+//
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
 
-		currentUser.setEmail(candidateCustom.getEmail());
-		currentUser.setFirstname(candidateCustom.getFirstname());
-		logger.info("candidateCustom.getFirstname() : {}", candidateCustom.getFirstname());
-		currentUser.setLastname(candidateCustom.getLastname());
-		currentUser.setNote(candidateCustom.getNote());
-		Date inputDate = candidateCustom.getDateOfBirth();
-		if (inputDate != null) {
-			LocalDate dateToDB = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			currentUser.setDateOfBirth(dateToDB);
-		}
-
-		System.out.println("OLDIMG: " + candidateCustom.getOldImg());
-		System.out.println("NewIMG: " + candidateCustom.getImgpath());
-		String oldImg = candidateCustom.getOldImg();
-		String newImg = candidateCustom.getImgpath();
-
-		// se si oldImg e si newImg
-		if (newImg != null && !oldImg.equals("null") && !newImg.equals("null")) {
-//			imgIsPresent = true;
-//			String imgPath = "img/" +candidateCustom.getUserId()+candidateCustom.getImgpath();
-			try {
-
-				// save newImg
-				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
-						candidateCustom.getUserId().toString());
-				logger.info("nameIdData:" + nameIdData[0]);
-				currentUser.setImgpath(nameIdData[0]);
-
-				// delete oldImg
-				String sPath = candidateService.IMG_DIR + File.separatorChar + candidateCustom.getOldImg();
-				Path path = Paths.get(sPath);
-				Files.delete(path);
-
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
-
-		// se no oldImg si newImg
-		if (newImg != null && oldImg.equals("null") && !newImg.equals("null")) {
-//			imgIsPresent = true;
-//			String imgPath = "img/" +candidateCustom.getUserId()+ candidateCustom.getImgpath();
-
-			try {
-
-				// save firstNewImg
-				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
-						candidateCustom.getUserId().toString());
-				logger.info("nameIdData:" + nameIdData[0]);
-				currentUser.setImgpath(nameIdData[0]);
-
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
-
-		logger.info("Update currentUser : {}", currentUser.toString());
-		userRepository.save(currentUser);
-
-		Optional<Candidate> candidate = candidateService.getById(id);
-
-		Candidate currentCandidate = candidate.get();
-		currentCandidate.setDomicileCity(candidateCustom.getDomicileCity());
-//		currentCandidate.setDomicileHouseNumber(candidateCustom.getDomicileHouseNumber());
-//		currentCandidate.setDomicileStreetName(candidateCustom.getDomicileStreetName());
-		currentCandidate.setStudyQualification(candidateCustom.getStudyQualification());
-		currentCandidate.setGraduate(candidateCustom.getGraduate());
-		currentCandidate.setHighGraduate(candidateCustom.getHighGraduate());
-		currentCandidate.setStillHighStudy(candidateCustom.getStillHighStudy());
-		currentCandidate.setMobile(candidateCustom.getMobile());
-		currentCandidate.setCandidateStatusCode(candidateCustom.getCandidateStatesId());
+//		logger.info("Update currentUser : {}", currentUser.toString());
+//		userRepository.save(currentUser);
+//
+//		Optional<Candidate> candidate = candidateService.getById(id);
+//
+//		Candidate currentCandidate = candidate.get();
+//		currentCandidate.setDomicileCity(candidateCustom.getDomicileCity());
+////		currentCandidate.setDomicileHouseNumber(candidateCustom.getDomicileHouseNumber());
+////		currentCandidate.setDomicileStreetName(candidateCustom.getDomicileStreetName());
+//		currentCandidate.setStudyQualification(candidateCustom.getStudyQualification());
+//		currentCandidate.setGraduate(candidateCustom.getGraduate());
+//		currentCandidate.setHighGraduate(candidateCustom.getHighGraduate());
+//		currentCandidate.setStillHighStudy(candidateCustom.getStillHighStudy());
+//		currentCandidate.setMobile(candidateCustom.getMobile());
+//		currentCandidate.setCandidateStatusCode(candidateCustom.getCandidateStatesId());
+//		
+//		//System.out.println("candidateStatesId: "+currentCandidate.getCandidateStatesId());
+//		//System.out.println("OLDCV: " + candidateCustom.getOldCV());
+//		//System.out.println("NewCV: " + candidateCustom.getCvExternalPath());
+//		String oldCV = candidateCustom.getOldCV();
+//		String newCV = candidateCustom.getCvExternalPath();
+//
+//		// se si oldCV si newCV
+//		if (newCV != null && !oldCV.equals("null") && !newCV.equals("null")) {
+////			cvIsPresent = true;
+////			String cvPath = "curriculumvitae/" +candidateCustom.getUserId()+ candidateCustom.getCvExternalPath();
+//
+//			try {
+//
+//				// save newCv
+//				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
+//						candidateCustom.getUserId().toString());
+//				logger.info("nameIdData:" + nameIdData[1]);
+//				currentCandidate.setCvExternalPath(nameIdData[1]);
+//
+//				// delete oldCV
+//				String sPath = candidateService.CV_DIR + File.separatorChar + candidateCustom.getOldCV();
+//				Path path = Paths.get(sPath);
+//				Files.delete(path);
+//
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
+//
+//		// se no oldCV si newCV
+//		if (newCV != null && oldCV.equals("null") && !newCV.equals("null")) {
+////			cvIsPresent = true;
+////			String cvPath = "curriculumvitae/" +candidateCustom.getUserId()+ candidateCustom.getCvExternalPath();
+//
+//			try {
+//
+//				// save firstCV
+//				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
+//						candidateCustom.getUserId().toString());
+//				logger.info("nameIdData:" + nameIdData[1]);
+//				currentCandidate.setCvExternalPath(nameIdData[1]);
+//
+//			} catch (IOException e) {
+//				logger.error("Error", e);
+//			}
+//
+//		}
 		
-		//System.out.println("candidateStatesId: "+currentCandidate.getCandidateStatesId());
-		//System.out.println("OLDCV: " + candidateCustom.getOldCV());
-		//System.out.println("NewCV: " + candidateCustom.getCvExternalPath());
-		String oldCV = candidateCustom.getOldCV();
-		String newCV = candidateCustom.getCvExternalPath();
-
-		// se si oldCV si newCV
-		if (newCV != null && !oldCV.equals("null") && !newCV.equals("null")) {
-//			cvIsPresent = true;
-//			String cvPath = "curriculumvitae/" +candidateCustom.getUserId()+ candidateCustom.getCvExternalPath();
-
-			try {
-
-				// save newCv
-				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
-						candidateCustom.getUserId().toString());
-				logger.info("nameIdData:" + nameIdData[1]);
-				currentCandidate.setCvExternalPath(nameIdData[1]);
-
-				// delete oldCV
-				String sPath = candidateService.CV_DIR + File.separatorChar + candidateCustom.getOldCV();
-				Path path = Paths.get(sPath);
-				Files.delete(path);
-
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
-
-		// se no oldCV si newCV
-		if (newCV != null && oldCV.equals("null") && !newCV.equals("null")) {
-//			cvIsPresent = true;
-//			String cvPath = "curriculumvitae/" +candidateCustom.getUserId()+ candidateCustom.getCvExternalPath();
-
-			try {
-
-				// save firstCV
-				String[] nameIdData = candidateService.uploadFile(candidateCustom.getFiles(),
-						candidateCustom.getUserId().toString());
-				logger.info("nameIdData:" + nameIdData[1]);
-				currentCandidate.setCvExternalPath(nameIdData[1]);
-
-			} catch (IOException e) {
-				logger.error("Error", e);
-			}
-
-		}
+//		//System.out.println("Prima di essere salvato candidateStatesId: "+currentCandidate.getCandidateStatesId());
+//		
+//		candidateService.update(currentCandidate);
+//        
+//		//System.out.println("Dopo essere salvato candidateStatesId: "+currentCandidate.getCandidateStatesId());
+//		//logger.info("Prima della fine della PUT.........................................................................................");
+//		logger.info("END PUT");
+//		return new ResponseEntity<>(candidateCustom, HttpStatus.OK);
 		
-		//System.out.println("Prima di essere salvato candidateStatesId: "+currentCandidate.getCandidateStatesId());
 		
-		candidateService.update(currentCandidate);
-        
-		//System.out.println("Dopo essere salvato candidateStatesId: "+currentCandidate.getCandidateStatesId());
-		//logger.info("Prima della fine della PUT.........................................................................................");
-		logger.info("END PUT");
-		return new ResponseEntity<>(candidateCustom, HttpStatus.OK);
+		
+		
+		
 	}
 
 	/**
@@ -607,68 +627,70 @@ public class CandidateCustomController {
 		}
 	}
 
-	/**
-	 * @author daniele
-	 * 
-	 *         updateCandidateCustom method updates a candidate custom
-	 *         
-	 *         USED BY REACT FRONTEND!!!!!!!!!!!!!!!!!
-	 * 
-	 * @param id   of the user to be updated
-	 * @param user with the fields updated
-	 * @return a new ResponseEntity with the given status code
-	 */
-	@PutMapping(value = "/field/{id}")
-	public ResponseEntity<CeReProAbstractEntity> updateFieldCandidateCustom(@PathVariable("id") final Long id,
-			@RequestBody final CandidateCustom candidateCustom) {
-		if (candidateCustom == null) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to update. candidateCustom with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
-		} else {
-
-			Optional<User> optUser = userRepository.findById(candidateCustom.getUserId());
-
-			if (!optUser.isPresent()) {
-				return new ResponseEntity<>(
-						new CustomErrorType(
-								"Unable to update. user with id " + candidateCustom.getUserId() + " not found."),
-						HttpStatus.NOT_FOUND);
-			} else {
-				User currentUser = optUser.get();
-
-				currentUser.setEmail(candidateCustom.getEmail());
-				currentUser.setFirstname(candidateCustom.getFirstname());
-				currentUser.setLastname(candidateCustom.getLastname());
-				currentUser.setDateOfBirth(candidateCustom.getDateOfBirth());
-
-				userRepository.save(currentUser);
-
-				Optional<Candidate> optCandidate = candidateService.getById(id);
-
-				if (!optCandidate.isPresent()) {
-					return new ResponseEntity<>(
-							new CustomErrorType("Unable to update. candidate with id " + id + " not found."),
-							HttpStatus.NOT_FOUND);
-				} else {
-					Candidate currentCandidate = optCandidate.get();
-					currentCandidate.setDomicileCity(candidateCustom.getDomicileCity());
-//					currentCandidate.setDomicileHouseNumber(candidateCustom.getDomicileHouseNumber());
-//					currentCandidate.setDomicileStreetName(candidateCustom.getDomicileStreetName());
-					currentCandidate.setStudyQualification(candidateCustom.getStudyQualification());
-					currentCandidate.setGraduate(candidateCustom.getGraduate());
-					currentCandidate.setHighGraduate(candidateCustom.getHighGraduate());
-					currentCandidate.setStillHighStudy(candidateCustom.getStillHighStudy());
-					currentCandidate.setMobile(candidateCustom.getMobile());
-					//currentCandidate.setCandidateStatesId(candidateCustom.getCandidateStatesId());
-					
-					
-					//System.out.println("Sei anche qua");
-					candidateService.insert(currentCandidate);
-					return new ResponseEntity<>(candidateCustom, HttpStatus.OK);
-				}
-			}
-		}
-	}
+	
+//	//COMMENTED BECAUSE NO MORE USED --> MAurizio --> 20200506
+//	/**
+//	 * @author daniele
+//	 * 
+//	 *         updateCandidateCustom method updates a candidate custom
+//	 *         
+//	 *         USED BY REACT FRONTEND!!!!!!!!!!!!!!!!!
+//	 * 
+//	 * @param id   of the user to be updated
+//	 * @param user with the fields updated
+//	 * @return a new ResponseEntity with the given status code
+//	 */
+//	@PutMapping(value = "/field/{id}")
+//	public ResponseEntity<CeReProAbstractEntity> updateFieldCandidateCustom(@PathVariable("id") final Long id,
+//			@RequestBody final CandidateCustom candidateCustom) {
+//		if (candidateCustom == null) {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to update. candidateCustom with id " + id + " not found."),
+//					HttpStatus.NOT_FOUND);
+//		} else {
+//
+//			Optional<User> optUser = userRepository.findById(candidateCustom.getUserId());
+//
+//			if (!optUser.isPresent()) {
+//				return new ResponseEntity<>(
+//						new CustomErrorType(
+//								"Unable to update. user with id " + candidateCustom.getUserId() + " not found."),
+//						HttpStatus.NOT_FOUND);
+//			} else {
+//				User currentUser = optUser.get();
+//
+//				currentUser.setEmail(candidateCustom.getEmail());
+//				currentUser.setFirstname(candidateCustom.getFirstname());
+//				currentUser.setLastname(candidateCustom.getLastname());
+//				currentUser.setDateOfBirth(candidateCustom.getDateOfBirth());
+//
+//				userRepository.save(currentUser);
+//
+//				Optional<Candidate> optCandidate = candidateService.getById(id);
+//
+//				if (!optCandidate.isPresent()) {
+//					return new ResponseEntity<>(
+//							new CustomErrorType("Unable to update. candidate with id " + id + " not found."),
+//							HttpStatus.NOT_FOUND);
+//				} else {
+//					Candidate currentCandidate = optCandidate.get();
+//					currentCandidate.setDomicileCity(candidateCustom.getDomicileCity());
+////					currentCandidate.setDomicileHouseNumber(candidateCustom.getDomicileHouseNumber());
+////					currentCandidate.setDomicileStreetName(candidateCustom.getDomicileStreetName());
+//					currentCandidate.setStudyQualification(candidateCustom.getStudyQualification());
+//					currentCandidate.setGraduate(candidateCustom.getGraduate());
+//					currentCandidate.setHighGraduate(candidateCustom.getHighGraduate());
+//					currentCandidate.setStillHighStudy(candidateCustom.getStillHighStudy());
+//					currentCandidate.setMobile(candidateCustom.getMobile());
+//					//currentCandidate.setCandidateStatesId(candidateCustom.getCandidateStatesId());
+//					
+//					
+//					//System.out.println("Sei anche qua");
+//					candidateService.insert(currentCandidate);
+//					return new ResponseEntity<>(candidateCustom, HttpStatus.OK);
+//				}
+//			}
+//		}
+//	}
 
 }

@@ -106,7 +106,6 @@ public class CandidateCustomControllerTest {
 		CandidateCustom candidateCustom = new CandidateCustom();
 	  
 		candidateCustom.setId(100L);
-		candidateCustom.setUserId(4L); 
 		candidateCustom.setDomicileCity("provaprova");  
 //		candidateCustom.setDomicileStreetName("provaprovaprova");
 		candidateCustom.setMobile("4124214124");

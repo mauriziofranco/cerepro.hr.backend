@@ -6,10 +6,13 @@ package centauri.academy.cerepro.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,25 +24,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CandidateStates;
-import centauri.academy.cerepro.persistence.entity.Role;
-import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.custom.CandidateCustom;
-import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.custom.ListedCandidateCustom;
 import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
-import centauri.academy.cerepro.rest.request.RequestCandidateCustom;
+import centauri.academy.cerepro.rest.request.candidate.RequestCandidateCustom;
+import centauri.academy.cerepro.rest.request.candidate.RequestUpdateCandidateCustom;
+import centauri.academy.cerepro.service.exception.CandidateNotFoundException;
 
 /**
  * 
  * 
- * @author m.franco@proximainformatica.com
+ * @author maurizio.franco@ymail.com
  *
  */
 @Service 
@@ -227,67 +227,18 @@ public class CandidateService {
 	}
 	
 	/**
-	 * create new candidate entity
+	 * Invoked by CandidateCustomController.insert, provides to upload image and cv files and fill a new Candidate entity, 
+	 * than call CandidateService.insert method to persist the entity. 
 	 * 
 	 * @return Candidate, inserted entity
 	 */
 	public Candidate createNewCandidate (RequestCandidateCustom requestCandidateCustom) {
 		logger.info("createNewCandidate - START - with requestCandidateCustom {}", requestCandidateCustom);
 		
-//		if (roleRepository.findByLevel(Role.JAVA_COURSE_CANDIDATE_LEVEL) == null) {
-//
-//			return new ResponseEntity<>(
-//					new CustomErrorType("Unable to create new Candidate. Level " + Role.JAVA_COURSE_CANDIDATE_LEVEL + " is not present in database."),
-//					HttpStatus.CONFLICT);
-//		}
-//		User user = null ;
-//		Optional<User> optUser = userRepository.findByEmail(candidateCustom.getEmail()) ;
-//		if (optUser.isPresent()) {
-//			user = optUser.get();
-//			return new ResponseEntity<>(new CustomErrorType("Unable to create new user. A Candidate with email "
-//					+ requestCandidateCustom.getEmail() + " already exist."), HttpStatus.CONFLICT);
-//		} else { 
-//
-//
-//			user = new User();
-//	
-//			user.setEmail(requestCandidateCustom.getEmail());
-//			user.setFirstname(requestCandidateCustom.getFirstname());
-//			user.setLastname(requestCandidateCustom.getLastname());
-//			user.setNote(requestCandidateCustom.getNote());
-//			System.out.println("Local date time: " + requestCandidateCustom.getDateOfBirth());
-//			Date inputDate = requestCandidateCustom.getDateOfBirth();
-//	
-//			if (inputDate != null) {
-//				SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-//				String inputStringDate = formatter.format(inputDate);
-//				System.out.println("inputStringDate " + inputStringDate);
-//	
-//				if (inputStringDate.equals("11-nov-1111")) {
-//					user.setDateOfBirth(null);
-//				} else {
-//					LocalDate dateToDB = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//					user.setDateOfBirth(dateToDB);
-//				}
-//			}
-//			user.setRegdate(LocalDateTime.now());
-//			user.setRole(Role.JAVA_COURSE_CANDIDATE_LEVEL);
-//	
-//			//User userforCandidate = userRepository.save(user);
-//			userRepository.save(user);
-//		}
 		Candidate candidateToInsert = new Candidate () ;
-		
-
-		
-		
-		
-
 		candidateToInsert.setUserId(requestCandidateCustom.getInsertedBy());
 		candidateToInsert.setInsertedBy(requestCandidateCustom.getInsertedBy());
 		candidateToInsert.setDomicileCity(requestCandidateCustom.getDomicileCity());
-//		candidateToInsert.setDomicileHouseNumber(requestCandidateCustom.getDomicileHouseNumber());
-//		candidateToInsert.setDomicileStreetName(requestCandidateCustom.getDomicileStreetName());
 		candidateToInsert.setStudyQualification(requestCandidateCustom.getStudyQualification());
 		candidateToInsert.setGraduate(requestCandidateCustom.getGraduate());
 		candidateToInsert.setHighGraduate(requestCandidateCustom.getHighGraduate());
@@ -299,8 +250,6 @@ public class CandidateService {
 		candidateToInsert.setTechnicalNote(requestCandidateCustom.getNote());
 		candidateToInsert.setRegdate(LocalDateTime.now());
 		candidateToInsert.setCourseCode(coursePageService.checkCoursePageCode(requestCandidateCustom.getCourseCode()));
-		//TODO: AGGIUNGERE UN CONTROLLO SUL COURSE CODE SE NON è PRESENTE NEL DATABASE METTERNE UNO DI DEFAULT --> candidatura generica!!!!
-//		candidateToInsert.setNote(requestCandidateCustom.getNote());
 		candidateToInsert.setCandidacyDateTime(LocalDateTime.now());
 		candidateToInsert.setCandidateStatusCode(CandidateStates.DEFAULT_INSERTING_STATUS_CODE);
 		if (requestCandidateCustom.getCvExternalPath() != null) {
@@ -320,8 +269,6 @@ public class CandidateService {
 				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), ""+requestCandidateCustom.getEmail().hashCode());
 				logger.info("nameIdData:" + nameIdData[0]);
 				candidateToInsert.setImgpath(nameIdData[0]);
-				//userforCandidate = userRepository.save(user);
-//				userRepository.save(user);
 			} catch (IOException e) {
 				logger.error("Error", e);
 			}
@@ -335,7 +282,7 @@ public class CandidateService {
 	 * Provide to save file
 	 */
 	public String[] uploadFile(MultipartFile[] files, String candidateFileName) throws IOException {
-		logger.info("saveUploadedFiles - START");
+		logger.info("uploadFile - START");
 		// Make sure directory exists!
 		File uploadImgDir = new File(IMG_DIR);
 		uploadImgDir.mkdirs();
@@ -343,7 +290,7 @@ public class CandidateService {
 		uploadCvDir.mkdirs();
 
 		StringBuilder sb = new StringBuilder();
-		logger.info("saveUploadedFiles - DEBUG 1");
+		logger.info("uploadFile - DEBUG 1");
 		String[] nameIdData = new String[2];
 		for (MultipartFile file : files) {
 
@@ -351,7 +298,7 @@ public class CandidateService {
 				continue;
 			}
 			String uploadFilePath = null;
-			logger.info("saveUploadedFiles - DEBUG 2");
+			logger.info("uploadFile - DEBUG 2");
 			StringTokenizer st = new StringTokenizer(file.getOriginalFilename(), ".");
 			String name = st.nextToken();
 			String extension = st.nextToken();
@@ -361,51 +308,215 @@ public class CandidateService {
 				extension = ".jpg";
 				uploadFilePath = IMG_DIR + File.pathSeparator + candidateFileName + file.getOriginalFilename();
 				nameIdData[0] = candidateFileName + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.1 - nameIdData[0]: " + nameIdData[0]);
+				logger.info("uploadFile - DEBUG 2.1 - nameIdData[0]: " + nameIdData[0]);
 				uploadFilePath = IMG_DIR + File.separatorChar + nameIdData[0];
 			}
 			if (fileName.endsWith("jpeg")) {
 				extension = ".jpeg";
 				uploadFilePath = IMG_DIR + File.pathSeparator + candidateFileName + file.getOriginalFilename();
 				nameIdData[0] = candidateFileName + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.2 - nameIdData[0]: " + nameIdData[0]);
+				logger.info("uploadFile - DEBUG 2.2 - nameIdData[0]: " + nameIdData[0]);
 				uploadFilePath = IMG_DIR + File.separatorChar + nameIdData[0];
 			}
 			if (fileName.endsWith("png")) {
 				extension = ".png";
 				uploadFilePath = IMG_DIR + File.pathSeparator + candidateFileName + file.getOriginalFilename();
 				nameIdData[0] = candidateFileName + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.3 - nameIdData[0]: " + nameIdData[0]);
+				logger.info("uploadFile - DEBUG 2.3 - nameIdData[0]: " + nameIdData[0]);
 				uploadFilePath = IMG_DIR + File.separatorChar + nameIdData[0];
 			}
 			if (fileName.endsWith("docx")) {
 				extension = ".docx";
 				nameIdData[1] = candidateFileName + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.4 - nameIdData[1]: " + nameIdData[1]);
+				logger.info("uploadFile - DEBUG 2.4 - nameIdData[1]: " + nameIdData[1]);
 				uploadFilePath = CV_DIR + File.separatorChar + nameIdData[1];
 			}
 			if (fileName.endsWith("doc")) {
 				extension = ".doc";
 				nameIdData[1] = candidateFileName + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.5 - nameIdData[1]: " + nameIdData[1]);
+				logger.info("uploadFile - DEBUG 2.5 - nameIdData[1]: " + nameIdData[1]);
 				uploadFilePath = CV_DIR + File.separatorChar + nameIdData[1];
 			}
 			if (fileName.endsWith("pdf")) {
 				extension = ".pdf";
 				nameIdData[1] = candidateFileName + extension;
-				logger.info("saveUploadedFiles - DEBUG 2.6 - nameIdData[1]: " + nameIdData[1]);
+				logger.info("uploadFile - DEBUG 2.6 - nameIdData[1]: " + nameIdData[1]);
 				uploadFilePath = CV_DIR + File.separatorChar + nameIdData[1];
 			}
 
-			logger.info("saveUploadedFiles - DEBUG 3 - uploadFilePath: " + uploadFilePath);
+			logger.info("uploadFile - DEBUG 3 - uploadFilePath: " + uploadFilePath);
 			byte[] bytes = file.getBytes();
-			logger.info("saveUploadedFiles - DEBUG 3.5 - bytes.length: " + bytes.length);
+			logger.info("uploadFile - DEBUG 3.5 - bytes.length: " + bytes.length);
 			FileOutputStream fos = new FileOutputStream(uploadFilePath);
 			fos.write(bytes);
 
-			logger.info("saveUploadedFiles - DEBUG 5");
+			logger.info("uploadFile - DEBUG 5");
 		}
-		logger.info("saveUploadedFiles - DEBUG 6");
+		logger.info("uploadFile - END - nameIdData: {}", Arrays.toString(nameIdData));
 		return nameIdData;
+	}
+	
+	
+	/**
+	 * Invoked by CandidateCustomController.update, provides retrieve existent
+	 * entity, uploads new image and new cv files, and fill the old entity with new
+	 * properties, than call CandidateService.update method to persist the new
+	 * entity.
+	 * 
+	 * @param id,                long number id of candidate to update
+	 * @param candidateToUpdate, RequestUpdateCandidateCustom instance that contains
+	 *                           new parameters to update.
+	 * 
+	 * @return Candidate, updated entity
+	 */
+	public Candidate updateCandidate(Long id, RequestUpdateCandidateCustom requestCandidateToUpdate) throws CandidateNotFoundException {
+		logger.info("updateCandidate - START - with requestCandidateToUpdate {}", requestCandidateToUpdate);
+
+		Optional<Candidate> optCandidate = getById(id);
+		if (optCandidate.isEmpty()) {
+			throw new CandidateNotFoundException("User not found, during candidate updating process.");
+		} else {// optCandidate.isPresent
+
+			Candidate candidateToUpdate = optCandidate.get();
+//			Candidate candidateToUpdate = new Candidate();
+//			candidateToUpdate.setUserId(requestCandidateToUpdate.getInsertedBy());
+//			candidateToUpdate.setInsertedBy(requestCandidateToUpdate.getInsertedBy());
+			candidateToUpdate.setDomicileCity(requestCandidateToUpdate.getDomicileCity());
+			candidateToUpdate.setStudyQualification(requestCandidateToUpdate.getStudyQualification());
+			candidateToUpdate.setGraduate(requestCandidateToUpdate.getGraduate());
+			candidateToUpdate.setHighGraduate(requestCandidateToUpdate.getHighGraduate());
+			candidateToUpdate.setStillHighStudy(requestCandidateToUpdate.getStillHighStudy());
+			candidateToUpdate.setMobile(requestCandidateToUpdate.getMobile());
+			candidateToUpdate.setEmail(requestCandidateToUpdate.getEmail());
+			candidateToUpdate.setFirstname(requestCandidateToUpdate.getFirstname());
+			candidateToUpdate.setLastname(requestCandidateToUpdate.getLastname());
+			candidateToUpdate.setTechnicalNote(requestCandidateToUpdate.getNote());
+			candidateToUpdate.setCandidateStatusCode(requestCandidateToUpdate.getCandidateStatusCode());
+//			candidateToUpdate.setRegdate(LocalDateTime.now());
+			Date inputDate = requestCandidateToUpdate.getDateOfBirth();
+			if (inputDate != null) {
+				LocalDate dateToDB = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				candidateToUpdate.setDateOfBirth(dateToDB);
+			}
+			//
+			//UPDATE CV - START
+			//
+			String oldCV = requestCandidateToUpdate.getOldCV();
+			String newCV = requestCandidateToUpdate.getCvExternalPath();
+			/*
+			// se si oldCV si newCV
+			if (newCV != null && !oldCV.equals("null") && !newCV.equals("null")) {
+				try {
+					// save newCv
+					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(), ""+requestCandidateToUpdate.getEmail().hashCode());
+					logger.info("nameIdData:" + nameIdData[1]);
+					candidateToUpdate.setCvExternalPath(nameIdData[1]);
+					// delete oldCV
+					String sPath = CV_DIR + File.separatorChar + requestCandidateToUpdate.getOldCV();
+					Path path = Paths.get(sPath);
+					Files.delete(path);
+				} catch (IOException e) {
+					logger.error("Error", e);
+				}
+			}
+
+			// se no oldCV si newCV
+			if (newCV != null && oldCV.equals("null") && !newCV.equals("null")) {
+//				cvIsPresent = true;
+//				String cvPath = "curriculumvitae/" +candidateCustom.getUserId()+ candidateCustom.getCvExternalPath();
+				try {
+					// save firstCV
+					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(),
+							""+requestCandidateToUpdate.getEmail().hashCode());
+					logger.info("nameIdData:" + nameIdData[1]);
+					candidateToUpdate.setCvExternalPath(nameIdData[1]);
+
+				} catch (IOException e) {
+					logger.error("Error", e);
+				}
+
+			}
+			*/
+			if (newCV != null && !newCV.equals("null")) {
+				if (oldCV != null && !oldCV.equals("null")) {
+					String filePathToDelete = CV_DIR + File.separatorChar + requestCandidateToUpdate.getOldCV();
+					try {						
+						Path path = Paths.get(filePathToDelete);
+						Files.delete(path);
+					} catch (IOException e) {
+						logger.error("Error in deleting old cv file: {}", filePathToDelete,  e);
+					}
+				}
+				try {
+					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(), ""+requestCandidateToUpdate.getEmail().hashCode());
+					logger.info("nameIdData:" + nameIdData[1]);
+					candidateToUpdate.setCvExternalPath(nameIdData[1]);
+
+				} catch (IOException e) {
+					logger.error("Error", e);
+				}
+
+			}
+			
+			//
+			//UPDATE CV - END
+			//
+			
+			//
+			//UPDATE PROFILE IMG - START
+			//
+			String oldImg = requestCandidateToUpdate.getOldImg();
+			String newImg = requestCandidateToUpdate.getImgpath();
+
+			// se si oldImg e si newImg
+			if (newImg != null && !oldImg.equals("null") && !newImg.equals("null")) {
+//				imgIsPresent = true;
+//				String imgPath = "img/" +candidateCustom.getUserId()+candidateCustom.getImgpath();
+				try {
+
+					// save newImg
+					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(),
+							""+requestCandidateToUpdate.getEmail().hashCode());
+					logger.info("nameIdData:" + nameIdData[0]);
+					candidateToUpdate.setImgpath(nameIdData[0]);
+
+					// delete oldImg
+					String sPath = IMG_DIR + File.separatorChar + requestCandidateToUpdate.getOldImg();
+					Path path = Paths.get(sPath);
+					Files.delete(path);
+
+				} catch (IOException e) {
+					logger.error("Error", e);
+				}
+
+			}
+
+			// se no oldImg si newImg
+			if (newImg != null && oldImg.equals("null") && !newImg.equals("null")) {
+//				imgIsPresent = true;
+//				String imgPath = "img/" +candidateCustom.getUserId()+ candidateCustom.getImgpath();
+
+				try {
+
+					// save firstNewImg
+					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(),
+							""+requestCandidateToUpdate.getEmail().hashCode());
+					logger.info("nameIdData:" + nameIdData[0]);
+					candidateToUpdate.setImgpath(nameIdData[0]);
+
+				} catch (IOException e) {
+					logger.error("Error", e);
+				}
+
+			}
+			//
+			// UPDATE PROFILE IMG - END
+			//
+			
+			
+			
+			return update(candidateToUpdate);
+
+		}
 	}
 }

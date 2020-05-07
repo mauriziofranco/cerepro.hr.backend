@@ -2,6 +2,8 @@ package centauri.academy.cerepro.rest.request;
 
 import java.util.Date;
 
+import centauri.academy.cerepro.rest.request.candidate.RequestCustom;
+
 /**
  * @author m.franco
  *

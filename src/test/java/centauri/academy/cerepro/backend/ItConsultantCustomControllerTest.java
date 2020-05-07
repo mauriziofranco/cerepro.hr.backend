@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,6 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
@@ -36,8 +36,7 @@ import centauri.academy.cerepro.persistence.repository.itconsultant.ItConsultant
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest (classes = CeReProBackendApplication.class, webEnvironment =
-WebEnvironment.RANDOM_PORT)
+@SpringBootTest (classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.MOCK)
 public class ItConsultantCustomControllerTest {
 	
 	public static final Logger logger = LoggerFactory.getLogger(ItConsultantCustomControllerTest.class);
