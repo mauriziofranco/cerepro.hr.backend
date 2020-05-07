@@ -1,4 +1,4 @@
-package centauri.academy.cerepro.rest.request;
+package centauri.academy.cerepro.rest.request.candidate;
 
 import java.util.Date;
 
@@ -19,12 +19,12 @@ public class RequestUpdateCandidateCustom extends RequestUpdateCustom {
 
 	}
 
-	public RequestUpdateCandidateCustom(Long id, Long userId, String domicileCity, String domicileStreetName,
+	public RequestUpdateCandidateCustom(Long id, String domicileCity, String domicileStreetName,
 			String domicileHouseNumber, String studyQualification, Boolean graduate, Boolean highGraduate,
 			Boolean stillHighStudy, String mobile, String cvExternalPath, String email, String firstname,
-			String lastname, Date dateOfBirth, String note, String imgpath,  String oldImg, String oldCV, MultipartFile[] files, Long candidateStatusCode) {
-		super(id, userId, domicileCity, domicileStreetName, domicileHouseNumber, studyQualification, graduate, highGraduate,
-				stillHighStudy, mobile, cvExternalPath, email, firstname, lastname, dateOfBirth, note,imgpath, oldImg, oldCV, files, candidateStatusCode);
+			String lastname, Date dateOfBirth, String note, String imgpath,  String oldImg, String oldCV, MultipartFile[] files, Long candidateStatusCode, long insertedBy) {
+		super(id, domicileCity, domicileStreetName, domicileHouseNumber, studyQualification, graduate, highGraduate,
+				stillHighStudy, mobile, cvExternalPath, email, firstname, lastname, dateOfBirth, note,imgpath, oldImg, oldCV, files, candidateStatusCode, insertedBy);
 	}
 	
 }

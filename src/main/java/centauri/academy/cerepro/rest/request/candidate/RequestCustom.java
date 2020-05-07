@@ -1,4 +1,4 @@
-package centauri.academy.cerepro.rest.request;
+package centauri.academy.cerepro.rest.request.candidate;
 
 import java.util.Arrays;
 import java.util.Date;

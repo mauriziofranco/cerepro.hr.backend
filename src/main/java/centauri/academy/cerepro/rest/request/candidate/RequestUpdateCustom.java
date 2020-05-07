@@ -1,4 +1,4 @@
-package centauri.academy.cerepro.rest.request;
+package centauri.academy.cerepro.rest.request.candidate;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -12,14 +12,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 
 /**
- * @author m.franco
+ * @author
  *
  */
 @JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
-public class RequestUpdateCustom extends CeReProAbstractEntity {
+public class RequestUpdateCustom {
 
 	protected Long id;
-	protected Long userId;
 	protected String domicileCity;
 	protected String domicileStreetName;
 	protected String domicileHouseNumber;
@@ -38,19 +37,19 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 	protected String oldImg;
 	protected String oldCV;
 	protected Long candidateStatusCode;
+	protected long insertedBy;
 
 	public RequestUpdateCustom() {
 
 	}
 
-	public RequestUpdateCustom(Long id, Long userId, String domicileCity, String domicileStreetName,
+	public RequestUpdateCustom(Long id, String domicileCity, String domicileStreetName,
 			String domicileHouseNumber, String studyQualification, Boolean graduate, Boolean highGraduate,
 			Boolean stillHighStudy, String mobile, String cvExternalPath, String email, String firstname,
 			String lastname, Date dateOfBirth, String note, String imgpath, String oldImg, String oldCV,
-			MultipartFile[] files, Long candidateStatusCode) {
+			MultipartFile[] files, Long candidateStatusCode, long insertedBy) {
 		super();
 		this.id = id;
-		this.userId = userId;
 		this.domicileCity = domicileCity;
 		this.domicileStreetName = domicileStreetName;
 		this.domicileHouseNumber = domicileHouseNumber;
@@ -70,6 +69,7 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 		this.oldCV = oldCV;
 		this.files = files;
 		this.candidateStatusCode = candidateStatusCode;
+		this.insertedBy=insertedBy;
 	}
 
 	/**
@@ -84,20 +84,6 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 	 */
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the userId
-	 */
-	public Long getUserId() {
-		return userId;
-	}
-
-	/**
-	 * @param userId the userId to set
-	 */
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	/**
@@ -346,37 +332,47 @@ public class RequestUpdateCustom extends CeReProAbstractEntity {
 
 	public void setFiles(MultipartFile[] files) {
 		this.files = files;
-	}
-
+	}	
+	
 	/**
-	 * @return the candidateStatesId
+	 * @return the candidateStatusCode
 	 */
-	public Long getCandidateStatesId() {
+	public Long getCandidateStatusCode() {
 		return candidateStatusCode;
 	}
 
 	/**
-	 * @param candidateStatesId the candidateStatesId to set
+	 * @param candidateStatusCode the candidateStatusCode to set
 	 */
-	public void setCandidateStatesId(Long candidateStatesId) {
-		this.candidateStatusCode = candidateStatesId;
+	public void setCandidateStatusCode(Long candidateStatusCode) {
+		this.candidateStatusCode = candidateStatusCode;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * @return the insertedBy
 	 */
+	public long getInsertedBy() {
+		return insertedBy;
+	}
+
+	/**
+	 * @param insertedBy the insertedBy to set
+	 */
+	public void setInsertedBy(long insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+
 	@Override
 	public String toString() {
-		return "RequestUpdateCustom [id=" + id + ", userId=" + userId + ", domicileCity=" + domicileCity
+		return "RequestUpdateCustom [id=" + id + ", domicileCity=" + domicileCity
 				+ ", domicileStreetName=" + domicileStreetName + ", domicileHouseNumber=" + domicileHouseNumber
 				+ ", studyQualification=" + studyQualification + ", graduate=" + graduate + ", highGraduate="
 				+ highGraduate + ", stillHighStudy=" + stillHighStudy + ", mobile=" + mobile + ", cvExternalPath="
 				+ cvExternalPath + ", email=" + email + ", firstname=" + firstname + ", lastname=" + lastname
 				+ ", note=" + note + ", dateOfBirth=" + dateOfBirth + ", imgpath=" + imgpath + ", oldImg=" + oldImg
-				+ ", oldCV=" + oldCV + ", candidateStatesId=" + candidateStatusCode + ", files=" + Arrays.toString(files)
-				+ "]";
+				+ ", oldCV=" + oldCV + ", candidateStatusCode=" + candidateStatusCode + ", insertedBy=" + insertedBy
+				+ ", files=" + Arrays.toString(files) + "]";
 	}
 
-	
 
 }
