@@ -21,7 +21,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({"centauri.academy.cerepro"})
 @EntityScan("centauri.academy.cerepro.persistence.entity")
 @EnableJpaRepositories("centauri.academy.cerepro.persistence.repository")
-@EnableCaching
+//@EnableCaching
 
 public class CeReProBackendApplication extends SpringBootServletInitializer {
 

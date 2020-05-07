@@ -475,11 +475,11 @@ public class CandidateCustomController {
 		} catch (CandidateNotFoundException e) {
 			logger.error(e.getMessage());
 			logger.error("ERROR in updating candidate, Candidate not found: ", e);
-			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Candidate not found. Unable to delete candidate with id: " + id)  , HttpStatus.NO_CONTENT);		
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Candidate not found. Unable to delete candidate with id: " + id)  , HttpStatus.BAD_REQUEST);		
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			logger.error("ERROR in updating candidate: ", e);
-			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Unable to delete candidate with id: " + id)  , HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Unable to delete candidate with id: " + id)  , HttpStatus.CONFLICT);
 		}
 		
 //		logger.info("DELETE CANDIDATE CUSTOM - START");
