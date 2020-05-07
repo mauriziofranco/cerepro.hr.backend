@@ -2,12 +2,8 @@ package centauri.academy.cerepro.backend;
 
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate; 
-import java.util.ArrayList;
-import java.util.List; 
+import java.time.LocalDate;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,6 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
@@ -26,8 +24,6 @@ import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.custom.CandidateCustom;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
-import centauri.academy.cerepro.persistence.repository.UserRepository;
-import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.service.CandidateService;
 
 /**
@@ -46,8 +42,8 @@ public class CandidateCustomControllerTest {
 	private CandidateCustomController candidateCustomController;
 	@Mock
 	private CandidateService candidateService;
-	@Mock
-	private UserRepository userRepository;
+//	@Mock
+//	private UserRepository userRepository;
 	@Mock
 	private RoleRepository roleRepository;
 	  
@@ -60,7 +56,7 @@ public class CandidateCustomControllerTest {
 	public void setup() {
 		candidateCustomController = new CandidateCustomController();
  		ReflectionTestUtils.setField(candidateCustomController, "candidateService", candidateService);  
-		ReflectionTestUtils.setField(candidateCustomController, "userRepository", userRepository);
+//		ReflectionTestUtils.setField(candidateCustomController, "userRepository", userRepository);
 		ReflectionTestUtils.setField(candidateCustomController, "roleRepository", roleRepository);
  		
 	}
