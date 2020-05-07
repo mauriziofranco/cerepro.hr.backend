@@ -187,10 +187,10 @@ public class CandidateCustomController {
 	
 
 	/**
-	 * createCandidateCustom method creates a candidate
+	 * Provides to create a new candidate from a given RequestCandidateCustom
 	 * 
-	 * @param candidate to be created
-	 * @return a new ResponseEntity with the given status code
+	 * @param requestCandidateCustom, RequestCandidateCustom instance to keep field to insert for a new Candidate entity to insert.
+	 * @return ResponseEntity instance with the status code
 	 */
 	//COMENTED----> OLD VERSION
 //	@Transactional
@@ -292,12 +292,12 @@ public class CandidateCustomController {
 	@Transactional
 	@PostMapping(value = "/")
 	//public ResponseEntity<CeReProAbstractEntity> insert(@ModelAttribute final RequestCandidateCustom requestCandidateCustom) {
-	public ResponseEntity insert(@ModelAttribute RequestCandidateCustom requestCandidateCustom) {
+	public ResponseEntity<CeReProAbstractEntity> insert(@ModelAttribute RequestCandidateCustom requestCandidateCustom) {
 		logger.info("insert : {}", requestCandidateCustom);
-
+		CeReProAbstractEntity objToReturn = null ;
 		try {
-			candidateService.createNewCandidate(requestCandidateCustom);
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			objToReturn = candidateService.createNewCandidate(requestCandidateCustom);
+			return new ResponseEntity<CeReProAbstractEntity>(objToReturn, HttpStatus.CREATED);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			logger.error("ERROR in inserting new candidate: ", e);
@@ -317,6 +317,7 @@ public class CandidateCustomController {
 	 * @param user with the fields updated
 	 * @return a new ResponseEntity with the given status code
 	 */
+	@Transactional
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<CeReProAbstractEntity> updateCandidateCustom(@PathVariable("id") final Long id,
 			@ModelAttribute final RequestUpdateCandidateCustom candidateCustom) {
