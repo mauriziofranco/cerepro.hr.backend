@@ -281,7 +281,7 @@ public class CandidateService {
 	/*
 	 * Provide to save file
 	 */
-	public String[] uploadFile(MultipartFile[] files, String candidateFileName) throws IOException {
+	private String[] uploadFile(MultipartFile[] files, String candidateFileName) throws IOException {
 		logger.info("uploadFile - START");
 		// Make sure directory exists!
 		File uploadImgDir = new File(IMG_DIR);
@@ -518,5 +518,54 @@ public class CandidateService {
 			return update(candidateToUpdate);
 
 		}
+	}
+	
+	/**
+	 * Invoked by CandidateCustomController.deleteCandidate method, provides retrieve existent
+	 * entity, delete profile image and profile cv files, than call CandidateService.delete method 
+	 * to delete entity from table.
+	 * 
+	 * @param id,                long number id of candidate to update
+	 * 
+	 */
+	public void deleteCandidate(long id) throws CandidateNotFoundException {
+		logger.info("deleteCandidate - START - with id {}", id);
+
+		Optional<Candidate> optCandidate = getById(id);
+		if (optCandidate.isEmpty()) {
+			throw new CandidateNotFoundException("User not found, during candidate updating process.");
+		} else {
+			Candidate candidateToDelete = optCandidate.get();
+			String oldCV = candidateToDelete.getCvExternalPath();
+			
+			if (oldCV != null && !oldCV.equals("null")) {
+				String filePathToDelete = CV_DIR + File.separatorChar + oldCV;
+				try {						
+					Path path = Paths.get(filePathToDelete);
+					Files.delete(path);
+				} catch (IOException e) {
+					logger.error("Error in deleting old cv file: {}", filePathToDelete,  e);
+				}
+			}
+
+			String oldImg = candidateToDelete.getImgpath();
+			if (oldImg != null && !oldImg.equals("null")) {
+				try {
+					String sPath = IMG_DIR + File.separatorChar + oldImg;
+					Path path = Paths.get(sPath);
+					Files.delete(path);
+
+				} catch (IOException e) {
+					logger.error("Error", e);
+				}
+
+			}
+			
+			
+			
+			
+
+		}
+		deleteById(id);
 	}
 }

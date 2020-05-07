@@ -1,24 +1,8 @@
 package centauri.academy.cerepro.backend;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.StringTokenizer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -30,40 +14,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.Role;
-import centauri.academy.cerepro.persistence.entity.SurveyReply;
-import centauri.academy.cerepro.persistence.entity.User;
-import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
 import centauri.academy.cerepro.persistence.entity.custom.CandidateCustom;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.custom.ListedCandidateCustom;
-import centauri.academy.cerepro.persistence.repository.RoleRepository;
-import centauri.academy.cerepro.persistence.repository.UserRepository;
-import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
-import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
 import centauri.academy.cerepro.rest.request.candidate.RequestCandidateCustom;
 import centauri.academy.cerepro.rest.request.candidate.RequestUpdateCandidateCustom;
 import centauri.academy.cerepro.service.CandidateService;
-import centauri.academy.cerepro.service.CoursePageService;
 import centauri.academy.cerepro.service.exception.CandidateNotFoundException;
 
 /**
  * 
- * @author dario
- * @author joffre
- * @author daniele piccinni
- * @author m.franco@proximainformatica.com
+ * @author maurizio.franco@ymail.com
  * 
  */
 @RestController
@@ -73,18 +38,15 @@ public class CandidateCustomController {
 	@Autowired
 	private CandidateService candidateService;
 
-	
-
-
 	public static final Logger logger = LoggerFactory.getLogger(CandidateCustomController.class);
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private RoleRepository roleRepository;
-	@Autowired
-	private UserSurveyTokenRepository userSurveyTokenRepository;
-	@Autowired
-	private SurveyReplyRepository surveyReplyRepository;
+//	@Autowired
+//	private UserRepository userRepository;
+//	@Autowired
+//	private RoleRepository roleRepository;
+//	@Autowired
+//	private UserSurveyTokenRepository userSurveyTokenRepository;
+//	@Autowired
+//	private SurveyReplyRepository surveyReplyRepository;
 	
 
 //	/**
@@ -114,8 +76,6 @@ public class CandidateCustomController {
 	 * @param size
 	 * @param number
 	 * @return
-	 * 
-	 * @author maurizio.franco
 	 */
 	@GetMapping("/paginated/{size}/{number}/")
 	public ResponseEntity<Page<ListedCandidateCustom>> getPaginatedCandidate(@PathVariable("size") final int size,
@@ -136,9 +96,8 @@ public class CandidateCustomController {
 	 * @param size
 	 * @param number
 	 * @param code
-	 * @return
+	 * @return paginated list of candidate filtered by course code, and pagination info
 	 * 
-	 * @author maurizio.franco
 	 */
 	@GetMapping("/paginated/{size}/{number}/{code}")
 	public ResponseEntity<Page<ListedCandidateCustom>> getAllCustomCandidatesPaginatedByCode(@PathVariable("size") final int size,
@@ -500,132 +459,146 @@ public class CandidateCustomController {
 	}
 
 	/**
-	 * deleteCandidate method deletes a candidate and relative user
+	 * Provides to delete candidate from database and cv and profile img files from file system.
 	 * 
-	 * @param id of the candidate to be canceled
-	 * 
+	 * @param id of the candidate to delete
 	 * 
 	 * @return a new ResponseEntity with the given status code
 	 */
 	@Transactional
 	@DeleteMapping("/{id}")
-	public ResponseEntity<CeReProAbstractEntity> deleteCandidate(@PathVariable("id") final Long id) {
-		logger.info("DELETE CANDIDATE CUSTOM - START");
-		Optional<Candidate> candidateOpt = candidateService.getById(id);
-		logger.info("candidateOpt " + candidateOpt);
-		if (!candidateOpt.isPresent()) {
-			logger.info("candidate not present " + candidateOpt);
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to delete. Candidate with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
+	public ResponseEntity<CeReProAbstractEntity> delete(@PathVariable("id") final Long id) {
+		logger.info("delete - START - for id: {}", id);
+		try {
+			candidateService.deleteCandidate(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (CandidateNotFoundException e) {
+			logger.error(e.getMessage());
+			logger.error("ERROR in updating candidate, Candidate not found: ", e);
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Candidate not found. Unable to delete candidate with id: " + id)  , HttpStatus.NO_CONTENT);		
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			logger.error("ERROR in updating candidate: ", e);
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType("Unable to delete candidate with id: " + id)  , HttpStatus.BAD_REQUEST);
 		}
-
-		Candidate currentCandidate = candidateOpt.get();
-		logger.info("Deleting user with user id: " + currentCandidate.getUserId());
-		logger.info("candidate id " + currentCandidate.getUserId());
-		List<UserTokenSurvey> userTokenSurvey = userSurveyTokenRepository.findByUserId(currentCandidate.getUserId());
-		logger.info("####################### LIST #########" + userTokenSurvey.toString());
-
-//		Optional<SurveyReply> surveyReplyOpt = surveyReplyRepository.findById(id); 
-//		logger.info("####### surveyReplyOpt  ########"+surveyReplyOpt);
-		List<SurveyReply> surveyReply = surveyReplyRepository.findByUserId(currentCandidate.getUserId());
-		logger.info("####################### LIST <SurveyReply> surveyReply #########" + surveyReply.toString());
-		if (!userTokenSurvey.isEmpty()) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to delete. User with id " + id + " is userTokenSurvey referenced."),
-					HttpStatus.CONFLICT); // code 409
-
-		} else if (!surveyReply.isEmpty()) {
-			return new ResponseEntity<>(new CustomErrorType("Non è possibile cancellare l'utente con id: " + id
-					+ " in quanto esiste almeno un questionario associato ad esso."), HttpStatus.CONFLICT); // code 409
-
-		} else {
-			logger.info("####################### ");
-			logger.info("Deleting candidate with id: " + id);
-			candidateService.deleteById(id);
-
-			Optional<User> userOpt = userRepository.findById(currentCandidate.getUserId());
-			userRepository.deleteById(currentCandidate.getUserId());
-
-			if (userOpt.get().getImgpath() != null) {
-
-				String sPath = candidateService.IMG_DIR + File.separatorChar + userOpt.get().getImgpath();
-				Path path = Paths.get(sPath);
-				try {
-					Files.delete(path);
-				} catch (IOException e) {
-					logger.error("Error", e);
-				}
-			}
-
-			if (currentCandidate.getCvExternalPath() != null) {
-
-				String sPath = candidateService.CV_DIR + File.separatorChar + currentCandidate.getCvExternalPath();
-				Path path = Paths.get(sPath);
-				try {
-					Files.delete(path);
-				} catch (IOException e) {
-					logger.error("Error", e);
-				}
-			}
-
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
+		
+//		logger.info("DELETE CANDIDATE CUSTOM - START");
+//		Optional<Candidate> candidateOpt = candidateService.getById(id);
+//		logger.info("candidateOpt " + candidateOpt);
+//		if (!candidateOpt.isPresent()) {
+//			logger.info("candidate not present " + candidateOpt);
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to delete. Candidate with id " + id + " not found."),
+//					HttpStatus.NOT_FOUND);
+//		}
+//
+//		Candidate currentCandidate = candidateOpt.get();
+//		logger.info("Deleting user with user id: " + currentCandidate.getUserId());
+//		logger.info("candidate id " + currentCandidate.getUserId());
+//		List<UserTokenSurvey> userTokenSurvey = userSurveyTokenRepository.findByUserId(currentCandidate.getUserId());
+//		logger.info("####################### LIST #########" + userTokenSurvey.toString());
+//
+////		Optional<SurveyReply> surveyReplyOpt = surveyReplyRepository.findById(id); 
+////		logger.info("####### surveyReplyOpt  ########"+surveyReplyOpt);
+//		List<SurveyReply> surveyReply = surveyReplyRepository.findByUserId(currentCandidate.getUserId());
+//		logger.info("####################### LIST <SurveyReply> surveyReply #########" + surveyReply.toString());
+//		if (!userTokenSurvey.isEmpty()) {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to delete. User with id " + id + " is userTokenSurvey referenced."),
+//					HttpStatus.CONFLICT); // code 409
+//
+//		} else if (!surveyReply.isEmpty()) {
+//			return new ResponseEntity<>(new CustomErrorType("Non è possibile cancellare l'utente con id: " + id
+//					+ " in quanto esiste almeno un questionario associato ad esso."), HttpStatus.CONFLICT); // code 409
+//
+//		} else {
+//			logger.info("####################### ");
+//			logger.info("Deleting candidate with id: " + id);
+//			candidateService.deleteById(id);
+//
+//			Optional<User> userOpt = userRepository.findById(currentCandidate.getUserId());
+//			userRepository.deleteById(currentCandidate.getUserId());
+//
+//			if (userOpt.get().getImgpath() != null) {
+//
+//				String sPath = candidateService.IMG_DIR + File.separatorChar + userOpt.get().getImgpath();
+//				Path path = Paths.get(sPath);
+//				try {
+//					Files.delete(path);
+//				} catch (IOException e) {
+//					logger.error("Error", e);
+//				}
+//			}
+//
+//			if (currentCandidate.getCvExternalPath() != null) {
+//
+//				String sPath = candidateService.CV_DIR + File.separatorChar + currentCandidate.getCvExternalPath();
+//				Path path = Paths.get(sPath);
+//				try {
+//					Files.delete(path);
+//				} catch (IOException e) {
+//					logger.error("Error", e);
+//				}
+//			}
+//
+//			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//		}
 
 	}
 
-	/**
-	 * @author daniele
-	 * 
-	 *         createCandidateCustom method creates a candidate
-	 *         
-	 *         
-	 *         USED BY REACT FRONTEND!!!!!!!!!!!!!!!!!
-	 * 
-	 * @param candidate to be created
-	 * @return a new ResponseEntity with the given status code
-	 */
-	@Transactional
-	@PostMapping(value = "/field/")
-	public ResponseEntity<?> createFieldCandidateCustom(@RequestBody final CandidateCustom candidateCustom) {
-
-		if (roleRepository.findByLevel(90) == null) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to create new Candidate. Level " + 90 + " is not present in database."),
-					HttpStatus.CONFLICT);
-		}
-
-		if (userRepository.findByEmail(candidateCustom.getEmail()).isPresent()) {
-			return new ResponseEntity<>(new CustomErrorType("Unable to create new candidate. A user with email "
-					+ candidateCustom.getEmail() + " already exist."), HttpStatus.CONFLICT);
-		} else {
-			User user = new User();
-
-			user.setEmail(candidateCustom.getEmail());
-			user.setFirstname(candidateCustom.getFirstname());
-			user.setLastname(candidateCustom.getLastname());
-			user.setDateOfBirth(candidateCustom.getDateOfBirth());
-			user.setRegdate(LocalDateTime.now());
-			user.setRole(90);
-
-			User userforCandidate = userRepository.save(user);
-			Candidate candidate = new Candidate();
-
-			candidate.setUserId(userforCandidate.getId());
-			candidate.setDomicileCity(candidateCustom.getDomicileCity());
-//			candidate.setDomicileHouseNumber(candidateCustom.getDomicileHouseNumber());
-//			candidate.setDomicileStreetName(candidateCustom.getDomicileStreetName());
-			candidate.setStudyQualification(candidateCustom.getStudyQualification());
-			candidate.setGraduate(candidateCustom.getGraduate());
-			candidate.setHighGraduate(candidateCustom.getHighGraduate());
-			candidate.setStillHighStudy(candidateCustom.getStillHighStudy());
-			candidate.setMobile(candidateCustom.getMobile());
-			candidate.setCandidacyDateTime(LocalDateTime.now());
-			candidateService.insert(candidate);
-
-			return new ResponseEntity<>(candidate, HttpStatus.CREATED);
-		}
-	}
+//	//COMMENTED BECAUSE NO MORE USED --> MAurizio --> 20200506
+//	/**
+//	 * @author daniele
+//	 * 
+//	 *         createCandidateCustom method creates a candidate
+//	 *         
+//	 *         
+//	 *         USED BY REACT FRONTEND!!!!!!!!!!!!!!!!!
+//	 * 
+//	 * @param candidate to be created
+//	 * @return a new ResponseEntity with the given status code
+//	 */
+//	@Transactional
+//	@PostMapping(value = "/field/")
+//	public ResponseEntity<?> createFieldCandidateCustom(@RequestBody final CandidateCustom candidateCustom) {
+//
+//		if (roleRepository.findByLevel(90) == null) {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to create new Candidate. Level " + 90 + " is not present in database."),
+//					HttpStatus.CONFLICT);
+//		}
+//
+//		if (userRepository.findByEmail(candidateCustom.getEmail()).isPresent()) {
+//			return new ResponseEntity<>(new CustomErrorType("Unable to create new candidate. A user with email "
+//					+ candidateCustom.getEmail() + " already exist."), HttpStatus.CONFLICT);
+//		} else {
+//			User user = new User();
+//
+//			user.setEmail(candidateCustom.getEmail());
+//			user.setFirstname(candidateCustom.getFirstname());
+//			user.setLastname(candidateCustom.getLastname());
+//			user.setDateOfBirth(candidateCustom.getDateOfBirth());
+//			user.setRegdate(LocalDateTime.now());
+//			user.setRole(90);
+//
+//			User userforCandidate = userRepository.save(user);
+//			Candidate candidate = new Candidate();
+//
+//			candidate.setUserId(userforCandidate.getId());
+//			candidate.setDomicileCity(candidateCustom.getDomicileCity());
+////			candidate.setDomicileHouseNumber(candidateCustom.getDomicileHouseNumber());
+////			candidate.setDomicileStreetName(candidateCustom.getDomicileStreetName());
+//			candidate.setStudyQualification(candidateCustom.getStudyQualification());
+//			candidate.setGraduate(candidateCustom.getGraduate());
+//			candidate.setHighGraduate(candidateCustom.getHighGraduate());
+//			candidate.setStillHighStudy(candidateCustom.getStillHighStudy());
+//			candidate.setMobile(candidateCustom.getMobile());
+//			candidate.setCandidacyDateTime(LocalDateTime.now());
+//			candidateService.insert(candidate);
+//
+//			return new ResponseEntity<>(candidate, HttpStatus.CREATED);
+//		}
+//	}
 
 	
 //	//COMMENTED BECAUSE NO MORE USED --> MAurizio --> 20200506
