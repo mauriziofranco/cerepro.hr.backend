@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
@@ -256,7 +258,7 @@ public class CandidateService {
 
 			try {
 
-				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), ""+requestCandidateCustom.getEmail().hashCode());
+				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), buildNewFileName(requestCandidateCustom.getEmail()));
 				logger.info("nameIdData:" + nameIdData[1]);
 				candidateToInsert.setCvExternalPath(nameIdData[1]);
 			} catch (IOException e) {
@@ -266,7 +268,7 @@ public class CandidateService {
 		if (requestCandidateCustom.getImgpath() != null) {
 
 			try {
-				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), ""+requestCandidateCustom.getEmail().hashCode());
+				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), buildNewFileName(requestCandidateCustom.getEmail()));
 				logger.info("nameIdData:" + nameIdData[0]);
 				candidateToInsert.setImgpath(nameIdData[0]);
 			} catch (IOException e) {
@@ -392,6 +394,7 @@ public class CandidateService {
 			candidateToUpdate.setLastname(requestCandidateToUpdate.getLastname());
 			candidateToUpdate.setTechnicalNote(requestCandidateToUpdate.getNote());
 			candidateToUpdate.setCandidateStatusCode(requestCandidateToUpdate.getCandidateStatusCode());
+			candidateToUpdate.setCourseCode(requestCandidateToUpdate.getPositionCode());
 //			candidateToUpdate.setRegdate(LocalDateTime.now());
 			Date inputDate = requestCandidateToUpdate.getDateOfBirth();
 			if (inputDate != null) {
@@ -448,7 +451,7 @@ public class CandidateService {
 					}
 				}
 				try {
-					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(), ""+requestCandidateToUpdate.getEmail().hashCode());
+					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(), "" + buildNewFileName (requestCandidateToUpdate.getEmail()));
 					logger.info("nameIdData:" + nameIdData[1]);
 					candidateToUpdate.setCvExternalPath(nameIdData[1]);
 
@@ -475,13 +478,13 @@ public class CandidateService {
 				try {
 
 					// save newImg
-					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(),
-							""+requestCandidateToUpdate.getEmail().hashCode());
+					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(), buildNewFileName(requestCandidateToUpdate.getEmail()));
 					logger.info("nameIdData:" + nameIdData[0]);
 					candidateToUpdate.setImgpath(nameIdData[0]);
 
 					// delete oldImg
-					String sPath = IMG_DIR + File.separatorChar + requestCandidateToUpdate.getOldImg();
+					//String sPath = IMG_DIR + File.separatorChar + requestCandidateToUpdate.getOldImg();
+					String sPath = IMG_DIR + File.separatorChar + oldImg;
 					Path path = Paths.get(sPath);
 					Files.delete(path);
 
@@ -499,8 +502,7 @@ public class CandidateService {
 				try {
 
 					// save firstNewImg
-					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(),
-							""+requestCandidateToUpdate.getEmail().hashCode());
+					String[] nameIdData = uploadFile(requestCandidateToUpdate.getFiles(), buildNewFileName(requestCandidateToUpdate.getEmail()));
 					logger.info("nameIdData:" + nameIdData[0]);
 					candidateToUpdate.setImgpath(nameIdData[0]);
 
@@ -518,6 +520,12 @@ public class CandidateService {
 			return update(candidateToUpdate);
 
 		}
+	}
+	
+	private String buildNewFileName (String email) {
+		String returnName = email ;
+		returnName = returnName.hashCode() + "-" + new Random().nextInt();
+		return returnName ;
 	}
 	
 	/**
@@ -543,19 +551,24 @@ public class CandidateService {
 				try {						
 					Path path = Paths.get(filePathToDelete);
 					Files.delete(path);
-				} catch (IOException e) {
+				} catch (NoSuchFileException e) {
+					logger.error("File non trovato. Non è stato possibile cancellarlo. {}", filePathToDelete);
+				} catch (Exception e) {
 					logger.error("Error in deleting old cv file: {}", filePathToDelete,  e);
 				}
 			}
 
 			String oldImg = candidateToDelete.getImgpath();
 			if (oldImg != null && !oldImg.equals("null")) {
+				String sPath = null ;
 				try {
-					String sPath = IMG_DIR + File.separatorChar + oldImg;
+					sPath = IMG_DIR + File.separatorChar + oldImg;
 					Path path = Paths.get(sPath);
 					Files.delete(path);
 
-				} catch (IOException e) {
+				} catch (NoSuchFileException e) {
+					logger.error("File non trovato. Non è stato possibile cancellarlo. {}", sPath);
+				} catch (Exception e) {
 					logger.error("Error", e);
 				}
 

@@ -38,6 +38,7 @@ public class RequestUpdateCustom {
 	protected String oldCV;
 	protected Long candidateStatusCode;
 	protected long insertedBy;
+	protected String positionCode;
 
 	public RequestUpdateCustom() {
 
@@ -47,7 +48,7 @@ public class RequestUpdateCustom {
 			String domicileHouseNumber, String studyQualification, Boolean graduate, Boolean highGraduate,
 			Boolean stillHighStudy, String mobile, String cvExternalPath, String email, String firstname,
 			String lastname, Date dateOfBirth, String note, String imgpath, String oldImg, String oldCV,
-			MultipartFile[] files, Long candidateStatusCode, long insertedBy) {
+			MultipartFile[] files, Long candidateStatusCode, long insertedBy, String positionCode) {
 		super();
 		this.id = id;
 		this.domicileCity = domicileCity;
@@ -70,6 +71,7 @@ public class RequestUpdateCustom {
 		this.files = files;
 		this.candidateStatusCode = candidateStatusCode;
 		this.insertedBy=insertedBy;
+		this.positionCode=positionCode;
 	}
 
 	/**
@@ -362,17 +364,30 @@ public class RequestUpdateCustom {
 		this.insertedBy = insertedBy;
 	}
 
-	@Override
-	public String toString() {
-		return "RequestUpdateCustom [id=" + id + ", domicileCity=" + domicileCity
-				+ ", domicileStreetName=" + domicileStreetName + ", domicileHouseNumber=" + domicileHouseNumber
-				+ ", studyQualification=" + studyQualification + ", graduate=" + graduate + ", highGraduate="
-				+ highGraduate + ", stillHighStudy=" + stillHighStudy + ", mobile=" + mobile + ", cvExternalPath="
-				+ cvExternalPath + ", email=" + email + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", note=" + note + ", dateOfBirth=" + dateOfBirth + ", imgpath=" + imgpath + ", oldImg=" + oldImg
-				+ ", oldCV=" + oldCV + ", candidateStatusCode=" + candidateStatusCode + ", insertedBy=" + insertedBy
-				+ ", files=" + Arrays.toString(files) + "]";
+	/**
+	 * @return the positionCode
+	 */
+	public String getPositionCode() {
+		return positionCode;
 	}
 
+	/**
+	 * @param positionCode the positionCode to set
+	 */
+	public void setPositionCode(String positionCode) {
+		this.positionCode = positionCode;
+	}
+
+	@Override
+	public String toString() {
+		return "RequestUpdateCustom [id=" + id + ", domicileCity=" + domicileCity + ", domicileStreetName="
+				+ domicileStreetName + ", domicileHouseNumber=" + domicileHouseNumber + ", studyQualification="
+				+ studyQualification + ", graduate=" + graduate + ", highGraduate=" + highGraduate + ", stillHighStudy="
+				+ stillHighStudy + ", mobile=" + mobile + ", cvExternalPath=" + cvExternalPath + ", email=" + email
+				+ ", firstname=" + firstname + ", lastname=" + lastname + ", note=" + note + ", dateOfBirth="
+				+ dateOfBirth + ", imgpath=" + imgpath + ", oldImg=" + oldImg + ", oldCV=" + oldCV
+				+ ", candidateStatusCode=" + candidateStatusCode + ", insertedBy=" + insertedBy + ", positionCode="
+				+ positionCode + ", files=" + Arrays.toString(files) + "]";
+	}
 
 }
