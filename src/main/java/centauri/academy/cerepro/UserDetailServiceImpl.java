@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -15,20 +17,21 @@ import org.springframework.stereotype.Service;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 
-
 /**
  * @author maurizio
  *
  */
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
-  @Autowired
-  private UserRepository repository;
 
+	public static final Logger logger = LoggerFactory.getLogger(UserDetailServiceImpl.class);
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
-    { 
+	@Autowired
+	private UserRepository repository;
+
+	@Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { 
+    	logger.info("UserDetailServiceImpl.loadUserByUsername - START - with given username: " + username);
       Optional<User> currentOptUser = repository.findByEmail(username);
       if (currentOptUser.isPresent()) {
     	  User currentUser = currentOptUser.get(); 
@@ -51,5 +54,5 @@ public class UserDetailServiceImpl implements UserDetailsService {
       }
         
     }
-    
+
 }
