@@ -49,9 +49,11 @@ public class LoginService implements UserDetailsService {
 	}
 
 	public Collection<GrantedAuthority> getAuthorities(User user) {
+		logger.info("LoginService.getAuthorities - START - user: " + user);
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
 		int role = user.getRole();
+		logger.info("LoginService.getAuthorities - DEBUG - current user role level: " + role);
 
 		if (role == 0) {
 			authorities = AuthorityUtils.createAuthorityList("ADMIN");
