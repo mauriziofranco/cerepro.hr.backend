@@ -300,7 +300,7 @@ public class CandidateService {
 		String extension = st.nextToken();
 		String fileName = file.getOriginalFilename();
 		logger.info("uploadFile - DEBUG 2.5 - extension: " + extension);
-		fileNameToReturn = candidateFileName + extension;
+		fileNameToReturn = candidateFileName + "." + extension;
 		uploadFilePath = File.separatorChar + fileNameToReturn;
 		if ((fileName.endsWith("jpg"))||(fileName.endsWith("jpeg"))||(fileName.endsWith("png"))||
 				(fileName.endsWith("gif")) ){
