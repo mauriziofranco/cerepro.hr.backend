@@ -42,4 +42,16 @@ public class RoleService {
 		logger.debug("deleteAll - START");
 		roleRepository.deleteAll();
 	}
+	
+	/**
+	 * Provides to insert given role entity 
+	 * 
+	 * @return entity, Role entity just inserted
+	 */
+	public Role insert(Role entity) {
+		logger.info("insert - START - entity: {}", entity);
+		entity = roleRepository.save(entity);
+		logger.info("insert - END - returning inserted entity: {}" + entity);
+		return entity;
+	}
 }

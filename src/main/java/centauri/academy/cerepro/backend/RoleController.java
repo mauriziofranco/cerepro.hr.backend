@@ -83,8 +83,8 @@ public class RoleController {
 					HttpStatus.CONFLICT);
 		}
 		
-		roleRepository.save(role);
-		return new ResponseEntity<>(role, HttpStatus.CREATED);
+		Role insertedRole = roleService.insert(role);
+		return new ResponseEntity<>(insertedRole, HttpStatus.CREATED);
 	}
 	
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
