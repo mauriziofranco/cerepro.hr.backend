@@ -75,7 +75,7 @@ public class RoleControllerTest {
 	@Test
 	public void testInsertRoleSuccessfully() {
 		Role testRole = new Role (100L, "test", "tester", 100) ;
-		when(this.roleRepository.save(testRole)).thenReturn(testRole);
+		when(this.roleService.insert(testRole)).thenReturn(testRole);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = this.roleController.createRole(testRole);
 		Assert.assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 		Assert.assertEquals(100, ((Role)responseEntity.getBody()).getLevel());
