@@ -74,7 +74,7 @@ public abstract class AbstractIntegrationTests {
 	protected User getFakeUser(int level) {
 		logger.trace("getFakeUser - START - level: " + level);
 		User testUser = new User();
-		testUser.setEmail(TEST_USER_EMAIL);
+		testUser.setEmail(getRandomLongBetweenLimits() + TEST_USER_EMAIL);
 		testUser.setPassword(encodePasswordForDBSaving(TEST_DECODED_USER_PASSWORD));
 //		testUser.setPassword(TEST_ENCODED_USER_PASSWORD);
 		testUser.setFirstname("pippo");

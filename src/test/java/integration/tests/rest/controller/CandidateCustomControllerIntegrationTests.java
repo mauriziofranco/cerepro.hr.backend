@@ -97,12 +97,12 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		logger.trace("whenGetCandidateCustomById_andThereIsNot_thenStatus204 - START");
 		logger.trace("########################################################");
 		logger.trace("########################################################");
-		User user = getFakeUser(Role.ADMIN_LEVEL);
-        logger.trace("auth  : " + Base64Utils.encodeToString((user.getEmail()+":"+TEST_DECODED_USER_PASSWORD).getBytes()));
+		User operativeUser = getFakeUser(Role.ADMIN_LEVEL);
+        logger.trace("auth  : " + Base64Utils.encodeToString((operativeUser.getEmail()+":"+TEST_DECODED_USER_PASSWORD).getBytes()));
 //        logger.trace("password: " + Base64Utils.encodeToString("ciao1234".getBytes()));
 //        logger.trace("httpBasic(user.getEmail(),\"ciao1234\"): " + (httpBasic(user.getEmail(),TEST_DECODED_USER_PASSWORD)).toString());
 //        logger.trace("user.getPassword().getBytes(): " + user.getPassword().getBytes());
-        String auth2 = Base64Utils.encodeToString((user.getEmail()+":" + TEST_DECODED_USER_PASSWORD).getBytes()) ;
+        String auth2 = Base64Utils.encodeToString((operativeUser.getEmail()+":" + TEST_DECODED_USER_PASSWORD).getBytes()) ;
         logger.trace("auth2 : " + auth2);
         logger.trace("password: " + Base64Utils.encodeToString(TEST_DECODED_USER_PASSWORD.getBytes()));
         logger.trace("decodeFromString(auth2) : " + Base64Utils.decodeFromString(auth2));
@@ -126,7 +126,7 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 //        String s = new String(Base64Utils.decodeFromString(user.getPassword()), "UTF-8");
 //        logger.trace("new String:" + s);
 	    mvc.perform(get(SERVICE_URI + getRandomLongBetweenLimits())
-	      .with(httpBasic(user.getEmail(),TEST_DECODED_USER_PASSWORD))
+	      .with(httpBasic(operativeUser.getEmail(),TEST_DECODED_USER_PASSWORD))
 //	      .header(HttpHeaders.AUTHORIZATION,
 //	                    "Basic " + Base64Utils.encodeToString((user.getEmail()+":"+"ciao1234").getBytes()))
 	      .contentType(MediaType.APPLICATION_JSON)
@@ -146,12 +146,15 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		logger.trace("whenGetCandidateCustomById_andThereIsOne_thenStatus200 - START");
 		logger.trace("########################################################");
 		logger.trace("########################################################");
+		User operativeUser = getFakeUser(Role.ADMIN_LEVEL);
 		Candidate insertedCandidate = getFakeCandidate() ;
 //		RequestMatcher rm = jsonPath("$[0].firstname", is(insertedCandidate.getFirstname()));
 		long candidateId = insertedCandidate.getId().longValue() ;
 		logger.trace("whenGetCandidateById_andThereIsOne_thenStatus200 - DEBUG - looking for candidateId: " + candidateId);
 		mvc.perform(
-				  get(SERVICE_URI + candidateId).contentType(MediaType.APPLICATION_JSON))
+				  get(SERVICE_URI + candidateId).contentType(MediaType.APPLICATION_JSON)
+				      .with(httpBasic(operativeUser.getEmail(),TEST_DECODED_USER_PASSWORD))
+				  )
 			      .andExpect(status().isOk())
 //			      .andExpect(status().isOk());
 //		          .andExpect(jsonPath("$[0].firstname", is(insertedCandidate.getFirstname())));
@@ -179,7 +182,7 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		logger.trace("whenPostNewSimpleCandidateCustom_thenStatus201 - START");
 		logger.trace("########################################################");
 		logger.trace("########################################################");
-		User userThatProvidesToInsert = getFakeUser();
+		User operativeUser = getFakeUser(Role.ADMIN_LEVEL);
 		CoursePage testCoursePage = getFakeCoursePage();
 		CandidateStates testCandidateState = getFakeCandidateState();
 		String testEmail = "aaa@aaa.it" ;
@@ -190,10 +193,11 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		        .param("email", testEmail)
 		        .param("firstname",testFirstname)
 		        .param("lastname",testLastname)
-		        .param("userId",""+userThatProvidesToInsert.getId().longValue())
-		        .param("insertedBy",""+userThatProvidesToInsert.getId().longValue())
+		        .param("userId",""+ operativeUser.getId().longValue())
+		        .param("insertedBy",""+ operativeUser.getId().longValue())
 		        .param("courseCode",testCoursePage.getCode())
 //		        .with(csrf())
+		        .with(httpBasic(operativeUser.getEmail(),TEST_DECODED_USER_PASSWORD))
 		        ;
 
 		    mvc
