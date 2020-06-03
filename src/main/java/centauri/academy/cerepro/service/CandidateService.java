@@ -257,21 +257,22 @@ public class CandidateService {
 		if (requestCandidateCustom.getCvExternalPath() != null) {
 
 			try {
-
+				logger.info("createNewCandidate - DEBUG - inserting cv document file");
 				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), buildNewFileName(requestCandidateCustom.getEmail()));
 				logger.info("nameIdData:" + nameIdData[1]);
 				candidateToInsert.setCvExternalPath(nameIdData[1]);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				logger.error("Error", e);
 			}
 		}
 		if (requestCandidateCustom.getImgpath() != null) {
 
 			try {
+				logger.info("createNewCandidate - DEBUG - inserting profile image file");
 				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), buildNewFileName(requestCandidateCustom.getEmail()));
 				logger.info("nameIdData:" + nameIdData[0]);
 				candidateToInsert.setImgpath(nameIdData[0]);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				logger.error("Error", e);
 			}
 
@@ -300,7 +301,7 @@ public class CandidateService {
 				continue;
 			}
 			String uploadFilePath = null;
-			logger.info("uploadFile - DEBUG 2");
+			logger.info("uploadFile - DEBUG 2 - file.getOriginalFilename(): " + file.getOriginalFilename());
 			StringTokenizer st = new StringTokenizer(file.getOriginalFilename(), ".");
 			String name = st.nextToken();
 			String extension = st.nextToken();

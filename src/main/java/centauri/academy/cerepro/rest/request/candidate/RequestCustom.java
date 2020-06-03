@@ -383,20 +383,7 @@ public class RequestCustom {
 				+ ", graduate=" + graduate + ", highGraduate=" + highGraduate + ", stillHighStudy=" + stillHighStudy
 				+ ", mobile=" + mobile + ", cvExternalPath=" + cvExternalPath + ", dateOfBirth=" + dateOfBirth
 				+ ", imgpath=" + imgpath + ", courseCode=" + courseCode + ", note=" + note + ", insertedBy="
-				+ insertedBy + ", files=" + Arrays.toString(files) + ", getId()=" + getId() + ", getUserId()="
-				+ getUserId() + ", getDomicileCity()=" + getDomicileCity() + ", getStudyQualification()="
-				+ getStudyQualification() + ", getGraduate()=" + getGraduate() + ", getHighGraduate()="
-				+ getHighGraduate() + ", getStillHighStudy()=" + getStillHighStudy() + ", getMobile()=" + getMobile()
-				+ ", getCvExternalPath()=" + getCvExternalPath() + ", getDateOfBirth()=" + getDateOfBirth()
-				+ ", getImgpath()=" + getImgpath() + ", getFirstname()=" + getFirstname() + ", getLastname()="
-				+ getLastname() + ", getEmail()=" + getEmail() + ", getFiles()=" + Arrays.toString(getFiles())
-				+ ", getCourseCode()=" + getCourseCode() + ", getNote()=" + getNote() + ", getInsertedBy()="
-				+ getInsertedBy() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
+				+ insertedBy + ", files=" + Arrays.toString(files) + "]";
 	}
 
-	
-	
-	
-	
 }
