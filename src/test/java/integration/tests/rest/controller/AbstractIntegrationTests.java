@@ -67,7 +67,8 @@ public abstract class AbstractIntegrationTests {
 	
 	protected final String TEST_USER_EMAIL = "a@b.c" ;
 	protected final String TEST_DECODED_USER_PASSWORD = "ciao1234" ;
-//	protected final String TEST_ENCODED_USER_PASSWORD = "$2a$10$FKozujcHmWdulk6naR/XveW3x46hWPnRY2S/cyI/XhmjZZEOwz.bW" ;
+//	protected final String TEST_USER_EMAIL = "integration@tests.cerepro" ;
+//	protected final String TEST_DECODED_USER_PASSWORD = "integration_tests_pwd" ;
 	
 
 	protected User getFakeUser(int level) {
