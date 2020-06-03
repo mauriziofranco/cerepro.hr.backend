@@ -296,8 +296,10 @@ public class CandidateService {
 		String uploadFilePath = null;
 		logger.info("uploadFile - DEBUG 2 - file.getOriginalFilename(): " + file.getOriginalFilename());
 		StringTokenizer st = new StringTokenizer(file.getOriginalFilename(), ".");
-		String name = st.nextToken();
-		String extension = st.nextToken();
+		String name = new String(file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf(".")));
+//		String name = st.nextToken();
+		String extension = new String(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1));
+//		String extension = st.nextToken();
 		String fileName = file.getOriginalFilename();
 		logger.info("uploadFile - DEBUG 2.5 - extension: " + extension);
 		fileNameToReturn = candidateFileName + "." + extension;
