@@ -6,7 +6,7 @@ pipeline {
             description: 'Al termine di questa pipeline, vuoi consentire la promozione in ambiente di Produzione?')
     }
     environment {
-    
+        SERVICE_SOURCE_PORT = "8080"  
         PACKAGE_FILE_NAME = readMavenPom().getProperties().getProperty('package.file.name')
         MAVEN_FILE = readMavenPom()
         PACKAGING = readMavenPom().getPackaging()
@@ -90,9 +90,9 @@ pipeline {
         stage ("PROMOTE DEV AND STAGE ENVIRONMENTS") {
             steps {
                 echo "EXECUTING DEV ENVIRONEMNT PROMOTION"
-                sh "/cerepro_resources/delivery_on_docker@env.sh ${DEV_SERVICES_EXPOSED_PORT} dev ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"
+                sh "/cerepro_resources/delivery_on_docker@env.sh ${DEV_SERVICES_EXPOSED_PORT} dev ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER} ${SERVICE_SOURCE_PORT}"
                 echo "EXECUTING STAGE ENVIRONEMNT PROMOTION"
-                sh "/cerepro_resources/delivery_on_docker@env.sh ${STAGE_SERVICES_EXPOSED_PORT} stage ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"
+                sh "/cerepro_resources/delivery_on_docker@env.sh ${STAGE_SERVICES_EXPOSED_PORT} stage ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER} ${SERVICE_SOURCE_PORT}"
             }
         }         
         stage ("HEALTH TEST ON DEV AND STAGE ENVIRONMENTS") {
@@ -110,7 +110,7 @@ pipeline {
             steps {
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"   
                 echo "EXECUTING PRODUCTION ENVIRONEMNT PROMOTION"
-                sh "/cerepro_resources/delivery_on_docker@env.sh ${PROD_SERVICES_EXPOSED_PORT} prod ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER}"            
+                sh "/cerepro_resources/delivery_on_docker@env.sh ${PROD_SERVICES_EXPOSED_PORT} prod ${DOCKER_HOST_CONTAINER_NAME_PREFIX} ${BUILD_NUMBER} ${SERVICE_SOURCE_PORT}"            
             }
         } 
         stage ("HEALTH TEST ON PROD ENVIRONMENT") {
