@@ -28,8 +28,14 @@ public class SurveyReplyService {
 
 	@Autowired
 	private SurveyReplyRepository surveyReplyRepository;
-	@Autowired
-	private SurveyReplyService surveyReplyService;
+	
+	/**
+	 * Provides to delete all entities from surveyReply table
+	 */
+	public void deleteAll() {
+		logger.debug("deleteAll - START");
+		surveyReplyRepository.deleteAll();
+	}
 	
 	public long getSurveyReplyCountForDay (LocalDate date) {
 		LocalDateTime dateTimeStart = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0);
@@ -48,7 +54,7 @@ public class SurveyReplyService {
 			LocalDate backday = today.minusDays(i);
 			currentCustomSurveyReply = new SurveyReplyCustom();		
 			currentCustomSurveyReply.setDate(backday);
-			currentCustomSurveyReply.setNumber(surveyReplyService.getSurveyReplyCountForDay(backday));
+			currentCustomSurveyReply.setNumber(getSurveyReplyCountForDay(backday));
 			toReturn.add(currentCustomSurveyReply);
 		}
 		return toReturn;
@@ -64,7 +70,7 @@ public class SurveyReplyService {
 			LocalDate yesterday = today.minusDays(i);
 			currentSrc = new SurveyReplyCustom();
 			currentSrc.setDate(yesterday);
-			currentSrc.setNumber(surveyReplyService.getPeriod(yesterday));
+			currentSrc.setNumber(getPeriod(yesterday));
 			count += currentSrc.getNumber();
 			logger.info("surveyFilledInPeriod() end");
 		}
@@ -80,7 +86,7 @@ public class SurveyReplyService {
 			LocalDate yesterday = today.minusDays(i);
 			currentSrc = new SurveyReplyCustom();
 			currentSrc.setDate(yesterday);
-			currentSrc.setNumber(surveyReplyService.getPeriod(yesterday));
+			currentSrc.setNumber(getPeriod(yesterday));
 			count += currentSrc.getNumber();
 			logger.info("surveyFilledInPeriod() end");
 		}
