@@ -8,6 +8,8 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.Base64Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,6 +32,8 @@ public abstract class AbstractIntegrationTests {
 
 	@Autowired
 	private RoleRepository roleRepository;
+//	@Autowired
+//	private RoleRepository roleService;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -60,11 +64,18 @@ public abstract class AbstractIntegrationTests {
 
 		return getFakeUser(new Random().nextInt());
 	}
+	
+	protected final String TEST_USER_EMAIL = "a@b.c" ;
+	protected final String TEST_DECODED_USER_PASSWORD = "ciao1234" ;
+//	protected final String TEST_ENCODED_USER_PASSWORD = "$2a$10$FKozujcHmWdulk6naR/XveW3x46hWPnRY2S/cyI/XhmjZZEOwz.bW" ;
+	
 
 	protected User getFakeUser(int level) {
+		logger.trace("getFakeUser - START - level: " + level);
 		User testUser = new User();
-		testUser.setEmail(getRandomLongBetweenLimits () + "pippo@prova.com");
-		testUser.setPassword("pippo");
+		testUser.setEmail(TEST_USER_EMAIL);
+		testUser.setPassword(encodePasswordForDBSaving(TEST_DECODED_USER_PASSWORD));
+//		testUser.setPassword(TEST_ENCODED_USER_PASSWORD);
 		testUser.setFirstname("pippo");
 		testUser.setLastname("prova");
 		testUser.setDateOfBirth(LocalDate.parse(("1989-10-21")));
@@ -73,6 +84,17 @@ public abstract class AbstractIntegrationTests {
 		testUser.setImgpath("impPippo");
 		userRepository.save(testUser);
 		return testUser;
+	}
+
+	protected String encodePasswordForDBSaving (String clearPwd) {
+		logger.trace("encodePasswordForDBSaving - START - clearPwd: " + clearPwd);
+//		String encodedB64Pwd = Base64Utils.encodeToString((clearPwd).getBytes()) ;
+//        logger.trace("encodePasswordForDBSaving - DEBUG - encodedB64Pwd : " + encodedB64Pwd);
+//        String fullBCriptEncodedPwd=new BCryptPasswordEncoder().encode(encodedB64Pwd);
+//        logger.trace("encodePasswordForDBSaving - DEBUG - fullBCriptEncodedPwd: " + fullBCriptEncodedPwd);
+		String fullBCriptEncodedPwd=new BCryptPasswordEncoder().encode(clearPwd);
+      logger.trace("encodePasswordForDBSaving - DEBUG - fullBCriptEncodedPwd: " + fullBCriptEncodedPwd);
+        return fullBCriptEncodedPwd ;
 	}
 	
 	protected CoursePage getFakeCoursePageWithCode(String code) {

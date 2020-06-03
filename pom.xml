@@ -26,6 +26,7 @@
 		<checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
 		<package.file.name>cerepro.hr.backend</package.file.name>
 		<maven-surefire-plugin-version>2.22.2</maven-surefire-plugin-version>
+		<spring-security.version>5.3.2.RELEASE</spring-security.version>
 	</properties>
 
 
@@ -377,6 +378,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
@@ -457,27 +463,27 @@
 		</dependency>
 
 
-<!--         the above is for handling the problem on jacoco reports making process -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 			<artifactId>jackson-databind</artifactId> -->
-<!-- 			<version>2.7.4</version> -->
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 					<artifactId>jackson-core</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 					<artifactId>jackson-annotations</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 			</exclusions> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 			<artifactId>jackson-core</artifactId> -->
-<!-- 			<version>2.7.4</version> -->
-<!-- 		</dependency> -->
+		<!-- the above is for handling the problem on jacoco reports making process -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
+		<!-- <artifactId>jackson-databind</artifactId> -->
+		<!-- <version>2.7.4</version> -->
+		<!-- <exclusions> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
+		<!-- <artifactId>jackson-core</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
+		<!-- <artifactId>jackson-annotations</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- </exclusions> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
+		<!-- <artifactId>jackson-core</artifactId> -->
+		<!-- <version>2.7.4</version> -->
+		<!-- </dependency> -->
 	</dependencies>
 
 
