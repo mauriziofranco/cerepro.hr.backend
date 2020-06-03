@@ -258,9 +258,9 @@ public class CandidateService {
 
 			try {
 				logger.info("createNewCandidate - DEBUG - inserting cv document file");
-				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), buildNewFileName(requestCandidateCustom.getEmail()));
-				logger.info("nameIdData:" + nameIdData[1]);
-				candidateToInsert.setCvExternalPath(nameIdData[1]);
+				String cvExternalPathFileName = uploadFile(requestCandidateCustom.getFiles()[1], buildNewFileName(requestCandidateCustom.getEmail()));
+				logger.info("createNewCandidate - DEBUG - cvExternalPathFileName:" + cvExternalPathFileName);
+				candidateToInsert.setCvExternalPath(cvExternalPathFileName);
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}
@@ -269,9 +269,9 @@ public class CandidateService {
 
 			try {
 				logger.info("createNewCandidate - DEBUG - inserting profile image file");
-				String[] nameIdData = uploadFile(requestCandidateCustom.getFiles(), buildNewFileName(requestCandidateCustom.getEmail()));
-				logger.info("nameIdData:" + nameIdData[0]);
-				candidateToInsert.setImgpath(nameIdData[0]);
+				String profileImgFileName = uploadFile(requestCandidateCustom.getFiles()[0], buildNewFileName(requestCandidateCustom.getEmail()));
+				logger.info("createNewCandidate - DEBUG - profileImgFileName:" + profileImgFileName);
+				candidateToInsert.setImgpath(profileImgFileName);
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}
@@ -281,6 +281,75 @@ public class CandidateService {
 
 	}
 	
+	/*
+	 * Provide to save file
+	 */
+	private String uploadFile (MultipartFile file, String candidateFileName) throws IOException {
+		logger.info("uploadFile - START");
+
+		StringBuilder sb = new StringBuilder();
+		String fileNameToReturn = null ;
+
+//		if (file.isEmpty()) {
+//			continue;
+//		}
+		String uploadFilePath = null;
+		logger.info("uploadFile - DEBUG 2 - file.getOriginalFilename(): " + file.getOriginalFilename());
+		StringTokenizer st = new StringTokenizer(file.getOriginalFilename(), ".");
+		String name = st.nextToken();
+		String extension = st.nextToken();
+		String fileName = file.getOriginalFilename();
+		logger.info("uploadFile - DEBUG 2.5 - extension: " + extension);
+		fileNameToReturn = candidateFileName + extension;
+		uploadFilePath = File.separatorChar + fileNameToReturn;
+		if ((fileName.endsWith("jpg"))||(fileName.endsWith("jpeg"))||(fileName.endsWith("png"))||
+				(fileName.endsWith("gif")) ){
+		
+//		if (fileName.endsWith("jpg")) {
+//			extension = ".jpg";
+//			uploadFilePath = IMG_DIR + File.pathSeparator + candidateFileName + file.getOriginalFilename();
+//			nameIdData[0] = candidateFileName + extension;
+//			logger.info("uploadFile - DEBUG 2.1 - nameIdData[0]: " + nameIdData[0]);
+			uploadFilePath = IMG_DIR + uploadFilePath ;
+//		} else if (fileName.endsWith("jpeg")) {
+//			extension = ".jpeg";
+//			uploadFilePath = IMG_DIR + File.pathSeparator + candidateFileName + file.getOriginalFilename();
+//			nameIdData[0] = candidateFileName + extension;
+//			logger.info("uploadFile - DEBUG 2.2 - nameIdData[0]: " + nameIdData[0]);
+//			uploadFilePath = IMG_DIR + uploadFilePath;
+//		} else if (fileName.endsWith("png")) {
+//			extension = ".png";
+//			uploadFilePath = IMG_DIR + File.pathSeparator + candidateFileName + file.getOriginalFilename();
+//			nameIdData[0] = candidateFileName + extension;
+//			logger.info("uploadFile - DEBUG 2.3 - nameIdData[0]: " + nameIdData[0]);
+//			uploadFilePath = IMG_DIR + uploadFilePath;
+		} else if ((fileName.endsWith("docx")) || (fileName.endsWith("doc")) || (fileName.endsWith("pdf")) || (fileName.endsWith("odt"))) {
+//			extension = ".docx";
+//			nameIdData[1] = candidateFileName + extension;
+//			logger.info("uploadFile - DEBUG 2.4 - nameIdData[1]: " + nameIdData[1]);
+//			uploadFilePath = CV_DIR + uploadFilePath;
+//		} else if (fileName.endsWith("doc")) {
+////			extension = ".doc";
+////			nameIdData[1] = candidateFileName + extension;
+////			logger.info("uploadFile - DEBUG 2.5 - nameIdData[1]: " + nameIdData[1]);
+//			uploadFilePath = CV_DIR + uploadFilePath;
+//		} else if (fileName.endsWith("pdf")) {
+////			extension = ".pdf";
+////			nameIdData[1] = candidateFileName + extension;
+////			logger.info("uploadFile - DEBUG 2.6 - nameIdData[1]: " + nameIdData[1]);
+			uploadFilePath = CV_DIR + uploadFilePath;
+		}
+		
+//		logger.info("uploadFile - DEBUG 2 - nameIdData[0]: " + nameIdData[0]);
+		logger.info("uploadFile - DEBUG 3 - uploadFilePath: " + uploadFilePath);
+		byte[] bytes = file.getBytes();
+		logger.info("uploadFile - DEBUG 3.5 - bytes.length: " + bytes.length);
+		FileOutputStream fos = new FileOutputStream(uploadFilePath);
+		fos.write(bytes);
+
+		logger.info("uploadFile - END - fileNameToReturn: {}", fileNameToReturn);
+		return fileNameToReturn;
+	}
 	/*
 	 * Provide to save file
 	 */
@@ -313,7 +382,7 @@ public class CandidateService {
 				nameIdData[0] = candidateFileName + extension;
 				logger.info("uploadFile - DEBUG 2.1 - nameIdData[0]: " + nameIdData[0]);
 				uploadFilePath = IMG_DIR + File.separatorChar + nameIdData[0];
-			}
+			} 
 			if (fileName.endsWith("jpeg")) {
 				extension = ".jpeg";
 				uploadFilePath = IMG_DIR + File.pathSeparator + candidateFileName + file.getOriginalFilename();
