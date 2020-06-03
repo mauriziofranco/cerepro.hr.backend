@@ -56,12 +56,11 @@ public class SurveyReplyControllerTest {
 	@Before
 	public void setup() {
 		surveyReplyController = new SurveyReplyController();
-		/* setta nellistanza del controllore dove ci sta il field che si chiama tra le "" l'istanza survreorep:  */
 		ReflectionTestUtils.setField(surveyReplyController, "surveyReplyRepository", surveyReplyRepository);
 		ReflectionTestUtils.setField(surveyReplyController, "surveyRepository", surveyRepository);
 		ReflectionTestUtils.setField(surveyReplyController, "userRepository", userRepository);
 		ReflectionTestUtils.setField(surveyReplyController, "surveyReplyService", surveyReplyService);
-		ReflectionTestUtils.setField(surveyReplyService, "surveyReplyService", surveyReplyService);	
+//		ReflectionTestUtils.setField(surveyReplyService, "surveyReplyService", surveyReplyService);	
 		ReflectionTestUtils.setField(surveyReplyService, "surveyReplyRepository", surveyReplyRepository);
 	}
 	
