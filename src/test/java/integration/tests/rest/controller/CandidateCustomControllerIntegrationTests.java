@@ -1,6 +1,7 @@
 package integration.tests.rest.controller;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -16,22 +17,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.util.Base64Utils;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CandidateStates;
 import centauri.academy.cerepro.persistence.entity.CoursePage;
+import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.CandidateStateService;
 import centauri.academy.cerepro.service.CoursePageService;
+import centauri.academy.cerepro.service.ITConsultantService;
 import centauri.academy.cerepro.service.RoleService;
+import centauri.academy.cerepro.service.SurveyReplyService;
 import centauri.academy.cerepro.service.UserService;
+import centauri.academy.cerepro.service.UserSurveyTokenService;
 
 /**
  * Integration tests CandidateCustomControllerTest methods
@@ -41,6 +49,7 @@ import centauri.academy.cerepro.service.UserService;
 @RunWith(SpringRunner.class)
 @SpringBootTest (classes = CeReProBackendApplication.class, webEnvironment = WebEnvironment.MOCK)
 @AutoConfigureMockMvc
+//@WebMvcTest(controllers = { CandidateCustomController.class }, secure = false)
 //@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class CandidateCustomControllerIntegrationTests extends AbstractIntegrationTests {
 	
@@ -61,6 +70,12 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
     private CoursePageService coursePageService;
 	@Autowired
     private CandidateStateService candidateStateService;
+	@Autowired
+    private SurveyReplyService surveyReplyService;
+	@Autowired
+    private UserSurveyTokenService userSurveyTokenService;
+	@Autowired
+    private ITConsultantService iTConsultantService;
 	
 	@Before
 	public void initializeRelatedTables () throws Exception {
@@ -68,8 +83,11 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		candidateService.deleteAll();
 		coursePageService.deleteAll();
 		candidateStateService.deleteAll();
-		userService.deleteAll();
-		roleService.deleteAll();
+		surveyReplyService.deleteAll();
+		userSurveyTokenService.deleteAll();
+		iTConsultantService.deleteAll();
+		userService.deleteAll();		
+		roleService.deleteAll();		
 	}
 	
 	@Test
@@ -79,8 +97,34 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		logger.trace("whenGetCandidateCustomById_andThereIsNot_thenStatus204 - START");
 		logger.trace("########################################################");
 		logger.trace("########################################################");
+		User user = getFakeUser(Role.ADMIN_LEVEL);
+//        logger.trace("auth  : " + Base64Utils.encodeToString((user.getEmail()+":"+user.getPassword()).getBytes()));
+////        logger.trace("password: " + Base64Utils.encodeToString("ciao1234".getBytes()));
+////        logger.trace("httpBasic(user.getEmail(),\"ciao1234\"): " + (httpBasic(user.getEmail(),TEST_DECODED_USER_PASSWORD)).toString());
+////        logger.trace("user.getPassword().getBytes(): " + user.getPassword().getBytes());
+//        String auth2 = Base64Utils.encodeToString((user.getEmail()+":" + TEST_DECODED_USER_PASSWORD).getBytes()) ;
+//        logger.trace("auth2 : " + auth2);
+//        logger.trace("password: " + Base64Utils.encodeToString(TEST_DECODED_USER_PASSWORD.getBytes()));
+//        logger.trace("decodeFromString(auth2) : " + Base64Utils.decodeFromString(auth2));
+//        logger.trace("decoded string:" + new String(Base64Utils.decodeFromString(auth2), "UTF-8").toString());
+//        
+//        String pwd = Base64Utils.encodeToString((TEST_DECODED_USER_PASSWORD).getBytes()) ;
+//        logger.trace("pwd : " + pwd);
+//        String encoded=new BCryptPasswordEncoder().encode(pwd);
+//        logger.trace("pwd encoded: " + encoded);
+//        logger.trace("decodeFromString(pwd) : " + Base64Utils.decodeFromString(pwd));
+//        logger.trace("decoded string:" + new String(Base64Utils.decodeFromString(pwd), "UTF-8").toString());
+//        logger.trace("decodeFromUrlSafeString: " + Base64Utils.decodeFromUrlSafeString("$2a$10$FKozujcHmWdulk6naR/XveW3x46hWPnRY2S/cyI/XhmjZZEOwz.bW"));
+//        logger.trace("decodeFromString: " + Base64Utils.decodeFromString("$2a$10$FKozujcHmWdulk6naR/XveW3x46hWPnRY2S/cyI/XhmjZZEOwz.bW"));
+//        logger.trace("decodeFromString.toString: " + (Base64Utils.decodeFromString("$2a$10$FKozujcHmWdulk6naR/XveW3x46hWPnRY2S/cyI/XhmjZZEOwz.bW")).toString());
+//        String s = new String(Base64Utils.decodeFromString(user.getPassword()), "UTF-8");
+//        logger.trace("new String:" + s);
 	    mvc.perform(get(SERVICE_URI + getRandomLongBetweenLimits())
-	      .contentType(MediaType.APPLICATION_JSON))
+	      .with(httpBasic(user.getEmail(),TEST_DECODED_USER_PASSWORD))
+//	      .header(HttpHeaders.AUTHORIZATION,
+//	                    "Basic " + Base64Utils.encodeToString((user.getEmail()+":"+"ciao1234").getBytes()))
+	      .contentType(MediaType.APPLICATION_JSON)
+	      )
 	      .andExpect(status().isNoContent());
 	    logger.trace("########################################################");
 		logger.trace("########################################################");
