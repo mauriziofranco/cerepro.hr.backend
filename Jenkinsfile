@@ -76,6 +76,7 @@ pipeline {
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-dev.properties ./src/main/resources/application-dev.properties"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-stage.properties ./src/main/resources/application-stage.properties"
                 sh "cp /cerepro_resources/properties/cerepro.hr.backend/application-prod.properties ./src/main/resources/application-prod.properties"
+                sh "cp /cerepro_resources/properties/cerepro.mail.manager/mail.prod.properties      ./src/test/resources/mail.properties"
                 echo "Preparing artifact: ${ARTIFACT_FULL_FILE_NAME}"
                 sh "./mvnw package -DskipTests"
                 echo "Archiving artifact: ${ARTIFACT_FULL_FILE_NAME}"
