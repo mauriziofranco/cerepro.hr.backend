@@ -136,4 +136,13 @@ pipeline {
 			body: "Your build completed, please check: ${env.BUILD_URL}"
 		}
 	}
+	post {
+		always {
+		
+			emailext body: 'Completed Pipeline: ${currentBuild.fullDisplayName}. /n Your build completed, please check: ${env.BUILD_URL}', 
+				recipientProviders: [[$class: 'DevelopersRecipientProvider'], 
+					[$class: 'RequesterRecipientProvider']], 
+					subject: 'Completed Pipeline: ${currentBuild.fullDisplayName}'
+		}
+	}
 }
