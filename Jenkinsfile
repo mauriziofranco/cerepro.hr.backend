@@ -129,13 +129,6 @@ pipeline {
         } 
         
     }
-    post {
-		always {
-			mail to: 'm.franco@proximanetwork.it',
-			subject: "Completed Pipeline: ${currentBuild.fullDisplayName}",
-			body: "Your build completed, please check: ${env.BUILD_URL}"
-		}
-	}
 	post {
 		always {
 		
