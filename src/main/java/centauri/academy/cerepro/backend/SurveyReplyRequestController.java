@@ -112,7 +112,7 @@ public class SurveyReplyRequestController {
 			
 		surveyReplyRepository.save(surveyReply);
 		
-		System.out.println("surveyReplyRequest.getUserTokenId() "+surveyReplyRequest.getUserTokenId());
+		logger.info("surveyReplyRequest.getUserTokenId() "+surveyReplyRequest.getUserTokenId());
 		
 		Optional<UserTokenSurvey> userTokenSurvey = userSurveyTokenRepository.findById(surveyReplyRequest.getUserTokenId());
 
