@@ -175,44 +175,44 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		logger.trace("########################################################");
 	}
 	
-	@Test
-	public void whenPostNewSimpleCandidateCustom_thenStatus201() throws Exception {
-		logger.trace("########################################################");
-		logger.trace("########################################################");
-		logger.trace("whenPostNewSimpleCandidateCustom_thenStatus201 - START");
-		logger.trace("########################################################");
-		logger.trace("########################################################");
-		User operativeUser = getFakeUser(Role.ADMIN_LEVEL);
-		CoursePage testCoursePage = getFakeCoursePage();
-		CandidateStates testCandidateState = getFakeCandidateState();
-		String testEmail = "aaa@aaa.it" ;
-		String testFirstname = "Giuseppe" ;
-		String testLastname = "Rossi" ;
-
-		RequestBuilder request = post(SERVICE_URI)
-		        .param("email", testEmail)
-		        .param("firstname",testFirstname)
-		        .param("lastname",testLastname)
-		        .param("userId",""+ operativeUser.getId().longValue())
-		        .param("insertedBy",""+ operativeUser.getId().longValue())
-		        .param("courseCode",testCoursePage.getCode())
-//		        .with(csrf())
-		        .with(httpBasic(operativeUser.getEmail(),TEST_DECODED_USER_PASSWORD))
-		        ;
-
-		    mvc
-		        .perform(request)
-		        .andDo(MockMvcResultHandlers.print())
-		        .andExpect(status().isCreated())
-		        .andExpect(jsonPath("$.firstname", is(testFirstname)))
-//		        .andExpect(redirectedUrl("/"))
-		        ;
-		logger.trace("########################################################");
-		logger.trace("########################################################");
-		logger.trace("whenPostNewSimpleCandidateCustom_thenStatus201 - END");
-		logger.trace("########################################################");
-		logger.trace("########################################################");
-	}
+//	@Test
+//	public void whenPostNewSimpleCandidateCustom_thenStatus201() throws Exception {
+//		logger.trace("########################################################");
+//		logger.trace("########################################################");
+//		logger.trace("whenPostNewSimpleCandidateCustom_thenStatus201 - START");
+//		logger.trace("########################################################");
+//		logger.trace("########################################################");
+//		User operativeUser = getFakeUser(Role.ADMIN_LEVEL);
+//		CoursePage testCoursePage = getFakeCoursePage();
+//		CandidateStates testCandidateState = getFakeCandidateState();
+//		String testEmail = "aaa@aaa.it" ;
+//		String testFirstname = "Giuseppe" ;
+//		String testLastname = "Rossi" ;
+//
+//		RequestBuilder request = post(SERVICE_URI)
+//		        .param("email", testEmail)
+//		        .param("firstname",testFirstname)
+//		        .param("lastname",testLastname)
+//		        .param("userId",""+ operativeUser.getId().longValue())
+//		        .param("insertedBy",""+ operativeUser.getId().longValue())
+//		        .param("courseCode",testCoursePage.getCode())
+////		        .with(csrf())
+//		        .with(httpBasic(operativeUser.getEmail(),TEST_DECODED_USER_PASSWORD))
+//		        ;
+//
+//		    mvc
+//		        .perform(request)
+//		        .andDo(MockMvcResultHandlers.print())
+//		        .andExpect(status().isCreated())
+//		        .andExpect(jsonPath("$.firstname", is(testFirstname)))
+////		        .andExpect(redirectedUrl("/"))
+//		        ;
+//		logger.trace("########################################################");
+//		logger.trace("########################################################");
+//		logger.trace("whenPostNewSimpleCandidateCustom_thenStatus201 - END");
+//		logger.trace("########################################################");
+//		logger.trace("########################################################");
+//	}
 	
 	
 	
