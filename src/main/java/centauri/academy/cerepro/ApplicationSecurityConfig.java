@@ -47,7 +47,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {		
 		http.authorizeRequests().antMatchers("/api/v1/**/").permitAll()
 		                        .antMatchers("/api/v1/**").permitAll()
-		                        .antMatchers("/api/v1/**/**").permitAll();
+		                        .antMatchers("/api/v1/**/**").permitAll()
+		                        .and().csrf().disable().cors();
 	}
 	
 	@Autowired
