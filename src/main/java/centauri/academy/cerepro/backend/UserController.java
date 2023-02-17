@@ -201,6 +201,9 @@ public class UserController {
 					HttpStatus.CONFLICT);
 		}
 		
+		
+		//REGISTRATION DATE HAVE NOT TO BE CHANGED!!!!!!!!!!!!!!
+		//so keep data from user and put all into currentUser (without regDate value!!!
 		User currentUser = optUser.get(); 
 		currentUser.setEmail(user.getEmail());
 		currentUser.setPassword(user.getPassword());
@@ -209,9 +212,10 @@ public class UserController {
 		currentUser.setDateOfBirth(user.getDateOfBirth()); 
 		currentUser.setRole(user.getRole());
 		currentUser.setImgpath(user.getImgpath());
+		currentUser.setEnabled(user.isEnabled());
 
 		 
-		userRepository.saveAndFlush(currentUser); 
+		userRepository.save(currentUser); 
 		return new ResponseEntity<>(currentUser, HttpStatus.OK);
 	}
 	
