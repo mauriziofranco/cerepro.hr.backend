@@ -48,6 +48,7 @@ public class CandidateController {
 	 * @return a new ResponseEntity with the given status code
 	 */
 //	* COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
+//  * UNCOMMENTATED FOR THE USE AND CREATION OF THE COURSE CODE TABLE ---> giammarco
 	@GetMapping("/")
 	public ResponseEntity<List<Candidate>> listAllCandidate() {
 		List<Candidate> candidates = candidateService.getAll();
