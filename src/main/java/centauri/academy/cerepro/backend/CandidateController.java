@@ -48,14 +48,14 @@ public class CandidateController {
 	 * @return a new ResponseEntity with the given status code
 	 */
 //	* COMMENTED BECAUSE FOR NOW, NOT CONSUMED ---> maurizio
-//	@GetMapping("/")
-//	public ResponseEntity<List<Candidate>> listAllCandidate() {
-//		List<Candidate> candidates = candidateService.getAll();
-//		if (candidates.isEmpty()) {
-//			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//		} else
-//			return new ResponseEntity<>(candidates, HttpStatus.OK);
-//	}
+	@GetMapping("/")
+	public ResponseEntity<List<Candidate>> listAllCandidate() {
+		List<Candidate> candidates = candidateService.getAll();
+		if (candidates.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} else
+			return new ResponseEntity<>(candidates, HttpStatus.OK);
+	}
 
 	/**
 	 * createCandidate method creates a candidate
