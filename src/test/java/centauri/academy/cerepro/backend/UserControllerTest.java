@@ -127,10 +127,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		Optional<User> currOpt = Optional.of(user);
 		when(this.userRepository.findById(100L)).thenReturn(currOpt);
@@ -157,10 +155,7 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
-//		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		when(this.roleRepository.findByLevel(user.getRole())).thenReturn(new Role());
 		Optional<User> optUser = Optional.ofNullable(null);
@@ -173,10 +168,7 @@ public class UserControllerTest {
 //		Assert.assertEquals("$2a$10$/dkQriasnwbmhxzdjDw.YO9WdTBwJHoPDhhWrceWTcZXfsVwtQEhC", ((User) responseEntity.getBody()).getPassword());
 		Assert.assertEquals("pippo", ((User) responseEntity.getBody()).getFirstname());
 		Assert.assertEquals("prova", ((User) responseEntity.getBody()).getLastname());
-		Assert.assertEquals(LocalDate.of(2018, 12, 3), ((User) responseEntity.getBody()).getDateOfBirth());
-//		Assert.assertEquals(LocalDateTime.now(), ((User) responseEntity.getBody()).getRegdate() );
 		Assert.assertEquals(10, ((User) responseEntity.getBody()).getRole());
-		Assert.assertEquals("impPippo", ((User) responseEntity.getBody()).getImgpath());
 		logger.info("testInsertUserSuccesfully()  ---------------------- END");
 	}
 
@@ -195,10 +187,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		when(this.roleRepository.findByLevel(user.getRole())).thenReturn(new Role());
 		Optional<User> optUser = Optional.ofNullable(user);
@@ -224,10 +214,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		when(this.roleRepository.findByLevel(user.getRole())).thenReturn(null);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = userController.createUser(user);
@@ -250,10 +238,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		Optional<User> currOpt = Optional.of(user);
 		when(this.roleRepository.findByLevel(user.getRole())).thenReturn(new Role());
@@ -281,10 +267,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		Optional<User> currOpt = Optional.of(user);
 		when(this.roleRepository.findByLevel(user.getRole())).thenReturn(null);
@@ -311,10 +295,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		Optional<User> currOpt = Optional.of(user);
 
@@ -349,10 +331,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		Optional<User> currOpt = Optional.of(user);
 
@@ -385,10 +365,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		Optional<User> currOpt = Optional.of(user);
 
@@ -419,10 +397,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		Optional<User> currOpt = Optional.of(user);
 
@@ -453,10 +429,8 @@ public class UserControllerTest {
 		user.setPassword("pippo");
 		user.setFirstname("pippo");
 		user.setLastname("prova");
-		user.setDateOfBirth(LocalDate.of(2018, 12, 3));
 		user.setRegdate(LocalDateTime.now());
 		user.setRole(10);
-		user.setImgpath("impPippo");
 
 		Optional<User> currOpt = Optional.of(user);
 
@@ -478,73 +452,5 @@ public class UserControllerTest {
 	public void teardown() {
 		userController = null;
 	}
-
-//	@Test
-//	public void getUserRegistratedTodayTest() {
-//		logger.info("getUserRegistratedTodayTest - START");
-//		LocalDate date = LocalDate.now();
-////		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-////		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-////		Long objL = 1L;
-//		long l = 1l;
-//
-//		when(this.candidateService.getRegisteredCandidatesInDate(date)).thenReturn(l);
-//		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedToday();
-//		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//		assertTrue(((Long) responseEntity.getBody()).equals(l));
-//		logger.info("getUserRegistratedTodayTest - END");
-//	}
-//
-//	@Test
-//	public void getUserRegistratedYesterdayTest() {
-//		logger.info("getUserRegistratedToday()  ---------------------- START");
-//		LocalDate date = LocalDate.now();
-//		date = date.minusDays(1);
-////		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-////		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-////		Long objL = 1L;
-//		long l = 1l;
-//
-////		when(this.userRepository.getUserRegdateInPeriod(start, end )).thenReturn(l);
-//		when(this.candidateService.getRegisteredCandidatesInDate(date)).thenReturn(l);
-//		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedYesterday();
-//		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//		assertTrue(((Long) responseEntity.getBody()).equals(l));
-//		logger.info("getUserRegistratedToday()  ---------------------- end");
-//	}
-//
-//	@Test
-//	public void getUserRegistratedLastSevenDaysTest() {
-//		logger.info("getUserRegistratedLastSevenDays()  ---------------------- START");
-////		LocalDate date = LocalDate.now();
-////		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-////		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-////		Long objL = 1L;
-//		long l = 1l;
-//
-////		when(this.userRepository.getUserRegdateInPeriod(start, end)).thenReturn(l);
-//        when(this.candidateService.getRegisteredCandidatesFromDaysAgo(7)).thenReturn(l);
-//		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedLastSevenDays();
-//		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//		assertTrue(((Long) responseEntity.getBody()).equals(l));
-//		logger.info("getUserRegistratedLastSevenDays()  ---------------------- end");
-//	}
-//
-//	@Test
-//	public void getUserRegistratedLastWeekTest() {
-//		logger.info("getUserRegistratedLastWeek()  ---------------------- START");
-////		LocalDate date = LocalDate.now();
-////		date = date.minusDays(7);
-////		LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0, 0);
-////		LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59, 59);
-////		Long objL = 1L;
-//		long l = 1l;
-////		when(this.userRepository.getUserRegdateInPeriod(start, end)).thenReturn(l);
-//        when(this.candidateService.getRegisteredCandidatesFromDaysAgo(14)).thenReturn(l);
-//		ResponseEntity<Long> responseEntity = this.userController.getUserRegistratedLastWeek();
-//		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//		assertTrue(((Long) responseEntity.getBody()).equals(l));
-//		logger.info("getUserRegistratedLastWeek()  ---------------------- end");
-//	}
 
 }

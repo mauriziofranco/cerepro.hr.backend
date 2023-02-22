@@ -42,8 +42,15 @@ import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurve
 import centauri.academy.cerepro.service.UserService;
 
 /**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * @author maurizio.franco@ymail.com
  * @author joffre
  * @author Orlando Platì
+ * 
  *
  */
 @RestController
@@ -209,9 +216,7 @@ public class UserController {
 		currentUser.setPassword(user.getPassword());
 		currentUser.setFirstname(user.getFirstname());
 		currentUser.setLastname(user.getLastname());
-		currentUser.setDateOfBirth(user.getDateOfBirth()); 
 		currentUser.setRole(user.getRole());
-		currentUser.setImgpath(user.getImgpath());
 		currentUser.setEnabled(user.isEnabled());
 
 		 
@@ -234,18 +239,10 @@ public class UserController {
 					HttpStatus.NOT_FOUND);
 		}  
 		
-//		List<Candidate> candidates = candidateRepository.findByUserId(id);   //foreign key (user_id) references users(id)
 		List<Employee> employees = employeeRepository.findByUserId(id);
 		List<UserTokenSurvey> userTokenSurvey = userSurveyTokenRepository.findByUserId(id);
 		List<SurveyReply> surveyReplies = surveyReplyRepository.findByUserId(id);
 		
-//		if ( !candidates.isEmpty()) {   
-//			return new ResponseEntity<>(
-//					new CustomErrorType(
-//							"Unable to delete. User with id " + id + " is candidate referenced."),
-//					HttpStatus.CONFLICT); // code 409
-//			 
-//		}else 
 		if( ! employees.isEmpty()) { 
 				return new ResponseEntity<>(
 						new CustomErrorType(
@@ -269,44 +266,4 @@ public class UserController {
 		 } 
 	} 
 	
-//	//candidati registrati oggi
-//	@GetMapping("/todayRegistrated")
-//	public ResponseEntity <Long> getUserRegistratedToday(){
-//		logger.info("getUserRegistratedToday() started");
-//		LocalDate today = LocalDate.now();
-//		long count = candidateService.getRegisteredCandidatesInDate(today);
-//		logger.info("getUserRegistratedToday() end " + count);
-//		return new ResponseEntity<Long>(count, HttpStatus.OK);
-//	}
-//	
-//	//candidati registrati nell'ultima settimana
-//	@GetMapping("/lastSevenDaysRegistrated")
-//	public ResponseEntity<Long> getUserRegistratedLastSevenDays(){
-//		logger.info("getUserRegistratedLastSevenDays() started");
-//		long count = candidateService.getRegisteredCandidatesFromDaysAgo(7);
-//		logger.info("getUserRegistratedLastSevenDays() end " + count);
-//		return new ResponseEntity<Long>(count, HttpStatus.OK);
-//	}
-//	//candidati registrati yeri
-//		@GetMapping("/yesterdayRegistrated")
-//		public ResponseEntity <Long> getUserRegistratedYesterday(){
-//			logger.info("getUserRegistratedToday() started");
-//			LocalDate yesterday = LocalDate.now();
-//			yesterday = yesterday.minusDays(1);
-//			long count = candidateService.getRegisteredCandidatesInDate(yesterday);
-//			logger.info("getUserRegistratedToday() end " + count);
-//			return new ResponseEntity<Long>(count, HttpStatus.OK);
-//		}
-//		
-//		//candidati registrati nella penultima settimana
-//		@GetMapping("/lastWeekRegistrated")
-//		public ResponseEntity<Long> getUserRegistratedLastWeek(){
-//			logger.info("getUserRegistratedLastSevenDays() started");
-////			long count = userService.getUserRegistratedInLastWeek(14);
-//			long count = candidateService.getRegisteredCandidatesFromDaysAgo(14);
-//			logger.info("getUserRegistratedLastSevenDays() end " + count);
-//			return new ResponseEntity<Long>(count, HttpStatus.OK);
-//		}
-		
-		
 }

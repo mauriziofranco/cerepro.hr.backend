@@ -79,10 +79,8 @@ public abstract class AbstractIntegrationTests {
 //		testUser.setPassword(TEST_ENCODED_USER_PASSWORD);
 		testUser.setFirstname("pippo");
 		testUser.setLastname("prova");
-		testUser.setDateOfBirth(LocalDate.parse(("1989-10-21")));
 		testUser.setRegdate(LocalDateTime.now());
 		testUser.setRole(getFakeRole(level).getLevel());
-		testUser.setImgpath("impPippo");
 		userRepository.save(testUser);
 		return testUser;
 	}

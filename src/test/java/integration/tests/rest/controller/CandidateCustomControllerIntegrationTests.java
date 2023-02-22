@@ -35,7 +35,6 @@ import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.CandidateStateService;
 import centauri.academy.cerepro.service.CoursePageService;
-import centauri.academy.cerepro.service.ITConsultantService;
 import centauri.academy.cerepro.service.RoleService;
 import centauri.academy.cerepro.service.SurveyReplyService;
 import centauri.academy.cerepro.service.UserService;
@@ -74,8 +73,6 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
     private SurveyReplyService surveyReplyService;
 	@Autowired
     private UserSurveyTokenService userSurveyTokenService;
-	@Autowired
-    private ITConsultantService iTConsultantService;
 	
 	@Before
 	public void initializeRelatedTables () throws Exception {
@@ -85,7 +82,6 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 		candidateStateService.deleteAll();
 		surveyReplyService.deleteAll();
 		userSurveyTokenService.deleteAll();
-		iTConsultantService.deleteAll();
 		userService.deleteAll();		
 		roleService.deleteAll();		
 	}
