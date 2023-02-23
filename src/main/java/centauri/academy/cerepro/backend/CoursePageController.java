@@ -2,13 +2,11 @@ package centauri.academy.cerepro.backend;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
-
+import java.util.Properties;
 
 import javax.validation.Valid;
 
@@ -18,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +49,10 @@ import centauri.academy.cerepro.persistence.repository.CoursePageRepository;
 @RestController
 @RequestMapping("/api/v1/coursepage")
 public class CoursePageController {
-
+	
+	@Autowired
+	private MessageSource messageSource;
+	
 	final String FINE_INDEX = "\n</body>\r\n" + "</html>\r\n" + "";
 //	static final String START_MESSAGE_BODY="<!DOCTYPE html>\r\n" + 
 //			"<html lang=\"it\" ng-app=\"candidating\">\r\n" + 
@@ -127,7 +130,7 @@ public class CoursePageController {
 //			"<link rel=\"apple-touch-icon-precomposed\"\r\n" + 
 //			"	href=\"http://www.proximainformatica.com/wp-content/uploads/2017/09/cropped-favicon-fb-proxima-3-180x180.png\" />\r\n" + 
 //			"<link\r\n" + 
-//			"	href=\"https://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css\"\r\n" + 
+//			"	href=\"https://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css\"\r\n" new + 
 //			"	rel=\"stylesheet\">\r\n" + 
 //			"<link rel=\"stylesheet\" type=\"text/css\"\r\n" + 
 //			"	href=\"/centauri/candidati/css/notice.css\">\r\n" + 
@@ -374,8 +377,17 @@ public class CoursePageController {
 					new CustomErrorType("Unable to delete. CoursePage with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
-		coursePageRepository.delete(coursePage.get());
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		try {			
+			coursePageRepository.delete(coursePage.get());
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} catch (DataIntegrityViolationException e) {
+			logger.error(e.getMessage(), e);
+			String constraintViolationMessage = messageSource.getMessage("coursepage.error.delete.not.executed.contraint.violation", null, LocaleContextHolder.getLocale());
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType(constraintViolationMessage)  , HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType(e.getMessage())  , HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@DeleteMapping(value = "/deleteFile/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
