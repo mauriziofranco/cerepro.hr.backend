@@ -203,13 +203,13 @@ public class UserController {
 					HttpStatus.NOT_FOUND);
 		}
 
-//		if (roleRepository.findByLevel(user.getRole()) == null) {
-//
-//			return new ResponseEntity<>(
-//					new CustomErrorType(
-//							"Unable to update user. Level " + user.getRole() + " is not present in database."),
-//					HttpStatus.CONFLICT);
-//		}
+		if (roleRepository.findByLevel(user.getRole()) == null) {
+
+			return new ResponseEntity<>(
+					new CustomErrorType(
+							"Unable to update user. Level " + user.getRole() + " is not present in database."),
+					HttpStatus.CONFLICT);
+		}
 
 		// REGISTRATION DATE HAVE NOT TO BE CHANGED!!!!!!!!!!!!!!
 		// so keep data from user and put all into currentUser (without regDate value!!!
