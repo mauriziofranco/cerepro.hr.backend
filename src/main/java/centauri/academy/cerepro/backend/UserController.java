@@ -29,12 +29,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.Employee;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
-import centauri.academy.cerepro.persistence.repository.EmployeeRepository;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
@@ -67,10 +65,6 @@ public class UserController {
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
-//	@Autowired
-//	private CandidateRepository  candidateRepository;
-	@Autowired
-	private EmployeeRepository employeeRepository;
 	@Autowired
 	private UserSurveyTokenRepository userSurveyTokenRepository;
 	@Autowired
@@ -251,16 +245,10 @@ public class UserController {
 					HttpStatus.NOT_FOUND);
 		}
 
-		List<Employee> employees = employeeRepository.findByUserId(id);
 		List<UserTokenSurvey> userTokenSurvey = userSurveyTokenRepository.findByUserId(id);
 		List<SurveyReply> surveyReplies = surveyReplyRepository.findByUserId(id);
 
-		if (!employees.isEmpty()) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to delete. User with id " + id + " is employee  referenced."),
-					HttpStatus.CONFLICT); // code 409
-
-		} else if (!userTokenSurvey.isEmpty()) {
+		if (!userTokenSurvey.isEmpty()) {
 			return new ResponseEntity<>(
 					new CustomErrorType("Unable to delete. User with id " + id + " is userTokenSurvey referenced."),
 					HttpStatus.CONFLICT); // code 409

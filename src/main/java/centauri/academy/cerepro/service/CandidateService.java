@@ -238,7 +238,6 @@ public class CandidateService {
 		logger.info("createNewCandidate - START - with requestCandidateCustom {}", requestCandidateCustom);
 		
 		Candidate candidateToInsert = new Candidate () ;
-		candidateToInsert.setUserId(requestCandidateCustom.getInsertedBy());
 		candidateToInsert.setInsertedBy(requestCandidateCustom.getInsertedBy());
 		candidateToInsert.setDomicileCity(requestCandidateCustom.getDomicileCity());
 		candidateToInsert.setStudyQualification(requestCandidateCustom.getStudyQualification());

@@ -11,15 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import centauri.academy.cerepro.persistence.entity.Interview;
 import centauri.academy.cerepro.persistence.entity.Question;
-import centauri.academy.cerepro.persistence.entity.SurveyInterview;
 import centauri.academy.cerepro.persistence.entity.SurveyQuestion;
-import centauri.academy.cerepro.persistence.repository.InterviewRepository;
 import centauri.academy.cerepro.persistence.repository.QuestionRepository;
-import centauri.academy.cerepro.persistence.repository.SurveyInterviewRepository;
 import centauri.academy.cerepro.persistence.repository.surveyquestion.SurveyQuestionRepository;
-import centauri.academy.cerepro.rest.response.AbstractSurveyResponse;
 import centauri.academy.cerepro.rest.response.ResponseInterview;
 import centauri.academy.cerepro.rest.response.ResponseQuestion;
 
@@ -33,10 +28,6 @@ public class SurveyService {
 	
 	@Autowired
 	private SurveyQuestionRepository surveyQuestionRepository;
-	@Autowired
-	private InterviewRepository interviewRepository;
-	@Autowired
-	private SurveyInterviewRepository surveyInterviewRepository;
 	@Autowired
 	private QuestionRepository questionRepository;
 	
@@ -98,34 +89,6 @@ public class SurveyService {
 			//TODO: extract in order by POSITION!!!!
 		}
 		return listaResponseQuestion;
-	}
-	
-	public List<ResponseInterview> getAllRelatedInterviewsBySurveyIdOrderedByPosition(long surveyId) {
-		List<SurveyInterview> listaSurveyInterview = surveyInterviewRepository.findBySurveyIdOrderByPositionAsc(surveyId);
-		List<ResponseInterview> listaResponseInterview = new ArrayList<ResponseInterview>();
-		for (SurveyInterview sI : listaSurveyInterview ) {
-			
-			ResponseInterview ri = new ResponseInterview();
-			Interview i = interviewRepository.getOne(sI.getInterviewId());
-			// TODO change getOne with findById....
-			ri.setId(i.getId());
-			ri.setAnsa(i.getAnsa());
-			ri.setAnsb(i.getAnsb());
-			ri.setAnsc(i.getAnsc());
-			ri.setAnsd(i.getAnsd());
-			ri.setAnse(i.getAnse());
-			ri.setAnsf(i.getAnsf());
-			ri.setAnsg(i.getAnsg());
-			ri.setAnsh(i.getAnsh());
-			ri.setAnsi(i.getAnsi());
-			ri.setAnsj(i.getAnsj());
-			ri.setQuestionText(i.getQuestionText());
-			ri.setPosition(sI.getPosition());
-			
-			listaResponseInterview.add(ri);
-			//TODO: extract in order by POSITION!!!!
-		}
-		return listaResponseInterview;
 	}
 	
 }

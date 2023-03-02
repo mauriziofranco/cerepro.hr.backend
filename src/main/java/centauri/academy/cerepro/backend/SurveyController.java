@@ -6,17 +6,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import javax.swing.JOptionPane;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +27,6 @@ import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Survey;
 import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
-import centauri.academy.cerepro.persistence.repository.SurveyInterviewRepository;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
 import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
 import centauri.academy.cerepro.rest.response.ResponseInterview;
@@ -52,8 +48,6 @@ public class SurveyController {
 
 	@Autowired
 	private SurveyRepository surveyRepository;
-	@Autowired
-	private SurveyInterviewRepository surveyInterviewRepository;
 	@Autowired
 	private UserSurveyTokenRepository userSurveyTokenRepository;
 	@Autowired
@@ -182,19 +176,10 @@ public class SurveyController {
 				toSend.setExpiredToken(tokenExpired);
 				return new ResponseEntity<StartSurveyResponse>(toSend, HttpStatus.OK);
 			} else {
-				logger.info("getSurveyForCandidate - DEBUG - isInterview(userTokenSurvey.getSurveyid()): " + isInterview(userTokenSurvey.getSurveyid()));
-				if(isInterview(userTokenSurvey.getSurveyid())) {
-					List<ResponseInterview> listaResponseInterview = surveyService.getAllRelatedInterviewsBySurveyIdOrderedByPosition(userTokenSurvey.getSurveyid());
-					toSend.setInterviews(listaResponseInterview);
-					
-				}
-				
-				else {
 					
 					List<ResponseQuestion> listaResponseQuestion = surveyService.getAllRelatedQuestionsBySurveyIdOrderedByPosition(userTokenSurvey.getSurveyid());
 					logger.info("getSurveyForCandidate - DEBUG - listaResponseQuestion.size(): " + listaResponseQuestion.size()); 
 					toSend.setQuestions(listaResponseQuestion);
-				}
 			}
 			
 			toSend.setSurveyId(userTokenSurvey.getSurveyid());
@@ -215,12 +200,5 @@ public class SurveyController {
 		toSend.setInvalidToken(invalidToken);
 		return new ResponseEntity<StartSurveyResponse>(toSend, HttpStatus.NOT_FOUND);
 	}
-	
-	public boolean isInterview(Long surveyId) {
-		if(surveyInterviewRepository.findBySurveyId(surveyId).size() == 0) {
-			return false;
-		}
 		
-		return true;
-	}
 }

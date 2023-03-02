@@ -148,7 +148,7 @@ public abstract class AbstractIntegrationTests {
 		String lastname = "Test_Lasstname" ;
 		String email = "test@email.com" ;
 		LocalDateTime candidacyDateTime = LocalDateTime.now();
-		Candidate testCandidate = new Candidate(userId, code,candidateStatusCode, email, firstname, lastname, regdate, insertedBy, candidacyDateTime);
+		Candidate testCandidate = new Candidate(code,candidateStatusCode, email, firstname, lastname, regdate, insertedBy, candidacyDateTime);
 		candidateService.insert(testCandidate);
 		return testCandidate;
 	}

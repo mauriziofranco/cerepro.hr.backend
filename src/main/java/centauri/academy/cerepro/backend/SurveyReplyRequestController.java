@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,7 +25,6 @@ import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
-import centauri.academy.cerepro.persistence.repository.SurveyInterviewRepository;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
@@ -54,8 +52,6 @@ public class SurveyReplyRequestController {
 	private SurveyReplyRequestService surveyReplyRequestService;
 	@Autowired
 	private UserSurveyTokenRepository userSurveyTokenRepository;
-	@Autowired
-	private SurveyInterviewRepository surveyInterviewRepository;
 	
 	public static final Logger logger = LoggerFactory.getLogger(SurveyReplyRequestController.class);
 	/** CREATE A NEW SURVEY REPLY REQUEST */
@@ -136,16 +132,16 @@ public class SurveyReplyRequestController {
 		
 		SurveyReply currentSurveyReply = optSurveyReply.get(); 
 		currentSurveyReply.setEndtime(LocalDateTime.now());
-		if(surveyInterviewRepository.findBySurveyId(currentSurveyReply.getSurveyId()).size() == 0) {
-			System.out.println("----------------------------------------------AAA--------------------");
-			currentSurveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
-			currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
-		}
-		else {
+//		if(surveyInterviewRepository.findBySurveyId(currentSurveyReply.getSurveyId()).size() == 0) {
+//			System.out.println("----------------------------------------------AAA--------------------");
+//			currentSurveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
+//			currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
+//		}
+//		else {
 			System.out.println("----------------------------------------------BBB--------------------");
 			currentSurveyReply.setAnswers(surveyReplyRequestService.answersInterviewToString(surveyReplyRequest.getInterviewAnswers()));
 			
-		}
+//		}
 	 
 		surveyReplyRepository.save(currentSurveyReply); 
 		return new ResponseEntity<>(currentSurveyReply, HttpStatus.OK);

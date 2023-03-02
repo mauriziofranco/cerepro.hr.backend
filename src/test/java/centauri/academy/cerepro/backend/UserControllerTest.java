@@ -2,7 +2,6 @@ package centauri.academy.cerepro.backend;
 
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.mockito.Spy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,15 +24,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.Employee;
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
-import centauri.academy.cerepro.persistence.repository.EmployeeRepository;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
-import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
 import centauri.academy.cerepro.service.UserService;
@@ -59,14 +54,8 @@ public class UserControllerTest {
 	private UserController userController;
 	@Mock
 	private UserRepository userRepository;
-//	@Mock
-//	private CandidateService candidateService;
 	@Mock
 	private RoleRepository roleRepository;
-//	@Mock
-//	private CandidateRepository candidateRepository;
-	@Mock
-	private EmployeeRepository employeeRepository;
 	@Mock
 	private UserSurveyTokenRepository userSurveyTokenRepository;
 	@Mock
@@ -83,15 +72,11 @@ public class UserControllerTest {
 	public void setup() {
 		userController = new UserController();
 		ReflectionTestUtils.setField(userController, "userRepository", userRepository);
-//		ReflectionTestUtils.setField(userController, "candidateService", candidateService);
 		ReflectionTestUtils.setField(userController, "roleRepository", roleRepository);
-//		ReflectionTestUtils.setField(userController, "candidateRepository", candidateRepository);
-		ReflectionTestUtils.setField(userController, "employeeRepository", employeeRepository);
 		ReflectionTestUtils.setField(userController, "userSurveyTokenRepository", userSurveyTokenRepository);
 		ReflectionTestUtils.setField(userController, "surveyReplyRepository", surveyReplyRepository);
 		ReflectionTestUtils.setField(userController, "userService", userService);
 		ReflectionTestUtils.setField(userService, "userRepository", userRepository);
-//		ReflectionTestUtils.setField(userService, "userService", userService);
 	}
 
 	/**
@@ -300,14 +285,11 @@ public class UserControllerTest {
 
 		Optional<User> currOpt = Optional.of(user);
 
-//		List<Candidate> candidateList = new ArrayList<Candidate>();
-		List<Employee> employeeList = new ArrayList<Employee>();
 		List<UserTokenSurvey> userSurveyTokenList = new ArrayList<UserTokenSurvey>();
 		List<SurveyReply> surveyReplyList = new ArrayList<SurveyReply>();
 
 		when(this.userRepository.findById(100L)).thenReturn(currOpt);
 //		when(this.candidateRepository.findByUserId(100L)).thenReturn(candidateList);
-		when(this.employeeRepository.findByUserId(100L)).thenReturn(employeeList);
 		when(this.userSurveyTokenRepository.findByUserId(100L)).thenReturn(userSurveyTokenList);
 		when(this.surveyReplyRepository.findByUserId(100L)).thenReturn(surveyReplyList);
 
@@ -349,37 +331,37 @@ public class UserControllerTest {
 		logger.info("testDeleteUserKOForUserSurveyTokenPresent() - END");
 	}
 
-	/**
-	 * testDeleteUserKOForEmployeeUserId() method tests if the method deleteUser()
-	 * is really able for foreign key (user_id) references users(id) into employees'
-	 * table
-	 * 
-	 */
-	@Test
-	public void testDeleteUserKOForEmployeeUserId() {
-
-		logger.info("testDeleteUserKOForEmployeeUserId()  ---------------------- START");
-		User user = new User();
-		user.setId(100L);
-		user.setEmail("pippo@prova.com");
-		user.setPassword("pippo");
-		user.setFirstname("pippo");
-		user.setLastname("prova");
-		user.setRegdate(LocalDateTime.now());
-		user.setRole(10);
-
-		Optional<User> currOpt = Optional.of(user);
-
-		List<Employee> employeeList = new ArrayList<Employee>();
-		employeeList.add(new Employee());
-
-		when(this.userRepository.findById(100L)).thenReturn(currOpt);
-		when(this.employeeRepository.findByUserId(100L)).thenReturn(employeeList);
-		ResponseEntity<CeReProAbstractEntity> responseEntity = this.userController.deleteUser(100L);
-
-		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-		logger.info("testDeleteUserKOForEmployeeUserId()  ---------------------- END");
-	}
+//	/**
+//	 * testDeleteUserKOForEmployeeUserId() method tests if the method deleteUser()
+//	 * is really able for foreign key (user_id) references users(id) into employees'
+//	 * table
+//	 * 
+//	 */
+//	@Test
+//	public void testDeleteUserKOForEmployeeUserId() {
+//
+//		logger.info("testDeleteUserKOForEmployeeUserId()  ---------------------- START");
+//		User user = new User();
+//		user.setId(100L);
+//		user.setEmail("pippo@prova.com");
+//		user.setPassword("pippo");
+//		user.setFirstname("pippo");
+//		user.setLastname("prova");
+//		user.setRegdate(LocalDateTime.now());
+//		user.setRole(10);
+//
+//		Optional<User> currOpt = Optional.of(user);
+//
+////		List<Employee> employeeList = new ArrayList<Employee>();
+////		employeeList.add(new Employee());
+//
+//		when(this.userRepository.findById(100L)).thenReturn(currOpt);
+////		when(this.employeeRepository.findByUserId(100L)).thenReturn(employeeList);
+//		ResponseEntity<CeReProAbstractEntity> responseEntity = this.userController.deleteUser(100L);
+//
+//		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+//		logger.info("testDeleteUserKOForEmployeeUserId()  ---------------------- END");
+//	}
 
 	/**
 	 * testDeleteUserKOForUserTokenSurveyUserId() method tests if the method

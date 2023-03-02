@@ -61,7 +61,7 @@ public abstract class AbstractMockModelGenerator {
 		String lastname = "Test_Lasstname" ;
 		String email = "test@email.com" ;
 		LocalDateTime candidacyDateTime = LocalDateTime.now();
-		Candidate testCandidate = new Candidate(userId, code,candidateStatesId, email, firstname, lastname, regdate, insertedBy, candidacyDateTime);
+		Candidate testCandidate = new Candidate(code,candidateStatesId, email, firstname, lastname, regdate, insertedBy, candidacyDateTime);
 		return testCandidate;
 	}
 	
