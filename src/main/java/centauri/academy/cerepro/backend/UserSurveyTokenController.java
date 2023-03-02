@@ -44,7 +44,8 @@ import centauri.academy.cerepro.util.RandomTokenGenerator;
 @RequestMapping("/api/v1/usersurveytoken")
 public class UserSurveyTokenController {
 	
-	public static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
+	public static final Logger logger = LoggerFactory.getLogger(UserSurveyTokenController.class);
+	
 	private UserSurveyTokenRepository userSurveyTokenRepository;
 	
 	@Value("${app.runtime.environment}")
@@ -127,15 +128,17 @@ public class UserSurveyTokenController {
 	 */ 
 	@GetMapping("/sendEmail/{id}")
 	public ResponseEntity<Boolean> sendEmail(@PathVariable("id") final Long id) {
-		UserTokenSurvey uts = null;
+		logger.info("sendEmail - START - id: " + id);
+		UserTokenSurvey currentUserSurveyToken = null;
 		Optional<UserTokenSurvey> ustQ = userSurveyTokenRepository.findById(id);
 		if (!ustQ.isPresent()) {
 			return new ResponseEntity<>(false,HttpStatus.NOT_FOUND);
 		} else {
-			uts=ustQ.get();
-			Optional<User> u = userRepository.findById(uts.getUserid());
+			
+			currentUserSurveyToken=ustQ.get();
+			logger.info("sendEmail - DEBUG - currentUserSurveyToken: " + currentUserSurveyToken);
+			Optional<User> u = userRepository.findById(currentUserSurveyToken.getUserid());
 				
-			//Struttura temporanea
 			if(u.isPresent()) {
 				Properties props = new Properties();
 				try {
@@ -145,11 +148,12 @@ public class UserSurveyTokenController {
 				}
 				String messageBody=props.getProperty("mail.survey.messageBody");
 				String link = props.getProperty("mail.survey.link");
-				link=link.replaceAll("XXX", uts.getGeneratedtoken());
+				link=link.replaceAll("XXX", currentUserSurveyToken.getGeneratedtoken());
 				link=link.replaceAll("YYY", runtimeEnvironment);
 				String subject = props.getProperty("mail.survey.subject");
 				String signature = props.getProperty("mail.survey.signature");
 				String message = messageBody+link+signature;
+				logger.info("sendEmail - DEBUG - sending mail - message: " + message);
 				boolean mailSent = MailUtility.sendSimpleMail(u.get().getEmail(), subject, message);
 				return new ResponseEntity<Boolean>(mailSent,HttpStatus.OK);
 			} else

@@ -148,11 +148,11 @@ public class SurveyController {
 	 */
 	@GetMapping("/getSurveyForCandidate/{token}")
 	public ResponseEntity<StartSurveyResponse> getSurveyForCandidate(@PathVariable("token") final String token){
+		logger.info("getSurveyForCandidate - START - token: " + token);
 		StartSurveyResponse toSend = new StartSurveyResponse();
 		/* lets take the userSurveyToken associated and check if it exists */
 		UserTokenSurvey userTokenSurvey = userSurveyTokenRepository.findByGeneratedtoken(token);
-		Optional<Survey> survey = surveyRepository.findById(userTokenSurvey.getSurveyid());
-		Boolean expired = userTokenSurvey.isExpired();
+		logger.info("getSurveyForCandidate - DEBUG - userTokenSurvey: " + userTokenSurvey);
 		Properties props = new Properties();
 		try {
 			props.load(UserSurveyTokenController.class.getClassLoader().getResourceAsStream("messages.properties"));
@@ -160,8 +160,13 @@ public class SurveyController {
 			logger.error("Error ",e);
 		}
 		if(userTokenSurvey != null) {
+			Optional<Survey> survey = surveyRepository.findById(userTokenSurvey.getSurveyid());
+			logger.info("getSurveyForCandidate - DEBUG - survey.isPresent(): " + survey.isPresent() + " - userTokenSurvey.getSurveyid(): " + userTokenSurvey.getSurveyid());
+			Boolean expired = userTokenSurvey.isExpired();
+			logger.info("getSurveyForCandidate - DEBUG - userTokenSurvey.isExpired(): " + expired);
 			/* check on expiration date */
 			LocalDateTime expDate = userTokenSurvey.getExpirationdate();
+			logger.info("getSurveyForCandidate - DEBUG - expDate.isBefore(LocalDateTime.now()): " + expDate.isBefore(LocalDateTime.now()));
 			if(expDate.isBefore(LocalDateTime.now())) {
 				String tokenExpired = props.getProperty("token.message.expired");
 				userTokenSurvey.setExpired(true);
@@ -170,30 +175,27 @@ public class SurveyController {
 				toSend.setErrorCode(2); /* if the token is expired -> errorCode = 2 */
 				toSend.setExpiredToken(tokenExpired);
 				return new ResponseEntity<StartSurveyResponse>(toSend, HttpStatus.OK);
-			}
-			
-			if(expired) {//TODO
+			} else if(expired) {//TODO
 //			if (false) {//only for testing frontend....
 				toSend.setErrorCode(2); /* if the token is expired -> errorCode = 2 */
 				String tokenExpired = props.getProperty("token.message.expired");
 				toSend.setExpiredToken(tokenExpired);
 				return new ResponseEntity<StartSurveyResponse>(toSend, HttpStatus.OK);
-			}
-			
-			//TODO--> diversificare se survey o interview
-//			List<ResponseQuestion> listaResponseQuestion = surveyService.getAllResponseQuestionBySurveyId(userTokenSurvey.getSurveyid());
-			if(isInterview(userTokenSurvey.getSurveyid())) {
-				List<ResponseInterview> listaResponseInterview = surveyService.getAllRelatedInterviewsBySurveyIdOrderedByPosition(userTokenSurvey.getSurveyid());
-				toSend.setInterviews(listaResponseInterview);
+			} else {
+				logger.info("getSurveyForCandidate - DEBUG - isInterview(userTokenSurvey.getSurveyid()): " + isInterview(userTokenSurvey.getSurveyid()));
+				if(isInterview(userTokenSurvey.getSurveyid())) {
+					List<ResponseInterview> listaResponseInterview = surveyService.getAllRelatedInterviewsBySurveyIdOrderedByPosition(userTokenSurvey.getSurveyid());
+					toSend.setInterviews(listaResponseInterview);
+					
+				}
 				
+				else {
+					
+					List<ResponseQuestion> listaResponseQuestion = surveyService.getAllRelatedQuestionsBySurveyIdOrderedByPosition(userTokenSurvey.getSurveyid());
+					logger.info("getSurveyForCandidate - DEBUG - listaResponseQuestion.size(): " + listaResponseQuestion.size()); 
+					toSend.setQuestions(listaResponseQuestion);
+				}
 			}
-			
-			else {
-			
-				List<ResponseQuestion> listaResponseQuestion = surveyService.getAllRelatedQuestionsBySurveyIdOrderedByPosition(userTokenSurvey.getSurveyid());
-				toSend.setQuestions(listaResponseQuestion);
-			}
-			
 			
 			toSend.setSurveyId(userTokenSurvey.getSurveyid());
 			toSend.setUserId(userTokenSurvey.getUserid());
