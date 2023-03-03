@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import centauri.academy.cerepro.persistence.entity.CandidateSurveyToken;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
-import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
+import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
-import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
 import centauri.academy.cerepro.rest.request.SurveyReplyRequest;
 import centauri.academy.cerepro.rest.request.SurveyReplyStartRequest;
 import centauri.academy.cerepro.service.SurveyReplyRequestService;
@@ -51,7 +51,7 @@ public class SurveyReplyRequestController {
 	@Autowired
 	private SurveyReplyRequestService surveyReplyRequestService;
 	@Autowired
-	private UserSurveyTokenRepository userSurveyTokenRepository;
+	private CandidateSurveyTokenRepository candidateSurveyTokenRepository;
 	
 	public static final Logger logger = LoggerFactory.getLogger(SurveyReplyRequestController.class);
 	/** CREATE A NEW SURVEY REPLY REQUEST */
@@ -72,7 +72,7 @@ public class SurveyReplyRequestController {
 		/* Creating a SurveyReply by SurveyReplyRequest */
 		SurveyReply surveyReply = new SurveyReply();
 		surveyReply.setSurveyId(surveyReplyRequest.getSurveyId());
-		surveyReply.setUserId(surveyReplyRequest.getUserId());
+		surveyReply.setCandidateId(surveyReplyRequest.getUserId());
 		surveyReply.setStarttime(surveyReplyRequest.getStarttime());
 		surveyReply.setEndtime(surveyReplyRequest.getEndtime());
 		
@@ -94,15 +94,15 @@ public class SurveyReplyRequestController {
 					new CustomErrorType("Unable to create new Survey Reply. Survey Id: " + surveyReplyRequest.getSurveyId()
 							+ " is not present in database."),HttpStatus.CONFLICT);
 		
-		if (userRepository.findById(surveyReplyRequest.getUserId()) == null)
+		if (userRepository.findById(surveyReplyRequest.getCandidateId()) == null)
 			return new ResponseEntity<>(
-					new CustomErrorType("Unable to create new Survey Reply. User id: " + surveyReplyRequest.getUserId()
+					new CustomErrorType("Unable to create new Survey Reply. User id: " + surveyReplyRequest.getCandidateId()
 							+ " is not present in database."),HttpStatus.CONFLICT);
 		
 		/* Creating a SurveyReply by SurveyReplyRequest */
 		SurveyReply surveyReply = new SurveyReply();
 		surveyReply.setSurveyId(surveyReplyRequest.getSurveyId());
-		surveyReply.setUserId(surveyReplyRequest.getUserId());
+		surveyReply.setCandidateId(surveyReplyRequest.getCandidateId());
 		surveyReply.setStarttime(LocalDateTime.now());
 		
 			
@@ -110,11 +110,11 @@ public class SurveyReplyRequestController {
 		
 		logger.info("surveyReplyRequest.getUserTokenId() "+surveyReplyRequest.getUserTokenId());
 		
-		Optional<UserTokenSurvey> userTokenSurvey = userSurveyTokenRepository.findById(surveyReplyRequest.getUserTokenId());
+		Optional<CandidateSurveyToken> candidateSurveyToken = candidateSurveyTokenRepository.findById(surveyReplyRequest.getUserTokenId());
 
-		UserTokenSurvey currentUserTokenSurvey = userTokenSurvey.get();
-		currentUserTokenSurvey.setExpired(true);
-		userSurveyTokenRepository.save(currentUserTokenSurvey); 
+		CandidateSurveyToken currentCandidateSurveyToken = candidateSurveyToken.get();
+		currentCandidateSurveyToken.setExpired(true);
+		candidateSurveyTokenRepository.save(currentCandidateSurveyToken); 
 
 		return new ResponseEntity<>(surveyReply, HttpStatus.CREATED);
 	}

@@ -1,7 +1,6 @@
 package centauri.academy.cerepro.backend;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +26,7 @@ import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.custom.SurveyReplyCustom;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
-import centauri.academy.cerepro.persistence.repository.UserRepository;
+import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 import centauri.academy.cerepro.service.SurveyReplyService;
 
@@ -43,7 +41,7 @@ public class SurveyReplyController {
 	@Autowired
 	private SurveyReplyService surveyReplyService;
 	@Autowired
-	private UserRepository userRepository;
+	private CandidateRepository candidateRepository;
 	@Autowired
 	private SurveyRepository surveyRepository;
 
@@ -71,9 +69,9 @@ public class SurveyReplyController {
 			return new ResponseEntity<>(new CustomErrorType("Unable to create new Survey Reply. Survey Id: "
 					+ surveyReply.getSurveyId() + " is not present in database."), HttpStatus.CONFLICT);
 
-		if (userRepository.findById(surveyReply.getUserId()) == null)
-			return new ResponseEntity<>(new CustomErrorType("Unable to create new Survey Reply. User id: "
-					+ surveyReply.getUserId() + " is not present in database."), HttpStatus.CONFLICT);
+		if (candidateRepository.findById(surveyReply.getCandidateId()) == null)
+			return new ResponseEntity<>(new CustomErrorType("Unable to create new Survey Reply. Candidate id: "
+					+ surveyReply.getCandidateId() + " does not exists."), HttpStatus.CONFLICT);
 
 		surveyReplyRepository.save(surveyReply);
 		return new ResponseEntity<>(surveyReply, HttpStatus.CREATED);
@@ -104,7 +102,7 @@ public class SurveyReplyController {
 		}
 		// update currentSurveyReply object data with SurveyReply object data
 
-		currentSurveyReply.get().setUserId(surveyReply.getUserId());
+		currentSurveyReply.get().setCandidateId(surveyReply.getCandidateId());
 		currentSurveyReply.get().setSurveyId(surveyReply.getSurveyId());
 		currentSurveyReply.get().setStarttime(surveyReply.getStarttime());
 		currentSurveyReply.get().setEndtime(surveyReply.getEndtime());

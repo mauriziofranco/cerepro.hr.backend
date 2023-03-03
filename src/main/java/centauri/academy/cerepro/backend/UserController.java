@@ -31,12 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
-import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
-import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
 import centauri.academy.cerepro.service.UserService;
 
 /**
@@ -59,16 +57,10 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-//	@Autowired
-//	private CandidateService candidateService;	
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
-	@Autowired
-	private UserSurveyTokenRepository userSurveyTokenRepository;
-	@Autowired
-	private SurveyReplyRepository surveyReplyRepository;
 
 	/**
 	 * getUsers method gets all users
@@ -103,21 +95,6 @@ public class UserController {
 	public ResponseEntity<Page<User>> getPaginatedUsers(@PathVariable("size") final int size,
 			@PathVariable("number") final int number) {
 		Page<User> user = userRepository.findAll(PageRequest.of(number, size, Sort.Direction.ASC, "regdate"));
-		if (user.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<>(user, HttpStatus.OK);
-	}
-
-	/**
-	 * /javacoursecandidate/ method gets all users
-	 * 
-	 * @return a new ResponseEntity with the given status code
-	 */
-	@GetMapping("/javacoursecandidate/")
-	public ResponseEntity<List<User>> getJavaCourseCandidate() {
-		List<User> user = userRepository.findByRole(90);
-
 		if (user.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
@@ -245,22 +222,23 @@ public class UserController {
 					HttpStatus.NOT_FOUND);
 		}
 
-		List<UserTokenSurvey> userTokenSurvey = userSurveyTokenRepository.findByUserId(id);
-		List<SurveyReply> surveyReplies = surveyReplyRepository.findByUserId(id);
+//		List<UserTokenSurvey> userTokenSurvey = userSurveyTokenRepository.findByUserId(id);
+//		List<SurveyReply> surveyReplies = surveyReplyRepository.findByUserId(id);
 
-		if (!userTokenSurvey.isEmpty()) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to delete. User with id " + id + " is userTokenSurvey referenced."),
-					HttpStatus.CONFLICT); // code 409
-
-		} else if (!surveyReplies.isEmpty()) {
-			return new ResponseEntity<>(
-					new CustomErrorType("Unable to delete. User with id " + id + " is surveyReply referenced."),
-					HttpStatus.CONFLICT); // code 409
-		} else {
+//		if (!userTokenSurvey.isEmpty()) {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to delete. User with id " + id + " is userTokenSurvey referenced."),
+//					HttpStatus.CONFLICT); // code 409
+//
+//		} else 
+//			if (!surveyReplies.isEmpty()) {
+//			return new ResponseEntity<>(
+//					new CustomErrorType("Unable to delete. User with id " + id + " is surveyReply referenced."),
+//					HttpStatus.CONFLICT); // code 409
+//		} else {
 			userRepository.delete(optUser.get());
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT); // code 204
-		}
+//		}
 	}
 
 }

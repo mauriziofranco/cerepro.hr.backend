@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
+import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.service.CandidateService;
 
@@ -203,6 +204,6 @@ public class CandidateController {
 		long count = candidateService.getRegisteredCandidatesFromDaysAgo(14);
 		logger.info("getRegistratedCandidatesOnLastTwoWeeks() - END - with count: " + count);
 		return new ResponseEntity<Long>(count, HttpStatus.OK);
-	}
+	}	
 
 }

@@ -3,7 +3,6 @@ package integration.tests.rest.controller;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,28 +16,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.util.Base64Utils;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.Candidate;
-import centauri.academy.cerepro.persistence.entity.CandidateStates;
-import centauri.academy.cerepro.persistence.entity.CoursePage;
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.CandidateStateService;
+import centauri.academy.cerepro.service.CandidateSurveyTokenService;
 import centauri.academy.cerepro.service.CoursePageService;
 import centauri.academy.cerepro.service.RoleService;
 import centauri.academy.cerepro.service.SurveyReplyService;
 import centauri.academy.cerepro.service.UserService;
-import centauri.academy.cerepro.service.UserSurveyTokenService;
 
 /**
  * Integration tests CandidateCustomControllerTest methods
@@ -72,16 +66,16 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 	@Autowired
     private SurveyReplyService surveyReplyService;
 	@Autowired
-    private UserSurveyTokenService userSurveyTokenService;
+    private CandidateSurveyTokenService candidateSurveyTokenService;
 	
 	@Before
 	public void initializeRelatedTables () throws Exception {
 		logger.trace("initializeRelatedTables - START");
+		candidateSurveyTokenService.deleteAll();
 		candidateService.deleteAll();
 		coursePageService.deleteAll();
 		candidateStateService.deleteAll();
 		surveyReplyService.deleteAll();
-		userSurveyTokenService.deleteAll();
 		userService.deleteAll();		
 		roleService.deleteAll();		
 	}

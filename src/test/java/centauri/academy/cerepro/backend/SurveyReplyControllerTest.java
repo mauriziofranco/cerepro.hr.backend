@@ -27,12 +27,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
+import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Survey;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
-import centauri.academy.cerepro.persistence.repository.UserRepository;
+import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 import centauri.academy.cerepro.service.SurveyReplyService;
 
@@ -51,14 +52,14 @@ public class SurveyReplyControllerTest {
 	@Mock
 	private SurveyRepository surveyRepository;
 	@Mock
-	private UserRepository userRepository;
+	private CandidateRepository candidateRepository;
 	
 	@Before
 	public void setup() {
 		surveyReplyController = new SurveyReplyController();
 		ReflectionTestUtils.setField(surveyReplyController, "surveyReplyRepository", surveyReplyRepository);
 		ReflectionTestUtils.setField(surveyReplyController, "surveyRepository", surveyRepository);
-		ReflectionTestUtils.setField(surveyReplyController, "userRepository", userRepository);
+		ReflectionTestUtils.setField(surveyReplyController, "candidateRepository", candidateRepository);
 		ReflectionTestUtils.setField(surveyReplyController, "surveyReplyService", surveyReplyService);
 //		ReflectionTestUtils.setField(surveyReplyService, "surveyReplyService", surveyReplyService);	
 		ReflectionTestUtils.setField(surveyReplyService, "surveyReplyRepository", surveyReplyRepository);
@@ -82,7 +83,7 @@ public class SurveyReplyControllerTest {
 		SurveyReply testSurveyReply = new SurveyReply();
 		testSurveyReply.setId(100L);
 		testSurveyReply.setSurveyId(6L);
-		testSurveyReply.setUserId(120L);
+		testSurveyReply.setCandidateId(120L);
 		testSurveyReply.setStarttime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setEndtime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setAnswers("testAnswer");
@@ -94,7 +95,7 @@ public class SurveyReplyControllerTest {
 		ResponseEntity<CeReProAbstractEntity> responseEntity = this.surveyReplyController.getSurveyReplyById(100L);
 		Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		Assert.assertEquals(6, ((SurveyReply)responseEntity.getBody()).getSurveyId());
-		Assert.assertEquals(120, ((SurveyReply)responseEntity.getBody()).getUserId());
+		Assert.assertEquals(120, ((SurveyReply)responseEntity.getBody()).getCandidateId());
 		Assert.assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)), ((SurveyReply)responseEntity.getBody()).getStarttime());
 		Assert.assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)), ((SurveyReply)responseEntity.getBody()).getEndtime());
 		Assert.assertEquals("testAnswer", ((SurveyReply)responseEntity.getBody()).getAnswers());
@@ -109,7 +110,7 @@ public class SurveyReplyControllerTest {
 		SurveyReply testSurveyReply = new SurveyReply();
 		testSurveyReply.setId(100L);
 		testSurveyReply.setSurveyId(6L);
-		testSurveyReply.setUserId(120L);
+		testSurveyReply.setCandidateId(120L);
 		testSurveyReply.setStarttime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setEndtime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setAnswers("testAnswer");
@@ -117,12 +118,12 @@ public class SurveyReplyControllerTest {
 		testSurveyReply.setPoints("testPoints");
 		
 		when(this.surveyRepository.findById(testSurveyReply.getSurveyId())).thenReturn(Optional.of(new Survey()));
-		when(this.userRepository.findById(testSurveyReply.getUserId())).thenReturn(Optional.of(new User()));
+		when(this.candidateRepository.findById(testSurveyReply.getCandidateId())).thenReturn(Optional.of(new Candidate()));
 		when(this.surveyReplyRepository.save(testSurveyReply)).thenReturn(testSurveyReply);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = this.surveyReplyController.createSurveyReply(testSurveyReply);
 		Assert.assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 		Assert.assertEquals(6, ((SurveyReply)responseEntity.getBody()).getSurveyId());
-		Assert.assertEquals(120, ((SurveyReply)responseEntity.getBody()).getUserId());
+		Assert.assertEquals(120, ((SurveyReply)responseEntity.getBody()).getCandidateId());
 		Assert.assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)), ((SurveyReply)responseEntity.getBody()).getStarttime());
 		Assert.assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)), ((SurveyReply)responseEntity.getBody()).getEndtime());
 		Assert.assertEquals("testAnswer", ((SurveyReply)responseEntity.getBody()).getAnswers());
@@ -137,7 +138,7 @@ public class SurveyReplyControllerTest {
 		SurveyReply testSurveyReply = new SurveyReply();
 		testSurveyReply.setId(100L);
 		testSurveyReply.setSurveyId(6L);
-		testSurveyReply.setUserId(120L);
+		testSurveyReply.setCandidateId(120L);
 		testSurveyReply.setStarttime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setEndtime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setAnswers("testAnswer");
@@ -145,7 +146,7 @@ public class SurveyReplyControllerTest {
 		testSurveyReply.setPoints("testPoints");
 		
 		when(this.surveyRepository.findById(testSurveyReply.getSurveyId())).thenReturn(null);
-		when(this.userRepository.findById(testSurveyReply.getUserId())).thenReturn(Optional.of(new User()));
+		when(this.candidateRepository.findById(testSurveyReply.getCandidateId())).thenReturn(Optional.of(new Candidate()));
 		when(this.surveyReplyRepository.save(testSurveyReply)).thenReturn(testSurveyReply);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = this.surveyReplyController.createSurveyReply(testSurveyReply);
 		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
@@ -158,7 +159,7 @@ public class SurveyReplyControllerTest {
 		SurveyReply testSurveyReply = new SurveyReply();
 		testSurveyReply.setId(100L);
 		testSurveyReply.setSurveyId(6L);
-		testSurveyReply.setUserId(120L);
+		testSurveyReply.setCandidateId(120L);
 		testSurveyReply.setStarttime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setEndtime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setAnswers("testAnswer");
@@ -166,7 +167,7 @@ public class SurveyReplyControllerTest {
 		testSurveyReply.setPoints("testPoints");
 		
 		when(this.surveyRepository.findById(testSurveyReply.getSurveyId())).thenReturn(Optional.of(new Survey()));
-		when(this.userRepository.findById(testSurveyReply.getUserId())).thenReturn(null);
+		when(this.candidateRepository.findById(testSurveyReply.getCandidateId())).thenReturn(null);
 		when(this.surveyReplyRepository.save(testSurveyReply)).thenReturn(testSurveyReply);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = this.surveyReplyController.createSurveyReply(testSurveyReply);
 		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
@@ -179,7 +180,7 @@ public class SurveyReplyControllerTest {
 		SurveyReply testSurveyReply = new SurveyReply();
 		testSurveyReply.setId(100L);
 		testSurveyReply.setSurveyId(6L);
-		testSurveyReply.setUserId(120L);
+		testSurveyReply.setCandidateId(120L);
 		testSurveyReply.setStarttime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setEndtime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setAnswers("testAnswer");
@@ -199,7 +200,7 @@ public class SurveyReplyControllerTest {
 		SurveyReply testSurveyReply = new SurveyReply();
 		testSurveyReply.setId(100L);
 		testSurveyReply.setSurveyId(6L);
-		testSurveyReply.setUserId(120L);
+		testSurveyReply.setCandidateId(120L);
 		testSurveyReply.setStarttime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setEndtime(LocalDateTime.of(LocalDate.of(2018, 12, 3), LocalTime.of(13, 01)));
 		testSurveyReply.setAnswers("testAnswer");

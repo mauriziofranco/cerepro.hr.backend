@@ -23,13 +23,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import centauri.academy.cerepro.persistence.entity.CandidateSurveyToken;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Survey;
-import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
-import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
-import centauri.academy.cerepro.rest.response.ResponseInterview;
+import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
 import centauri.academy.cerepro.rest.response.ResponseQuestion;
 import centauri.academy.cerepro.rest.response.StartSurveyResponse;
 import centauri.academy.cerepro.service.SurveyService;
@@ -49,7 +48,7 @@ public class SurveyController {
 	@Autowired
 	private SurveyRepository surveyRepository;
 	@Autowired
-	private UserSurveyTokenRepository userSurveyTokenRepository;
+	private CandidateSurveyTokenRepository candidateSurveyTokenRepository;
 	@Autowired
 	private SurveyService surveyService = new SurveyService();
 
@@ -135,9 +134,9 @@ public class SurveyController {
 	
 	
 	/**
-	 * Utilizzato inizialmente al posto del token in modo da recuperare tutte le question che 
-	 * l'utente deve rispondere.
-	 * @param id
+	 * recuperare tutte le question alle quali il candidato deve rispondere.
+	 * 
+	 * @param token --> della tabella candidatesurveytokens 
 	 * @return
 	 */
 	@GetMapping("/getSurveyForCandidate/{token}")
@@ -145,26 +144,26 @@ public class SurveyController {
 		logger.info("getSurveyForCandidate - START - token: " + token);
 		StartSurveyResponse toSend = new StartSurveyResponse();
 		/* lets take the userSurveyToken associated and check if it exists */
-		UserTokenSurvey userTokenSurvey = userSurveyTokenRepository.findByGeneratedtoken(token);
-		logger.info("getSurveyForCandidate - DEBUG - userTokenSurvey: " + userTokenSurvey);
+		CandidateSurveyToken candidateSurveyToken = candidateSurveyTokenRepository.findByGeneratedToken(token);
+		logger.info("getSurveyForCandidate - DEBUG - candidateSurveyToken: " + candidateSurveyToken);
 		Properties props = new Properties();
 		try {
-			props.load(UserSurveyTokenController.class.getClassLoader().getResourceAsStream("messages.properties"));
+			props.load(SurveyController.class.getClassLoader().getResourceAsStream("messages.properties"));
 		} catch (IOException e) {
 			logger.error("Error ",e);
 		}
-		if(userTokenSurvey != null) {
-			Optional<Survey> survey = surveyRepository.findById(userTokenSurvey.getSurveyid());
-			logger.info("getSurveyForCandidate - DEBUG - survey.isPresent(): " + survey.isPresent() + " - userTokenSurvey.getSurveyid(): " + userTokenSurvey.getSurveyid());
-			Boolean expired = userTokenSurvey.isExpired();
+		if(candidateSurveyToken != null) {
+			Optional<Survey> survey = surveyRepository.findById(candidateSurveyToken.getSurveyId());
+			logger.info("getSurveyForCandidate - DEBUG - survey.isPresent(): " + survey.isPresent() + " - candidateSurveyToken.getSurveyId(): " + candidateSurveyToken.getSurveyId());
+			Boolean expired = candidateSurveyToken.isExpired();
 			logger.info("getSurveyForCandidate - DEBUG - userTokenSurvey.isExpired(): " + expired);
 			/* check on expiration date */
-			LocalDateTime expDate = userTokenSurvey.getExpirationdate();
+			LocalDateTime expDate = candidateSurveyToken.getExpirationDateTime();
 			logger.info("getSurveyForCandidate - DEBUG - expDate.isBefore(LocalDateTime.now()): " + expDate.isBefore(LocalDateTime.now()));
 			if(expDate.isBefore(LocalDateTime.now())) {
 				String tokenExpired = props.getProperty("token.message.expired");
-				userTokenSurvey.setExpired(true);
-				userSurveyTokenRepository.saveAndFlush(userTokenSurvey);
+				candidateSurveyToken.setExpired(true);
+				candidateSurveyTokenRepository.save(candidateSurveyToken);
 				
 				toSend.setErrorCode(2); /* if the token is expired -> errorCode = 2 */
 				toSend.setExpiredToken(tokenExpired);
@@ -177,14 +176,14 @@ public class SurveyController {
 				return new ResponseEntity<StartSurveyResponse>(toSend, HttpStatus.OK);
 			} else {
 					
-					List<ResponseQuestion> listaResponseQuestion = surveyService.getAllRelatedQuestionsBySurveyIdOrderedByPosition(userTokenSurvey.getSurveyid());
+					List<ResponseQuestion> listaResponseQuestion = surveyService.getAllRelatedQuestionsBySurveyIdOrderedByPosition(candidateSurveyToken.getSurveyId());
 					logger.info("getSurveyForCandidate - DEBUG - listaResponseQuestion.size(): " + listaResponseQuestion.size()); 
 					toSend.setQuestions(listaResponseQuestion);
 			}
 			
-			toSend.setSurveyId(userTokenSurvey.getSurveyid());
-			toSend.setUserId(userTokenSurvey.getUserid());
-			toSend.setUserTokenId(userTokenSurvey.getId());
+			toSend.setSurveyId(candidateSurveyToken.getSurveyId());
+			toSend.setCandidateId(candidateSurveyToken.getCandidateId());
+			toSend.setCandidateTokenId(candidateSurveyToken.getId());
 			toSend.setTime(survey.get().getTime());
 			String afterSurvey = props.getProperty("survey.message.after");
 			logger.info("afterSurvey" + afterSurvey);

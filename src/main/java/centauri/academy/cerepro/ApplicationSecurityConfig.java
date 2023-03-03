@@ -36,6 +36,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET, "/api/v1/survey/getSurveyForCandidate/**").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/v1/surveyreplyrequest/start/").permitAll()		
 		.antMatchers(HttpMethod.PUT, "/api/v1/surveyreplyrequest/end/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/api/v1/application/info/**").permitAll()
 		.antMatchers(HttpMethod.GET, "/api/v1/**/**").authenticated()
 		.antMatchers(HttpMethod.POST, "/api/v1/**/**").authenticated()
 		.antMatchers(HttpMethod.PUT, "/api/v1/**/**").authenticated()

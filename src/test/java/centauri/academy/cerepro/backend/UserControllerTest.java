@@ -27,11 +27,11 @@ import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
-import centauri.academy.cerepro.persistence.entity.UserTokenSurvey;
+import centauri.academy.cerepro.persistence.entity.CandidateSurveyToken;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
+import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
-import centauri.academy.cerepro.persistence.repository.usersurveytoken.UserSurveyTokenRepository;
 import centauri.academy.cerepro.service.UserService;
 
 /**
@@ -57,7 +57,7 @@ public class UserControllerTest {
 	@Mock
 	private RoleRepository roleRepository;
 	@Mock
-	private UserSurveyTokenRepository userSurveyTokenRepository;
+	private CandidateSurveyTokenRepository candidateSurveyTokenRepository;
 	@Mock
 	private SurveyReplyRepository surveyReplyRepository;
 
@@ -73,8 +73,6 @@ public class UserControllerTest {
 		userController = new UserController();
 		ReflectionTestUtils.setField(userController, "userRepository", userRepository);
 		ReflectionTestUtils.setField(userController, "roleRepository", roleRepository);
-		ReflectionTestUtils.setField(userController, "userSurveyTokenRepository", userSurveyTokenRepository);
-		ReflectionTestUtils.setField(userController, "surveyReplyRepository", surveyReplyRepository);
 		ReflectionTestUtils.setField(userController, "userService", userService);
 		ReflectionTestUtils.setField(userService, "userRepository", userRepository);
 	}
@@ -285,147 +283,19 @@ public class UserControllerTest {
 
 		Optional<User> currOpt = Optional.of(user);
 
-		List<UserTokenSurvey> userSurveyTokenList = new ArrayList<UserTokenSurvey>();
+		List<CandidateSurveyToken> userSurveyTokenList = new ArrayList<CandidateSurveyToken>();
 		List<SurveyReply> surveyReplyList = new ArrayList<SurveyReply>();
 
 		when(this.userRepository.findById(100L)).thenReturn(currOpt);
 //		when(this.candidateRepository.findByUserId(100L)).thenReturn(candidateList);
-		when(this.userSurveyTokenRepository.findByUserId(100L)).thenReturn(userSurveyTokenList);
-		when(this.surveyReplyRepository.findByUserId(100L)).thenReturn(surveyReplyList);
+		when(this.candidateSurveyTokenRepository.findByCandidateId(100L)).thenReturn(userSurveyTokenList);
+		when(this.surveyReplyRepository.findByCandidateId(100L)).thenReturn(surveyReplyList);
 
 		ResponseEntity<CeReProAbstractEntity> responseEntity = this.userController.deleteUser(100L);
 		logger.info("testDeleteUserSuccessfully()  ---------------------- END");
 	}
 
-	/**
-	 * testDeleteUserKOForUserSurveyTokenPresent() method tests if the method deleteUser()
-	 * is really able for foreign key (user_id) references users(id) into
-	 * userSurveyToken table
-	 * 
-	 */
-	@Test
-	public void testDeleteUserKOForUserSurveyTokenPresent() {
-
-		logger.info("testDeleteUserKOForUserSurveyTokenPresent() - START");
-		User user = new User();
-		user.setId(100L);
-		user.setEmail("pippo@prova.com");
-		user.setPassword("pippo");
-		user.setFirstname("pippo");
-		user.setLastname("prova");
-		user.setRegdate(LocalDateTime.now());
-		user.setRole(10);
-
-		Optional<User> currOpt = Optional.of(user);
-
-//		List<Candidate> candidateList = new ArrayList<Candidate>();
-//		candidateList.add(new Candidate());
-
-		when(this.userRepository.findById(100L)).thenReturn(currOpt);
-		List<UserTokenSurvey> userTokenSurveyList = new ArrayList<UserTokenSurvey>() ;
-		userTokenSurveyList.add(new UserTokenSurvey());
-		when(this.userSurveyTokenRepository.findByUserId(100L)).thenReturn(userTokenSurveyList);
-		ResponseEntity<CeReProAbstractEntity> responseEntity = this.userController.deleteUser(100L);
-
-		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-		logger.info("testDeleteUserKOForUserSurveyTokenPresent() - END");
-	}
-
-//	/**
-//	 * testDeleteUserKOForEmployeeUserId() method tests if the method deleteUser()
-//	 * is really able for foreign key (user_id) references users(id) into employees'
-//	 * table
-//	 * 
-//	 */
-//	@Test
-//	public void testDeleteUserKOForEmployeeUserId() {
-//
-//		logger.info("testDeleteUserKOForEmployeeUserId()  ---------------------- START");
-//		User user = new User();
-//		user.setId(100L);
-//		user.setEmail("pippo@prova.com");
-//		user.setPassword("pippo");
-//		user.setFirstname("pippo");
-//		user.setLastname("prova");
-//		user.setRegdate(LocalDateTime.now());
-//		user.setRole(10);
-//
-//		Optional<User> currOpt = Optional.of(user);
-//
-////		List<Employee> employeeList = new ArrayList<Employee>();
-////		employeeList.add(new Employee());
-//
-//		when(this.userRepository.findById(100L)).thenReturn(currOpt);
-////		when(this.employeeRepository.findByUserId(100L)).thenReturn(employeeList);
-//		ResponseEntity<CeReProAbstractEntity> responseEntity = this.userController.deleteUser(100L);
-//
-//		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-//		logger.info("testDeleteUserKOForEmployeeUserId()  ---------------------- END");
-//	}
-
-	/**
-	 * testDeleteUserKOForUserTokenSurveyUserId() method tests if the method
-	 * deleteUser() is really able for foreign key (user_id) references users(id)
-	 * into usersurveytoken table
-	 * 
-	 */
-	@Test
-	public void testDeleteUserKOForUserTokenSurveyUserId() {
-
-		logger.info("testDeleteUserKOForUserTokenSurveyUserId()  ---------------------- START");
-		User user = new User();
-		user.setId(100L);
-		user.setEmail("pippo@prova.com");
-		user.setPassword("pippo");
-		user.setFirstname("pippo");
-		user.setLastname("prova");
-		user.setRegdate(LocalDateTime.now());
-		user.setRole(10);
-
-		Optional<User> currOpt = Optional.of(user);
-
-		List<UserTokenSurvey> userSurveyTokenList = new ArrayList<UserTokenSurvey>();
-		userSurveyTokenList.add(new UserTokenSurvey());
-
-		when(this.userRepository.findById(100L)).thenReturn(currOpt);
-		when(this.userSurveyTokenRepository.findByUserId(100L)).thenReturn(userSurveyTokenList);
-		ResponseEntity<CeReProAbstractEntity> responseEntity = this.userController.deleteUser(100L);
-
-		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-		logger.info("testDeleteUserKOForUserTokenSurveyUserId()  ---------------------- END");
-	}
-
-	/**
-	 * testDeleteUserKOForSurveyReplyUserId() method tests if the method
-	 * deleteUser() is really able for foreign key (user_id) references users(id)
-	 * into surveyreplies table
-	 * 
-	 */
-	@Test
-	public void testDeleteUserKOForSurveyReplyUserId() {
-
-		logger.info("testDeleteUserKOForSurveyReplyUserId()  ---------------------- START");
-		User user = new User();
-		user.setId(100L);
-		user.setEmail("pippo@prova.com");
-		user.setPassword("pippo");
-		user.setFirstname("pippo");
-		user.setLastname("prova");
-		user.setRegdate(LocalDateTime.now());
-		user.setRole(10);
-
-		Optional<User> currOpt = Optional.of(user);
-
-		List<SurveyReply> surveyReplyList = new ArrayList<SurveyReply>();
-		surveyReplyList.add(new SurveyReply());
-
-		when(this.userRepository.findById(100L)).thenReturn(currOpt);
-		when(this.surveyReplyRepository.findByUserId(100L)).thenReturn(surveyReplyList);
-		ResponseEntity<CeReProAbstractEntity> responseEntity = this.userController.deleteUser(100L);
-
-		Assert.assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-		logger.info("testDeleteUserKOForSurveyReplyUserId()  ---------------------- END");
-	}
+	
 
 	/**
 	 * teardown() method sets userController to null
