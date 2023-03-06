@@ -134,13 +134,13 @@ public class SurveyReplyRequestController {
 		currentSurveyReply.setEndtime(LocalDateTime.now());
 //		if(surveyInterviewRepository.findBySurveyId(currentSurveyReply.getSurveyId()).size() == 0) {
 //			System.out.println("----------------------------------------------AAA--------------------");
-//			currentSurveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
-//			currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
+			currentSurveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
+			currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
 //		}
 //		else {
-			System.out.println("----------------------------------------------BBB--------------------");
-			currentSurveyReply.setAnswers(surveyReplyRequestService.answersInterviewToString(surveyReplyRequest.getInterviewAnswers()));
-			
+//			System.out.println("----------------------------------------------BBB--------------------");
+//			currentSurveyReply.setAnswers(surveyReplyRequestService.answersInterviewToString(surveyReplyRequest.getInterviewAnswers()));
+//			
 //		}
 	 
 		surveyReplyRepository.save(currentSurveyReply); 
