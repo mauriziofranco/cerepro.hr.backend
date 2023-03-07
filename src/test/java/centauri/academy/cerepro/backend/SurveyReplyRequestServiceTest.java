@@ -23,7 +23,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.Question;
-import centauri.academy.cerepro.persistence.repository.QuestionRepository;
+import centauri.academy.cerepro.persistence.repository.question.QuestionRepository;
 import centauri.academy.cerepro.rest.request.SingleQuestionReplyRequest;
 import centauri.academy.cerepro.service.SurveyReplyRequestService;
 

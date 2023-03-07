@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import centauri.academy.cerepro.persistence.entity.Question;
 import centauri.academy.cerepro.persistence.entity.SurveyQuestion;
-import centauri.academy.cerepro.persistence.repository.QuestionRepository;
+import centauri.academy.cerepro.persistence.repository.question.QuestionRepository;
 import centauri.academy.cerepro.persistence.repository.surveyquestion.SurveyQuestionRepository;
 import centauri.academy.cerepro.rest.response.ResponseInterview;
 import centauri.academy.cerepro.rest.response.ResponseQuestion;

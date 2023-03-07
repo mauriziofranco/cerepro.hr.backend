@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import centauri.academy.cerepro.persistence.entity.Question;
-import centauri.academy.cerepro.persistence.repository.QuestionRepository;
+import centauri.academy.cerepro.persistence.repository.question.QuestionRepository;
 import centauri.academy.cerepro.rest.request.InterviewReplyRequest;
 import centauri.academy.cerepro.rest.request.SingleQuestionReplyRequest;
 

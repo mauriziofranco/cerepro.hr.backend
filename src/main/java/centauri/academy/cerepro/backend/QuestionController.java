@@ -25,7 +25,7 @@ import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Question;
 import centauri.academy.cerepro.persistence.entity.SurveyQuestion;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
-import centauri.academy.cerepro.persistence.repository.QuestionRepository;
+import centauri.academy.cerepro.persistence.repository.question.QuestionRepository;
 import centauri.academy.cerepro.persistence.repository.surveyquestion.SurveyQuestionRepository;
 
 /**
