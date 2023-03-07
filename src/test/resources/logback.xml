@@ -1,8 +1,8 @@
 <configuration scan="true" debug="true">
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-<!-- 	<file>/logs/cerepro/hr.backend.log</file> -->
-		 <file>c:\\logs\\cerepro\\backend.log</file> 
+	<file>/logs/cerepro/hr.backend.log</file>
+<!-- 		 <file>c:\\logs\\cerepro\\backend.log</file>  -->
 		<encoder>
 			<pattern>%date %level %logger{10} [%file:%line] %msg%n
 			</pattern>
