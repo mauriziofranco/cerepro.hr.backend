@@ -45,7 +45,7 @@ import centauri.academy.cerepro.util.RandomTokenGenerator;
 @RequestMapping("/api/v1/candidatesurveytoken")
 public class CandidateSurveyTokenController {
 	
-	public static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
+	public static final Logger logger = LoggerFactory.getLogger(CandidateSurveyTokenController.class);
 	
 	@Value("${app.runtime.environment}")
 	private String runtimeEnvironment ;
@@ -127,6 +127,7 @@ public class CandidateSurveyTokenController {
 	 */ 
 	@GetMapping("/sendEmail/{id}")
 	public ResponseEntity<Boolean> sendEmail(@PathVariable("id") final Long id) {
+		logger.info("sendEmail - START - id: " + id);
 		CandidateSurveyToken uts = null;
 		Optional<CandidateSurveyToken> ustQ = candidateSurveyTokenRepository.findById(id);
 		if (!ustQ.isPresent()) {
@@ -150,6 +151,9 @@ public class CandidateSurveyTokenController {
 				String subject = props.getProperty("mail.survey.subject");
 				String signature = props.getProperty("mail.survey.signature");
 				String message = messageBody+link+signature;
+				logger.info("sendEmail - DEBUG - email: " + u.get().getEmail());
+				logger.info("sendEmail - DEBUG - subject: " + subject);
+				logger.info("sendEmail - DEBUG - message: " + message);
 				boolean mailSent = MailUtility.sendSimpleMail(u.get().getEmail(), subject, message);
 				return new ResponseEntity<Boolean>(mailSent,HttpStatus.OK);
 			} else
