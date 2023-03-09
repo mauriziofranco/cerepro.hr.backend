@@ -142,17 +142,15 @@ public class PdfService {
 		try {
 //			List<QuestionAndReply> qaaq = mapper.readValue(answers, List<QuestionAndReply.class>);
 			for(QuestionCustom es : questionCustomList) {
-				for(; i < questionCustomList.size(); i++) {
-				System.out.println("#### QUESTION CUSTOM LIST posizione : " + i + " ######");
+				for(; i < questionCustomList.size()-1; i++) {
 				
-				QuestionAndReply qar = new QuestionAndReply(es.getId(), es.getLabel(), es.getDescription(), 
-						es.getAnsa(), es.getAnsb(), es.getAnsc(), es.getAnsd(), es.getAnse(), es.getAnsf(), 
-						es.getAnsg(), es.getAnsh(), es.getCansa(), es.getCansb(), es.getCansc(), es.getCansd(), 
-						es.getCanse(), es.getCansf(), es.getCansg(), es.getCansh() , es.getFullAnswer(), es.getPosition(),
-						qarArray[i].getQuestionId(), qarArray[i].getUserCansa(), qarArray[i].getUserCansb(), qarArray[i].getUserCansc(), qarArray[i].getUserCansd(), qarArray[i].getUserCanse(),
-						qarArray[i].getUserCansf(), qarArray[i].getUserCansg(), qarArray[i].getUserCansh());
-				lista.add(qar);
-				System.out.println("######################### DIMENSIONE LISTA " + lista.size());
+					QuestionAndReply qar = new QuestionAndReply(es.getId(), es.getLabel(), es.getDescription(), 
+							es.getAnsa(), es.getAnsb(), es.getAnsc(), es.getAnsd(), es.getAnse(), es.getAnsf(), 
+							es.getAnsg(), es.getAnsh(), es.getCansa(), es.getCansb(), es.getCansc(), es.getCansd(), 
+							es.getCanse(), es.getCansf(), es.getCansg(), es.getCansh() , es.getFullAnswer(), es.getPosition(),
+							qarArray[i].getQuestionId(), qarArray[i].getUserCansa(), qarArray[i].getUserCansb(), qarArray[i].getUserCansc(), qarArray[i].getUserCansd(), qarArray[i].getUserCanse(),
+							qarArray[i].getUserCansf(), qarArray[i].getUserCansg(), qarArray[i].getUserCansh());
+					lista.add(qar);
 				}
 			}
 //			System.out.println("####### POSIZIONE: " + i);
