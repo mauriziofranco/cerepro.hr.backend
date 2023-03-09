@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.service.PdfService;
-
+/**
+ * 
+ * @author git-DaimCod
+ *
+ */
 @RestController
 @RequestMapping("/api/v1/pdf")
 public class PdfController {
@@ -22,10 +26,10 @@ public class PdfController {
 	PdfService pdfService;
 	
 	@PostMapping(value = "/{id}")
-	public ResponseEntity<CeReProAbstractEntity> createPdfForSurveyFromId(@PathVariable("id") Long id){
+	public boolean createPdfForSurveyFromId(@PathVariable("id") Long surveyReplyId){
 		
 		logger.debug("################### CREATING PDF METHOD STARTED ###################");
-		return pdfService.generatePdf(id);
+		return pdfService.generatePdf(surveyReplyId);
 	}
 		
 }

@@ -52,6 +52,8 @@ public class SurveyReplyRequestController {
 	private SurveyReplyRequestService surveyReplyRequestService;
 	@Autowired
 	private CandidateSurveyTokenRepository candidateSurveyTokenRepository;
+	@Autowired
+	PdfController pdfController;
 	
 	public static final Logger logger = LoggerFactory.getLogger(SurveyReplyRequestController.class);
 	/** CREATE A NEW SURVEY REPLY REQUEST */
@@ -143,7 +145,12 @@ public class SurveyReplyRequestController {
 //			
 //		}
 	 
-		surveyReplyRepository.save(currentSurveyReply); 
+		surveyReplyRepository.save(currentSurveyReply);
+		
+		//TODO
+		boolean pdfGenerated = pdfController.createPdfForSurveyFromId(currentSurveyReply.getId());
+		
+		
 		return new ResponseEntity<>(currentSurveyReply, HttpStatus.OK);
 	}
 	
