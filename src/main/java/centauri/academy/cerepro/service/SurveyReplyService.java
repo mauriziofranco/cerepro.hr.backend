@@ -101,5 +101,13 @@ public class SurveyReplyService {
 		logger.info("getPeriod() end");
 		return count;
 	}
+	
+	public void updatePdfName(String name, long id) {
+		logger.info("updatePdfName() started");
+		
+		surveyReplyRepository.updatePdfFileName(name, id);
+		
+		logger.info("updatePdfName() end");
+	}
 
 }
