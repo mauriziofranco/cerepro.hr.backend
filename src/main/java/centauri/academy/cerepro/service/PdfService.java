@@ -1,5 +1,6 @@
 package centauri.academy.cerepro.service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class PdfService {
 				+ surveyReply.get().getStarttime().getMonthValue() + "-" 
 				+ surveyReply.get().getStarttime().getDayOfMonth() + "-" 
 				+ surveyReply.get().getId() + ".pdf";
-		String aa = path.concat("\\").concat(name);
+		String aa = path.concat(File.separator).concat(name);
 		
 		try {
 			PdfWriter.getInstance(document, new FileOutputStream(
