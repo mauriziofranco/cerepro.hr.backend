@@ -26,7 +26,7 @@ pipeline {
         DEV_SERVICES_EXPOSED_PORT="9081"
         STAGE_SERVICES_EXPOSED_PORT="9082"
         PROD_SERVICES_EXPOSED_PORT="9033"
-        DOCKER_HOST_CONTAINER_NAME_PREFIX="cerepro.hr.backend"
+        DOCKER_HOST_CONTAINER_NAME_PREFIX="_repro.hr.backend"
         DEV_info_app_environment_PROPERTY="DEV"
         STAGE_info_app_environment_PROPERTY="STAGE"
         PROD_info_app_environment_PROPERTY="PROD"
