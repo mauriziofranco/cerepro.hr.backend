@@ -16,11 +16,17 @@ pipeline {
         PACKAGING = readMavenPom().getPackaging()
         ARTIFACT_FULL_FILE_NAME = "${PACKAGE_FILE_NAME}.${PACKAGING}"
         APPLICATION_DOCKER_HOST = "rastaban"
+        APPLICATION_CONTEXT_ROOT="cerepro.hr.backend"
+        /*        
         DEV_SERVICES_EXPOSED_PORT="9051"
         STAGE_SERVICES_EXPOSED_PORT="9052"
         PROD_SERVICES_EXPOSED_PORT="9053"
-        APPLICATION_CONTEXT_ROOT="cerepro.hr.backend"
         DOCKER_HOST_CONTAINER_NAME_PREFIX="${PACKAGE_FILE_NAME}"
+        */
+        DEV_SERVICES_EXPOSED_PORT="9081"
+        STAGE_SERVICES_EXPOSED_PORT="9082"
+        PROD_SERVICES_EXPOSED_PORT="9033"
+        DOCKER_HOST_CONTAINER_NAME_PREFIX="repro.hr.backend"
         DEV_info_app_environment_PROPERTY="DEV"
         STAGE_info_app_environment_PROPERTY="STAGE"
         PROD_info_app_environment_PROPERTY="PROD"
