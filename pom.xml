@@ -157,7 +157,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<reporting>
 		<plugins>
 			<plugin>
@@ -179,202 +178,6 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-
-
-
-	<!-- <profiles> -->
-	<!-- <profile> -->
-	<!-- <id>dev</id> -->
-	<!-- <properties> -->
-	<!-- <env.properties.file.name>application.dev.properties</env.properties.file.name> -->
-	<!-- </properties> -->
-	<!-- <activation> -->
-	<!-- <activeByDefault>true</activeByDefault> -->
-	<!-- </activation> -->
-	<!-- <build> -->
-	<!-- <plugins> -->
-	<!-- <plugin> -->
-	<!-- <groupId>org.apache.maven.plugins</groupId> -->
-	<!-- <artifactId>maven-antrun-plugin</artifactId> -->
-	<!-- <executions> -->
-	<!-- <execution> -->
-	<!-- <phase>test</phase> -->
-	<!-- <goals> -->
-	<!-- <goal>run</goal> -->
-	<!-- </goals> -->
-	<!-- <configuration> -->
-	<!-- <tasks> -->
-	<!-- <echo>selected dev profile, properties file: -->
-	<!-- ${env.properties.file.name}</echo> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/${default.properties.file.name}" 
-		/> -->
-	<!-- <copy -->
-	<!-- file="src/main/resources/application.dev.properties" -->
-	<!-- tofile="${project.build.outputDirectory}/${default.properties.file.name}" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.stage.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.test.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.dev.properties" 
-		/> -->
-	<!-- <echo>Using application.dev.properties</echo> -->
-	<!-- </tasks> -->
-	<!-- </configuration> -->
-	<!-- </execution> -->
-	<!-- </executions> -->
-	<!-- </plugin> -->
-	<!-- </plugins> -->
-	<!-- </build> -->
-	<!-- </profile> -->
-	<!-- <profile> -->
-	<!-- <id>test</id> -->
-	<!-- <properties> -->
-	<!-- <env>application.test</env> -->
-	<!-- </properties> -->
-	<!-- <build> -->
-	<!-- <plugins> -->
-	<!-- <plugin> -->
-	<!-- <groupId>org.apache.maven.plugins</groupId> -->
-	<!-- <artifactId>maven-antrun-plugin</artifactId> -->
-	<!-- <version>1.1</version> -->
-	<!-- <executions> -->
-	<!-- <execution> -->
-	<!-- <phase>test</phase> -->
-	<!-- <goals> -->
-	<!-- <goal>run</goal> -->
-	<!-- </goals> -->
-	<!-- <configuration> -->
-	<!-- <tasks> -->
-	<!-- <echo>selected test profile</echo> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/${default.properties.file.name}" 
-		/> -->
-	<!-- <copy -->
-	<!-- file="src/main/resources/application.test.properties" -->
-	<!-- tofile="${project.build.outputDirectory}/${default.properties.file.name}" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.stage.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.test.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.dev.properties" 
-		/> -->
-	<!-- <echo>Using application.test.properties</echo> -->
-	<!-- </tasks> -->
-	<!-- </configuration> -->
-	<!-- </execution> -->
-	<!-- </executions> -->
-	<!-- </plugin> -->
-	<!-- </plugins> -->
-	<!-- </build> -->
-	<!-- </profile> -->
-	<!-- <profile> -->
-	<!-- <id>stage</id> -->
-	<!-- <properties> -->
-	<!-- <env>application.stage</env> -->
-	<!-- </properties> -->
-	<!-- <build> -->
-	<!-- <plugins> -->
-	<!-- <plugin> -->
-	<!-- <groupId>org.apache.maven.plugins</groupId> -->
-	<!-- <artifactId>maven-antrun-plugin</artifactId> -->
-	<!-- <version>1.1</version> -->
-	<!-- <executions> -->
-	<!-- <execution> -->
-	<!-- <phase>test</phase> -->
-	<!-- <goals> -->
-	<!-- <goal>run</goal> -->
-	<!-- </goals> -->
-	<!-- <configuration> -->
-	<!-- <tasks> -->
-	<!-- <echo>selected stage profile</echo> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/${default.properties.file.name}" 
-		/> -->
-	<!-- <copy -->
-	<!-- file="src/main/resources/application.stage.properties" -->
-	<!-- tofile="${project.build.outputDirectory}/${default.properties.file.name}" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.stage.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.test.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.dev.properties" 
-		/> -->
-
-	<!-- <echo>Using application.stage.properties</echo> -->
-	<!-- </tasks> -->
-	<!-- </configuration> -->
-	<!-- </execution> -->
-	<!-- </executions> -->
-	<!-- </plugin> -->
-	<!-- </plugins> -->
-	<!-- </build> -->
-	<!-- </profile> -->
-	<!-- <profile> -->
-	<!-- <id>prod</id> -->
-	<!-- <properties> -->
-	<!-- <env>application.prod</env> -->
-	<!-- </properties> -->
-	<!-- <build> -->
-	<!-- <plugins> -->
-	<!-- <plugin> -->
-	<!-- <groupId>org.apache.maven.plugins</groupId> -->
-	<!-- <artifactId>maven-antrun-plugin</artifactId> -->
-	<!-- <version>1.1</version> -->
-	<!-- <executions> -->
-	<!-- <execution> -->
-	<!-- <phase>test</phase> -->
-	<!-- <goals> -->
-	<!-- <goal>run</goal> -->
-	<!-- </goals> -->
-	<!-- <configuration> -->
-	<!-- <tasks> -->
-	<!-- <echo>selected prod profile</echo> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/${default.properties.file.name}" 
-		/> -->
-	<!-- <echo>copyng -->
-	<!-- ${project.build.outputDirectory}/application.prod.properties</echo> -->
-	<!-- <copy -->
-	<!-- file="${project.build.outputDirectory}/application.prod.properties" -->
-	<!-- tofile="${project.build.outputDirectory}/${default.properties.file.name}" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.stage.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.test.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.dev.properties" 
-		/> -->
-	<!-- <delete -->
-	<!-- file="${project.build.outputDirectory}/application.prod.properties" 
-		/> -->
-	<!-- <echo>Using application.prod.properties</echo> -->
-	<!-- </tasks> -->
-	<!-- </configuration> -->
-	<!-- </execution> -->
-	<!-- </executions> -->
-	<!-- </plugin> -->
-	<!-- </plugins> -->
-	<!-- </build> -->
-	<!-- </profile> -->
-	<!-- </profiles> -->
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -430,25 +233,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		<dependency><!-- automatically restart application when you make changes 
-				to the project classpath files. -->
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<version>1.2.3</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -460,8 +259,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-
-		<!-- Dependencies to convert and entity in PDF file -->
 		<dependency>
 		    <groupId>com.itextpdf</groupId>
 		    <artifactId>itextpdf</artifactId>
@@ -472,27 +269,6 @@
 		    <artifactId>pdfbox</artifactId>
 		    <version>2.0.4</version>
 		</dependency>
-		<!-- the above is for handling the problem on jacoco reports making process -->
-		<!-- <dependency> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- <artifactId>jackson-databind</artifactId> -->
-		<!-- <version>2.7.4</version> -->
-		<!-- <exclusions> -->
-		<!-- <exclusion> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- <artifactId>jackson-core</artifactId> -->
-		<!-- </exclusion> -->
-		<!-- <exclusion> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- <artifactId>jackson-annotations</artifactId> -->
-		<!-- </exclusion> -->
-		<!-- </exclusions> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- <artifactId>jackson-core</artifactId> -->
-		<!-- <version>2.7.4</version> -->
-		<!-- </dependency> -->
 	</dependencies>
 
 
