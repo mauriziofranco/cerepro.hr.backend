@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,7 @@ import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.Cand
 import centauri.academy.cerepro.rest.response.ResponseQuestion;
 import centauri.academy.cerepro.rest.response.StartSurveyResponse;
 import centauri.academy.cerepro.service.SurveyService;
+import jakarta.validation.Valid;
 
 /**
  * @author Marco Fulgosi

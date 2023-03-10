@@ -90,8 +90,8 @@ public class PdfService {
 		String name = candidate.get().getFirstname() + "-" + candidate.get().getLastname()+"-" 
 				+ surveyReply.get().getStarttime().getMonthValue() + "-" 
 				+ surveyReply.get().getStarttime().getDayOfMonth() + "-" 
-				+ surveyReply.get().getId() + ".pdf";
-		String aa = path.concat(File.separator).concat(name);
+				+ surveyReply.get().getId();
+		String aa = path.concat(File.separator).concat(name) + ".pdf";
 		
 		try {
 			PdfWriter.getInstance(document, new FileOutputStream(

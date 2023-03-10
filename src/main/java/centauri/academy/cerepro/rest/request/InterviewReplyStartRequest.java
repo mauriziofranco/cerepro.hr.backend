@@ -1,6 +1,7 @@
 package centauri.academy.cerepro.rest.request;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * @author Fabio
  *

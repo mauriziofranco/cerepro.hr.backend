@@ -6,7 +6,8 @@ package centauri.academy.cerepro.rest.request;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 
 /**
  * @author Marco Fulgosi

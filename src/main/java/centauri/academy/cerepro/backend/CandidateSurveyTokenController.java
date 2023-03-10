@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import javax.validation.Valid;
-
 import org.proxima.common.mail.MailUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CandidateSurveyToken;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
-import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
 import centauri.academy.cerepro.util.RandomTokenGenerator;
+import jakarta.validation.Valid;
 
 /**
  * controller class for UserSurveyTokenController entity
