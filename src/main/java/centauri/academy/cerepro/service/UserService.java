@@ -1,5 +1,6 @@
 package centauri.academy.cerepro.service;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,5 +70,15 @@ public class UserService {
 	public void deleteAll () {
 		logger.debug("deleteAll - START");
 		userRepository.deleteAll();
+	}
+	
+	public Optional<User> getById(Long id) {
+		logger.debug("getById -START");
+		return userRepository.findById(id);
+	}
+	
+	public Boolean updateEnabledById(Long id, Boolean b) {
+		logger.debug("updateEnabledById - START");
+		return (userRepository.updateEnabledById(id, b)==1?true:false);
 	}
 }
