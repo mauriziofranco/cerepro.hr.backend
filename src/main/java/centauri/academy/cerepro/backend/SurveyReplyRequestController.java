@@ -3,6 +3,7 @@
  */
 package centauri.academy.cerepro.backend;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,20 +23,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CandidateSurveyToken;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
+import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
+import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.rest.request.SurveyReplyRequest;
 import centauri.academy.cerepro.rest.request.SurveyReplyStartRequest;
+import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.SurveyReplyRequestService;
+import org.proxima.common.mail.MailUtility;
+
 
 /**
  * @author Marco Fulgosi
+ * @author Antonio Iannaccone - Roma Academy VII
  *
  */
 
@@ -54,6 +63,10 @@ public class SurveyReplyRequestController {
 	private CandidateSurveyTokenRepository candidateSurveyTokenRepository;
 	@Autowired
 	PdfController pdfController;
+	@Autowired
+	private CandidateRepository candidateRepository;
+	@Autowired
+	private Environment env;
 	
 	public static final Logger logger = LoggerFactory.getLogger(SurveyReplyRequestController.class);
 	/** CREATE A NEW SURVEY REPLY REQUEST */
@@ -150,6 +163,37 @@ public class SurveyReplyRequestController {
 		//TODO
 		boolean pdfGenerated = pdfController.createPdfForSurveyFromId(currentSurveyReply.getId());
 		
+		// Sending email with attachment
+		if (pdfGenerated) {
+			long candidateId = optSurveyReply.get().getCandidateId();
+			Optional<Candidate> optCandidate = candidateRepository.findById(candidateId);
+			long insertedBy = optCandidate.get().getInsertedBy();
+			Optional<User> optUser = userRepository.findById(insertedBy);
+			String recipient = optUser.get().getEmail();
+			
+		    String subject = "Nuovo PDF generato da " + optCandidate.get().getFirstname() + optCandidate.get().getLastname();
+		    String mess = "Ciao, in allegato il PDF generato al termine del questionario compilato da " + optCandidate.get().getFirstname() + optCandidate.get().getLastname() + ", utente con ID: " + optCandidate.get().getId() + ".";
+		    
+		    String path = env.getProperty("app.folder.candidate.survey.pdf");
+			String name = optCandidate.get().getFirstname() + "-" + optCandidate.get().getLastname() + "-" 
+					+ optSurveyReply.get().getStarttime().getMonthValue() + "-" 
+					+ optSurveyReply.get().getStarttime().getDayOfMonth() + "-" 
+					+ optSurveyReply.get().getId() + ".pdf";
+		    String attachmentPath = path.concat(File.separator).concat(name);
+		    
+		    String pdfFileName = optSurveyReply.get().getPdffilename();
+		    String attachmentName = pdfFileName;
+		    
+		    boolean mailSent = MailUtility.sendMailWithAttachment(recipient, subject, mess, attachmentPath, attachmentName);
+
+		    if (mailSent) {
+		        logger.info("E-mail inviata con successo.");
+		    } else {
+		        logger.error("Errore durante l'invio dell'e-mail.");
+		    }
+		} else {
+		    logger.error("Nessun PDF trovato da inviare.");
+		}
 		
 		return new ResponseEntity<>(currentSurveyReply, HttpStatus.OK);
 	}
