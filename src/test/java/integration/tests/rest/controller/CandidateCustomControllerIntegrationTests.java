@@ -72,10 +72,10 @@ public class CandidateCustomControllerIntegrationTests extends AbstractIntegrati
 	public void initializeRelatedTables () throws Exception {
 		logger.trace("initializeRelatedTables - START");
 		candidateSurveyTokenService.deleteAll();
-		candidateService.deleteAll();
 		coursePageService.deleteAll();
 		candidateStateService.deleteAll();
 		surveyReplyService.deleteAll();
+		candidateService.deleteAll();
 		userService.deleteAll();		
 		roleService.deleteAll();		
 	}
