@@ -87,6 +87,7 @@ public class PdfService {
 		
 		Document document = new Document();
 		String path = env.getProperty("app.folder.candidate.survey.pdf");
+		logger.info("generatePdf - DEBUG - app.folder.candidate.survey.pdf: " + path);
 		String name = candidate.get().getFirstname() + "-" + candidate.get().getLastname()+"-" 
 				+ surveyReply.get().getStarttime().getMonthValue() + "-" 
 				+ surveyReply.get().getStarttime().getDayOfMonth() + "-" 
