@@ -43,6 +43,8 @@
 		<!-- </resource> -->
 		<!-- </resources> -->
 		<plugins>
+		
+
 			<!-- <plugin> -->
 			<!-- <artifactId>maven-resources-plugin</artifactId> -->
 			<!-- <version>3.1.0</version> -->
@@ -212,7 +214,7 @@
 		<dependency>
 			<groupId>centauri.academy</groupId>
 			<artifactId>cerepro.mail.manager</artifactId>
-			<version>0.9.5</version>
+			<version>0.9.6</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -260,14 +262,20 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>itextpdf</artifactId>
-		    <version>5.5.10</version>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.10</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.pdfbox</groupId>
-		    <artifactId>pdfbox</artifactId>
-		    <version>2.0.4</version>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.20</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
