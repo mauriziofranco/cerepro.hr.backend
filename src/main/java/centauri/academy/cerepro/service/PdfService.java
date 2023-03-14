@@ -191,7 +191,7 @@ public class PdfService {
 		
 		List<String> lista = new ArrayList<String>();
 
-		String s = "Candidato: ";
+		String s = "Candidate complete name: ";
 //		s += candidate.getClass().getSimpleName().toUpperCase() + "\n";
 //		s += "ID: " + candidate.getId() + "\n";
 //		s += "Course code: " + candidate.getCourseCode() + "\n";
@@ -199,7 +199,7 @@ public class PdfService {
 //		s += "Firstname: " + candidate.getFirstname() + "\n";
 //		s += "Lastname: " + candidate.getLastname() + "\n";		
 		s += candidate.getFirstname() + " " + candidate.getLastname() + "\n";
-		s += "Email candidato: " + candidate.getEmail() + "\n";
+		s += "Candidate email: " + candidate.getEmail() + "\n";
 //		s += "DateOfBirth: " + candidate.getDateOfBirth() + "\n";
 //		s += "Residential city: " + candidate.getDomicileCity() + "\n";
 //		s += "Mobile: " + candidate.getMobile() + "\n";
@@ -226,9 +226,9 @@ public class PdfService {
 //		s += "Answers:" + surveyReply.getAnswers() + "\n\n\n\n\n";
 		
 		s = "";
-		s += "Questionario svolto: " + survey.getLabel() + "(" + questionCustomList.size() + " domande)\n";
+		s += "Exam name: " + survey.getLabel() + "(" + questionCustomList.size() + " questions)\n";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		s += "Giorno di esecuzione del questionario: " + surveyReply.getStarttime().format(formatter) + "\n";
+		s += "Exam execution day: " + surveyReply.getStarttime().format(formatter) + "\n";
 		s += "Tempo massimo di esecuzione del questionario: " + survey.getTime() + " minuti\n";
 		formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		s += "Inizio: " + surveyReply.getStarttime().format(formatter) + " - Fine: " + surveyReply.getEndtime().format(formatter) + "\n";
@@ -241,42 +241,42 @@ public class PdfService {
 				
 				s = "";
 //				s += "ID: " + rq.getId() + "\n";
-				s += "Domanda numero: " + rq.getPosition() + " - " + rq.getLabel() + "\n";
+				s += "Question number: " + rq.getPosition() + " - " + rq.getLabel() + "\n";
 				s += rq.getDescription() + "\n";
 //				s += "Position: " + rq.getPosition() + "\n";
 				if (rq.getAnsa()!=null) {
-					s += "Risposta A: " + rq.getAnsa() + "(" + rq.getCansa() + "): " + questionReplyList.get(i).getCansa()+ "\n";
+					s += "Answer A: " + rq.getAnsa() + "(" + rq.getCansa() + "): " + questionReplyList.get(i).getCansa()+ "\n";
 				}
 				if (rq.getAnsb()!=null) {
-				    s += "Risposta B: " + rq.getAnsb() + "(" + rq.getCansb() + "): " + questionReplyList.get(i).getCansb() + "\n";
+				    s += "Answer B: " + rq.getAnsb() + "(" + rq.getCansb() + "): " + questionReplyList.get(i).getCansb() + "\n";
 				}
 				if (rq.getAnsc()!=null) {
-					s += "Risposta C: " + rq.getAnsc() + "(" + rq.getCansc() + "): " + questionReplyList.get(i).getCansc() + "\n";
+					s += "Answer C: " + rq.getAnsc() + "(" + rq.getCansc() + "): " + questionReplyList.get(i).getCansc() + "\n";
 				}
 				if (rq.getAnsd()!=null) {
-					s += "Risposta D: " + rq.getAnsd() + "(" + rq.getCansd() + "): " + questionReplyList.get(i).getCansd() + "\n";
+					s += "Answer D: " + rq.getAnsd() + "(" + rq.getCansd() + "): " + questionReplyList.get(i).getCansd() + "\n";
 				}
 				if (rq.getAnse()!=null) {
-					s += "Risposta E: " + rq.getAnse() + "(" + rq.getCanse() + "): " + questionReplyList.get(i).getCanse() + "\n";
+					s += "Answer E: " + rq.getAnse() + "(" + rq.getCanse() + "): " + questionReplyList.get(i).getCanse() + "\n";
 				}
 				if (rq.getAnsf()!=null) {
-				    s += "Risposta F: " + rq.getAnsf() + "(" + rq.getCansf() + "): " + questionReplyList.get(i).getCansf() + "\n";
+				    s += "Answer F: " + rq.getAnsf() + "(" + rq.getCansf() + "): " + questionReplyList.get(i).getCansf() + "\n";
 				}
 				if (rq.getAnsg()!=null) {
-				    s += "Risposta G: " + rq.getAnsg() + "(" + rq.getCansg() + "): " + questionReplyList.get(i).getCansg() + "\n";
+				    s += "Answer G: " + rq.getAnsg() + "(" + rq.getCansg() + "): " + questionReplyList.get(i).getCansg() + "\n";
 				}
 				if (rq.getAnsh()!=null) {
-					s += "Risposta H: " + rq.getAnsh() + "(" + rq.getCansh() + "): " + questionReplyList.get(i).getCansh() + "\n";
+					s += "Answer H: " + rq.getAnsh() + "(" + rq.getCansh() + "): " + questionReplyList.get(i).getCansh() + "\n";
 				}
 				s += "\n";
-				s += "Risposta completa/descrittiva: " + rq.getFullAnswer() + "\n\n\n\n";
+				s += "Full answer: " + rq.getFullAnswer() + "\n\n\n\n";
 				logger.info("####### String creata: " + s);
 				lista.add(s);
 				i++;
 			
 		}
 		
-		s = "Al termine del questionario il punteggio complessivo totalizzato dal candidato è di " + surveyReply.getPoints() + " punti\n";
+		s = "Exam final result: " + surveyReply.getPoints() + " points\n";
 //		s += "Answers:" + surveyReply.getAnswers() + "\n\n\n\n\n";
 		lista.add(s);
 
