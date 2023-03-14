@@ -102,12 +102,18 @@ public class SurveyReplyService {
 		return count;
 	}
 	
-	public void updatePdfName(String name, long id) {
+	public boolean updatePdfName(String name, long id) {
 		logger.info("updatePdfName() started");
-		
-		surveyReplyRepository.updatePdfFileName(name, id);
+		boolean returnValue = false ;
+		try {
+		    surveyReplyRepository.updatePdfFileName(name, id);
+		    returnValue = true ;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 		
 		logger.info("updatePdfName() end");
+		return returnValue ;
 	}
 
 }

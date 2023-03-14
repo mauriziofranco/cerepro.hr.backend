@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.proxima.common.mail.MailUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +28,20 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import aj.org.objectweb.asm.Type;
+import centauri.academy.cerepro.backend.PdfController;
 import centauri.academy.cerepro.backend.QuestionController;
 import centauri.academy.cerepro.dto.QuestionAndReply;
 import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Survey;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
+import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.custom.QuestionCustom;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
+import centauri.academy.cerepro.persistence.repository.UserRepository;
+import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
+import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 import centauri.academy.cerepro.rest.response.ResponseQuestion;
 
@@ -67,6 +73,12 @@ public class PdfService {
 	
 	@Autowired
 	private SurveyReplyService surveyReplyService;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private CandidateRepository candidateRepository;
 
 	public boolean generatePdf(Long surveyReplyId) {
 		
@@ -94,7 +106,7 @@ public class PdfService {
 				+ surveyReply.get().getStarttime().getDayOfMonth() + "-" 
 				+ surveyReply.get().getId() + ".pdf";
 		String aa = path.concat(File.separator).concat(name);
-		
+		boolean pdfGenerated = false ;
 		try {
 			PdfWriter.getInstance(document, new FileOutputStream(
 					aa
@@ -120,16 +132,53 @@ public class PdfService {
 			
 			document.close();
 			
-			surveyReplyService.updatePdfName(name, surveyReply.get().getId());
+			pdfGenerated = surveyReplyService.updatePdfName(name, surveyReply.get().getId());
+			if (pdfGenerated) {
+				sendEmailWithPdf(candidate.get().getId(), surveyReply.get());
+			} else {
+			    logger.error("Nessun PDF trovato da inviare.");
+			}
 			
-			return true;
+//			return true;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
 		
-		return false;	
+		return pdfGenerated;	
+	}
+	
+	private void sendEmailWithPdf (long candidateId, SurveyReply surveyReply) {
+		try {
+			Optional<Candidate> optCandidate = candidateRepository.findById(candidateId);
+			long insertedBy = optCandidate.get().getInsertedBy();
+			Optional<User> optUser = userRepository.findById(insertedBy);
+			String recipient = optUser.get().getEmail();
+			
+		    String subject = "Nuovo PDF generato da " + optCandidate.get().getFirstname() + optCandidate.get().getLastname();
+		    String mess = "Ciao, in allegato il PDF generato al termine del questionario compilato da " + optCandidate.get().getFirstname() + optCandidate.get().getLastname() + ", candidato con ID: " + optCandidate.get().getId() + ".";
+		    
+		    String path = env.getProperty("app.folder.candidate.survey.pdf");
+			String name = optCandidate.get().getFirstname() + "-" + optCandidate.get().getLastname() + "-" 
+					+ surveyReply.getStarttime().getMonthValue() + "-" 
+					+ surveyReply.getStarttime().getDayOfMonth() + "-" 
+					+ surveyReply.getId() + ".pdf";
+		    String attachmentPath = path.concat(File.separator).concat(name);
+		    
+		    String pdfFileName = surveyReply.getPdffilename();
+		    String attachmentName = pdfFileName;
+		    
+		    boolean mailSent = MailUtility.sendMailWithAttachment(recipient, subject, mess, attachmentPath, attachmentName);
+
+		    if (mailSent) {
+		        logger.info("E-mail inviata con successo.");
+		    } else {
+		        logger.error("Errore durante l'invio dell'e-mail.");
+		    }
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	private List<QuestionAndReply> createQuestionReplyList(

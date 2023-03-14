@@ -64,8 +64,6 @@ public class SurveyReplyRequestController {
 	@Autowired
 	PdfController pdfController;
 	@Autowired
-	private CandidateRepository candidateRepository;
-	@Autowired
 	private Environment env;
 	
 	public static final Logger logger = LoggerFactory.getLogger(SurveyReplyRequestController.class);
@@ -147,53 +145,12 @@ public class SurveyReplyRequestController {
 		
 		SurveyReply currentSurveyReply = optSurveyReply.get(); 
 		currentSurveyReply.setEndtime(LocalDateTime.now());
-//		if(surveyInterviewRepository.findBySurveyId(currentSurveyReply.getSurveyId()).size() == 0) {
-//			System.out.println("----------------------------------------------AAA--------------------");
-			currentSurveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
-			currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
-//		}
-//		else {
-//			System.out.println("----------------------------------------------BBB--------------------");
-//			currentSurveyReply.setAnswers(surveyReplyRequestService.answersInterviewToString(surveyReplyRequest.getInterviewAnswers()));
-//			
-//		}
+		currentSurveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
+		currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
 	 
 		surveyReplyRepository.save(currentSurveyReply);
 		
-		//TODO
-		boolean pdfGenerated = pdfController.createPdfForSurveyFromId(currentSurveyReply.getId());
-		
-		// Sending email with attachment
-		if (pdfGenerated) {
-			long candidateId = optSurveyReply.get().getCandidateId();
-			Optional<Candidate> optCandidate = candidateRepository.findById(candidateId);
-			long insertedBy = optCandidate.get().getInsertedBy();
-			Optional<User> optUser = userRepository.findById(insertedBy);
-			String recipient = optUser.get().getEmail();
-			
-		    String subject = "Nuovo PDF generato da " + optCandidate.get().getFirstname() + optCandidate.get().getLastname();
-		    String mess = "Ciao, in allegato il PDF generato al termine del questionario compilato da " + optCandidate.get().getFirstname() + optCandidate.get().getLastname() + ", utente con ID: " + optCandidate.get().getId() + ".";
-		    
-		    String path = env.getProperty("app.folder.candidate.survey.pdf");
-			String name = optCandidate.get().getFirstname() + "-" + optCandidate.get().getLastname() + "-" 
-					+ optSurveyReply.get().getStarttime().getMonthValue() + "-" 
-					+ optSurveyReply.get().getStarttime().getDayOfMonth() + "-" 
-					+ optSurveyReply.get().getId() + ".pdf";
-		    String attachmentPath = path.concat(File.separator).concat(name);
-		    
-		    String pdfFileName = optSurveyReply.get().getPdffilename();
-		    String attachmentName = pdfFileName;
-		    
-		    boolean mailSent = MailUtility.sendMailWithAttachment(recipient, subject, mess, attachmentPath, attachmentName);
-
-		    if (mailSent) {
-		        logger.info("E-mail inviata con successo.");
-		    } else {
-		        logger.error("Errore durante l'invio dell'e-mail.");
-		    }
-		} else {
-		    logger.error("Nessun PDF trovato da inviare.");
-		}
+		pdfController.createPdfForSurveyFromId(currentSurveyReply.getId());
 		
 		return new ResponseEntity<>(currentSurveyReply, HttpStatus.OK);
 	}
