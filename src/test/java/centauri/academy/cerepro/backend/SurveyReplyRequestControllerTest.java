@@ -76,7 +76,7 @@ public class SurveyReplyRequestControllerTest {
 		testSurveyReplyRequest.setAnswers(new ArrayList<SingleQuestionReplyRequest>());
 
 		when(this.surveyReplyRequestService.answersToString(testSurveyReplyRequest.getAnswers())).thenReturn("");
-		when(this.surveyReplyRequestService.pointsCalculator(testSurveyReplyRequest.getAnswers())).thenReturn(new Long(10));
+		when(this.surveyReplyRequestService.calculateScore(testSurveyReplyRequest.getAnswers())).thenReturn("10");
 		when(this.surveyRepository.findById(testSurveyReplyRequest.getSurveyId())).thenReturn(Optional.of(new Survey()));
 		when(this.userRepository.findById(testSurveyReplyRequest.getUserId())).thenReturn(Optional.of(new User()));
 //		when(this.surveyReplyRepository.save(surveyReply)).thenReturn(testSurveyReply);

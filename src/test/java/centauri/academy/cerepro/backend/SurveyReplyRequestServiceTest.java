@@ -78,13 +78,13 @@ public class SurveyReplyRequestServiceTest {
 		
 		when(this.questionRepository.getOne(question.getId())).thenReturn(question);
 		
-		Long punteggio = surveyReplyRequestService.pointsCalculator(answers);
+		String punteggio = surveyReplyRequestService.calculateScore(answers);
 		logger.info(" # # punteggio totalizzato: "+ punteggio);
 		
 		Long punteggioMAX = 8L*surveyReplyRequestService.getCorrect();
 		logger.info(" # # punteggio massimo: "+ punteggioMAX);
 		
-		Assert.assertTrue(punteggioMAX == punteggio);
+		Assert.assertTrue((""+punteggioMAX).equals(punteggio));
 		logger.info(" # testPointsCalculatorSuccessfully() - END");
 	}
 	
@@ -118,13 +118,13 @@ public class SurveyReplyRequestServiceTest {
 		
 		when(this.questionRepository.getOne(question.getId())).thenReturn(question);
 		
-		Long punteggio = surveyReplyRequestService.pointsCalculator(answers);
+		String punteggio = surveyReplyRequestService.calculateScore(answers);
 		logger.info(" # # punteggio totalizzato: "+ punteggio);
 		
 		Long punteggioMAX = 8L*surveyReplyRequestService.getCorrect();
 		logger.info(" # # punteggio massimo: "+ punteggioMAX);
 		
-		Assert.assertTrue(punteggioMAX > punteggio);
+		Assert.assertTrue(!(""+punteggioMAX).equals(punteggio));
 		logger.info(" # testPointsCalculatorWrongAnswer() - END");
 	}
 	
@@ -158,10 +158,10 @@ public class SurveyReplyRequestServiceTest {
 		
 		when(this.questionRepository.getOne(question.getId())).thenReturn(question);
 		
-		Long punteggio = surveyReplyRequestService.pointsCalculator(answers);
+		String punteggio = surveyReplyRequestService.calculateScore(answers);
 		logger.info(" # # punteggio totalizzato: "+ punteggio);
 		
-		Assert.assertTrue(-8L == punteggio);
+		Assert.assertTrue("-8".equals(punteggio));
 		logger.info(" # testPointsCalculatorALLWrongAnswers() - END");
 	}
 	
