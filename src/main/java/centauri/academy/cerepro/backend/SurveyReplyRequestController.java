@@ -3,7 +3,6 @@
  */
 package centauri.academy.cerepro.backend;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -23,22 +22,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import centauri.academy.cerepro.persistence.entity.Candidate;
 import centauri.academy.cerepro.persistence.entity.CandidateSurveyToken;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
-import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
-import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
 import centauri.academy.cerepro.rest.request.SurveyReplyRequest;
 import centauri.academy.cerepro.rest.request.SurveyReplyStartRequest;
-import centauri.academy.cerepro.service.CandidateService;
 import centauri.academy.cerepro.service.SurveyReplyRequestService;
-import org.proxima.common.mail.MailUtility;
 
 
 /**
@@ -70,7 +64,7 @@ public class SurveyReplyRequestController {
 	/** CREATE A NEW SURVEY REPLY REQUEST */
 	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CeReProAbstractEntity> insertSurveyReply(@Valid @RequestBody final SurveyReplyRequest surveyReplyRequest) {
-		logger.info("Creating Survey Reply : {}", surveyReplyRequest);
+		logger.info("insertSurveyReply - START - surveyReplyRequest: {}", surveyReplyRequest);
 		
 		if (surveyRepository.findById(surveyReplyRequest.getSurveyId())==null)
 			return new ResponseEntity<>(
@@ -90,7 +84,7 @@ public class SurveyReplyRequestController {
 		surveyReply.setEndtime(surveyReplyRequest.getEndtime());
 		
 		surveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
-		surveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
+		surveyReply.setPoints(surveyReplyRequestService.calculateScore(surveyReplyRequest.getAnswers()).toString()); 
 		surveyReply.setPdffilename("Risposte del candidato n."+surveyReplyRequest.getUserId()+" Al questionario n."+surveyReplyRequest.getSurveyId());
 		
 		surveyReplyRepository.save(surveyReply);
@@ -146,7 +140,8 @@ public class SurveyReplyRequestController {
 		SurveyReply currentSurveyReply = optSurveyReply.get(); 
 		currentSurveyReply.setEndtime(LocalDateTime.now());
 		currentSurveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
-		currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
+//		currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
+		currentSurveyReply.setPoints(surveyReplyRequestService.calculateScore(surveyReplyRequest.getAnswers())); 
 	 
 		surveyReplyRepository.save(currentSurveyReply);
 		
