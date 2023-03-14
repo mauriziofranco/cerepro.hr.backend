@@ -3,6 +3,7 @@ package centauri.academy.cerepro.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -135,7 +136,7 @@ public class PdfService {
 			List<QuestionCustom> questionCustomList, String answers) {
 		
 		List<QuestionAndReply> lista = new ArrayList<QuestionAndReply>();
-		System.out.println("#### DIMENSIONE QUESTION CUSTOM LIST : " + questionCustomList.size() + " ######");
+		logger.info("#### DIMENSIONE QUESTION CUSTOM LIST : " + questionCustomList.size() + " ######");
 		
 //		ObjectMapper mapper = new ObjectMapper();
 		Gson gson = new Gson(); 
@@ -178,7 +179,7 @@ public class PdfService {
 		
 		List<String> lista = new ArrayList<String>();
 
-		String s = "";
+		String s = "Candidato: ";
 //		s += candidate.getClass().getSimpleName().toUpperCase() + "\n";
 //		s += "ID: " + candidate.getId() + "\n";
 //		s += "Course code: " + candidate.getCourseCode() + "\n";
@@ -186,7 +187,7 @@ public class PdfService {
 //		s += "Firstname: " + candidate.getFirstname() + "\n";
 //		s += "Lastname: " + candidate.getLastname() + "\n";		
 		s += candidate.getFirstname() + " " + candidate.getLastname() + "\n";
-		s += candidate.getEmail() + "\n";
+		s += "Email candidato: " + candidate.getEmail() + "\n";
 //		s += "DateOfBirth: " + candidate.getDateOfBirth() + "\n";
 //		s += "Residential city: " + candidate.getDomicileCity() + "\n";
 //		s += "Mobile: " + candidate.getMobile() + "\n";
@@ -213,15 +214,18 @@ public class PdfService {
 //		s += "Answers:" + surveyReply.getAnswers() + "\n\n\n\n\n";
 		
 		s = "";
-		s += "Survey type: " + survey.getLabel() + "(" + questionCustomList.size() + " questions)\n";
-		s += "Execution start time: " + surveyReply.getStarttime() + "\n";
-		s += "Execution end time: " + surveyReply.getEndtime() + "\n";
+		s += "Questionario svolto: " + survey.getLabel() + "(" + questionCustomList.size() + " domande)\n";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		s += "Giorno di esecuzione del questionario: " + surveyReply.getStarttime().format(formatter) + "\n";
+		s += "Tempo massimo di esecuzione del questionario: " + survey.getTime() + " minuti\n";
+		formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		s += "Inizio: " + surveyReply.getStarttime().format(formatter) + " - Fine: " + surveyReply.getEndtime().format(formatter) + "\n";
 		s += "\n\n\n\n\n";
 		lista.add(s);
 		int i = 0;
 		for (QuestionCustom rq : questionReplyList) {
-				System.out.println("####################### CREAZIONE STRINGA DENTRO FOR ###########");
-				System.out.println("####################### dimensione questionCustomList: " + questionCustomList.size());
+				logger.info("####################### CREAZIONE STRINGA DENTRO FOR ###########");
+				logger.info("####################### dimensione questionCustomList: " + questionCustomList.size());
 				
 				s = "";
 				s += "ID: " + rq.getId() + "\n";
@@ -237,7 +241,7 @@ public class PdfService {
 				s += "Answer G: " + rq.getAnsg() + " --- correct Answer:" + rq.getCansg() + " ------ User answer: " + questionReplyList.get(i).getCansg() + "\n";
 				s += "Answer H: " + rq.getAnsh() + " --- correct Answer:" + rq.getCansh() + " ------ User answer: " + questionReplyList.get(i).getCansh() + "\n";
 				s += "FullAnswer: " + rq.getFullAnswer() + "\n\n\n\n";
-				System.out.println("####### String creata: " + s);
+				logger.info("####### String creata: " + s);
 				lista.add(s);
 				i++;
 			
