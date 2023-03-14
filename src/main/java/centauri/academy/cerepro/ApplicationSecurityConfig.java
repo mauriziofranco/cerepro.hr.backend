@@ -33,6 +33,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.httpBasic().and().authorizeRequests()
 		.antMatchers(HttpMethod.POST, "/api/v1/user/").permitAll()//to allow regitration????
+		.antMatchers(HttpMethod.GET, "/api/v1/user/email/**").permitAll()//to allow login
 		.antMatchers(HttpMethod.GET,  "/api/v1/survey/getSurveyForCandidate/**").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/v1/surveyreplyrequest/start/").permitAll()		
 		.antMatchers(HttpMethod.PUT,  "/api/v1/surveyreplyrequest/end/**").permitAll()
