@@ -136,25 +136,37 @@ public class PdfService {
 			List<QuestionCustom> questionCustomList, String answers) {
 		
 		List<QuestionAndReply> lista = new ArrayList<QuestionAndReply>();
-		logger.info("#### DIMENSIONE QUESTION CUSTOM LIST : " + questionCustomList.size() + " ######");
+		logger.info("createQuestionReplyList - DEBUG - #### DIMENSIONE QUESTION CUSTOM LIST : " + questionCustomList.size() + " ######");
 		
 //		ObjectMapper mapper = new ObjectMapper();
 		Gson gson = new Gson(); 
 		QuestionAndReply[] qarArray = gson.fromJson(answers, QuestionAndReply[].class); 
-		int i = 0;
+//		int i = 0;
 		try {
 //			List<QuestionAndReply> qaaq = mapper.readValue(answers, List<QuestionAndReply.class>);
 			for(QuestionCustom es : questionCustomList) {
-				for(; i < questionCustomList.size()-1; i++) {
-				
-					QuestionAndReply qar = new QuestionAndReply(es.getId(), es.getLabel(), es.getDescription(), 
-							es.getAnsa(), es.getAnsb(), es.getAnsc(), es.getAnsd(), es.getAnse(), es.getAnsf(), 
-							es.getAnsg(), es.getAnsh(), es.getCansa(), es.getCansb(), es.getCansc(), es.getCansd(), 
-							es.getCanse(), es.getCansf(), es.getCansg(), es.getCansh() , es.getFullAnswer(), es.getPosition(),
-							qarArray[i].getQuestionId(), qarArray[i].getUserCansa(), qarArray[i].getUserCansb(), qarArray[i].getUserCansc(), qarArray[i].getUserCansd(), qarArray[i].getUserCanse(),
-							qarArray[i].getUserCansf(), qarArray[i].getUserCansg(), qarArray[i].getUserCansh());
-					lista.add(qar);
+				logger.info("createQuestionReplyList - DEBUG - " + es);
+				for (int i=0; i<qarArray.length; i++) {
+					if (qarArray[i].getQuestionId()==es.getId()) {
+						QuestionAndReply qar = new QuestionAndReply(es.getId(), es.getLabel(), es.getDescription(), 
+								es.getAnsa(), es.getAnsb(), es.getAnsc(), es.getAnsd(), es.getAnse(), es.getAnsf(), 
+								es.getAnsg(), es.getAnsh(), es.getCansa(), es.getCansb(), es.getCansc(), es.getCansd(), 
+								es.getCanse(), es.getCansf(), es.getCansg(), es.getCansh() , es.getFullAnswer(), es.getPosition(),
+								qarArray[i].getQuestionId(), qarArray[i].getUserCansa(), qarArray[i].getUserCansb(), qarArray[i].getUserCansc(), qarArray[i].getUserCansd(), qarArray[i].getUserCanse(),
+								qarArray[i].getUserCansf(), qarArray[i].getUserCansg(), qarArray[i].getUserCansh());
+						lista.add(qar);
+					}
 				}
+//				for(; i < questionCustomList.size()-1; i++) {
+//				
+//					QuestionAndReply qar = new QuestionAndReply(es.getId(), es.getLabel(), es.getDescription(), 
+//							es.getAnsa(), es.getAnsb(), es.getAnsc(), es.getAnsd(), es.getAnse(), es.getAnsf(), 
+//							es.getAnsg(), es.getAnsh(), es.getCansa(), es.getCansb(), es.getCansc(), es.getCansd(), 
+//							es.getCanse(), es.getCansf(), es.getCansg(), es.getCansh() , es.getFullAnswer(), es.getPosition(),
+//							qarArray[i].getQuestionId(), qarArray[i].getUserCansa(), qarArray[i].getUserCansb(), qarArray[i].getUserCansc(), qarArray[i].getUserCansd(), qarArray[i].getUserCanse(),
+//							qarArray[i].getUserCansf(), qarArray[i].getUserCansg(), qarArray[i].getUserCansh());
+//					lista.add(qar);
+//				}
 			}
 //			System.out.println("####### POSIZIONE: " + i);
 //			for(QuestionCustom es : questionCustomList) {
@@ -220,7 +232,7 @@ public class PdfService {
 		s += "Tempo massimo di esecuzione del questionario: " + survey.getTime() + " minuti\n";
 		formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		s += "Inizio: " + surveyReply.getStarttime().format(formatter) + " - Fine: " + surveyReply.getEndtime().format(formatter) + "\n";
-		s += "\n\n\n\n\n";
+		s += "\n\n\n";
 		lista.add(s);
 		int i = 0;
 		for (QuestionCustom rq : questionReplyList) {
@@ -228,26 +240,43 @@ public class PdfService {
 				logger.info("####################### dimensione questionCustomList: " + questionCustomList.size());
 				
 				s = "";
-				s += "ID: " + rq.getId() + "\n";
-				s += "Description: " + rq.getLabel() + "\n";
-				s += "Description: " + rq.getDescription() + "\n";
-				s += "Position: " + rq.getPosition() + "\n";
-				s += "Answer A: " + rq.getAnsa() + " --- correct Answer:" + rq.getCansa() + " ------ User answer: " + questionReplyList.get(i).getCansa()+ "\n";
-				s += "Answer B: " + rq.getAnsb() + " --- correct Answer:" + rq.getCansb() + " ------ User answer: " + questionReplyList.get(i).getCansb() + "\n";
-				s += "Answer C: " + rq.getAnsc() + " --- correct Answer:" + rq.getCansc() + " ------ User answer: " + questionReplyList.get(i).getCansc() + "\n";
-				s += "Answer D: " + rq.getAnsd() + " --- correct Answer:" + rq.getCansd() + " ------ User answer: " + questionReplyList.get(i).getCansd() + "\n";
-				s += "Answer E: " + rq.getAnse() + " --- correct Answer:" + rq.getCanse() + " ------ User answer: " + questionReplyList.get(i).getCanse() + "\n";
-				s += "Answer F: " + rq.getAnsf() + " --- correct Answer:" + rq.getCansf() + " ------ User answer: " + questionReplyList.get(i).getCansf() + "\n";
-				s += "Answer G: " + rq.getAnsg() + " --- correct Answer:" + rq.getCansg() + " ------ User answer: " + questionReplyList.get(i).getCansg() + "\n";
-				s += "Answer H: " + rq.getAnsh() + " --- correct Answer:" + rq.getCansh() + " ------ User answer: " + questionReplyList.get(i).getCansh() + "\n";
-				s += "FullAnswer: " + rq.getFullAnswer() + "\n\n\n\n";
+//				s += "ID: " + rq.getId() + "\n";
+				s += "Domanda numero: " + rq.getPosition() + " - " + rq.getLabel() + "\n";
+				s += rq.getDescription() + "\n";
+//				s += "Position: " + rq.getPosition() + "\n";
+				if (rq.getAnsa()!=null) {
+					s += "Risposta A: " + rq.getAnsa() + "(" + rq.getCansa() + "): " + questionReplyList.get(i).getCansa()+ "\n";
+				}
+				if (rq.getAnsb()!=null) {
+				    s += "Risposta B: " + rq.getAnsb() + "(" + rq.getCansb() + "): " + questionReplyList.get(i).getCansb() + "\n";
+				}
+				if (rq.getAnsc()!=null) {
+					s += "Risposta C: " + rq.getAnsc() + "(" + rq.getCansc() + "): " + questionReplyList.get(i).getCansc() + "\n";
+				}
+				if (rq.getAnsd()!=null) {
+					s += "Risposta D: " + rq.getAnsd() + "(" + rq.getCansd() + "): " + questionReplyList.get(i).getCansd() + "\n";
+				}
+				if (rq.getAnse()!=null) {
+					s += "Risposta E: " + rq.getAnse() + "(" + rq.getCanse() + "): " + questionReplyList.get(i).getCanse() + "\n";
+				}
+				if (rq.getAnsf()!=null) {
+				    s += "Risposta F: " + rq.getAnsf() + "(" + rq.getCansf() + "): " + questionReplyList.get(i).getCansf() + "\n";
+				}
+				if (rq.getAnsg()!=null) {
+				    s += "Risposta G: " + rq.getAnsg() + "(" + rq.getCansg() + "): " + questionReplyList.get(i).getCansg() + "\n";
+				}
+				if (rq.getAnsh()!=null) {
+					s += "Risposta H: " + rq.getAnsh() + "(" + rq.getCansh() + "): " + questionReplyList.get(i).getCansh() + "\n";
+				}
+				s += "\n";
+				s += "Risposta completa/descrittiva: " + rq.getFullAnswer() + "\n\n\n\n";
 				logger.info("####### String creata: " + s);
 				lista.add(s);
 				i++;
 			
 		}
 		
-		s += "Point: " + surveyReply.getPoints() + "\n";
+		s = "Al termine del questionario il punteggio complessivo totalizzato dal candidato è di " + surveyReply.getPoints() + " punti\n";
 //		s += "Answers:" + surveyReply.getAnswers() + "\n\n\n\n\n";
 		lista.add(s);
 

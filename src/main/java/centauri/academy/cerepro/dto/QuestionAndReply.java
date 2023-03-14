@@ -4,7 +4,7 @@ import centauri.academy.cerepro.persistence.entity.custom.QuestionCustom;
 
 public class QuestionAndReply extends QuestionCustom {
 
-	private int questionId;
+	private long questionId;
 	private Boolean userCansa;
 	private Boolean userCansb;
 	private Boolean userCansc;
@@ -22,7 +22,7 @@ public class QuestionAndReply extends QuestionCustom {
 			String ansa, String ansb, String ansc, String ansd, String anse,
 			String ansf, String ansg, String ansh, Boolean cansa, Boolean cansb,
 			Boolean cansc, Boolean cansd, Boolean canse, Boolean cansf,
-			Boolean cansg, Boolean cansh, String fullAnswer, Long position, int questionId, Boolean userCansa, Boolean userCansb,
+			Boolean cansg, Boolean cansh, String fullAnswer, Long position, long questionId, Boolean userCansa, Boolean userCansb,
 			Boolean userCansc, Boolean userCansd, Boolean userCanse,
 			Boolean userCansf, Boolean userCansg, Boolean userCansh) {
 		super(id, label, description, ansa, ansb, ansc, ansd, anse, ansf, ansg,
@@ -42,14 +42,14 @@ public class QuestionAndReply extends QuestionCustom {
 	/**
 	 * @return the questionId
 	 */
-	public int getQuestionId() {
+	public long getQuestionId() {
 		return questionId;
 	}
 
 	/**
 	 * @param questionId the questionId to set
 	 */
-	public void setQuestionId(int questionId) {
+	public void setQuestionId(long questionId) {
 		this.questionId = questionId;
 	}
 
