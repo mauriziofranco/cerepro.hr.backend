@@ -244,7 +244,7 @@ public class UserController {
 	}
 	
 	@PatchMapping("/{id}")
-	public ResponseEntity<CeReProAbstractEntity> updateUserEnabledByid(@PathVariable("id") final Long id, @RequestParam Boolean b ) {
+	public ResponseEntity<CeReProAbstractEntity> updateUserEnabledByid(@PathVariable("id") final Long id) {
 		
 		Optional<User> optUser = userService.getById(id);
 		
@@ -253,10 +253,11 @@ public class UserController {
 		}
 		
 		try {
-			boolean result = userService.updateEnabledById(id, b);
+			boolean result = userService.updateEnabledById(id, !optUser.get().isEnabled());
 			logger.info(""+result);
 			if (result) {
 				User updatedUser = userService.getById(id).get();
+				updatedUser.setEnabled(!updatedUser.isEnabled());
 				return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(new CustomErrorType("Unable to update. Something went wrong."), HttpStatus.INTERNAL_SERVER_ERROR);
