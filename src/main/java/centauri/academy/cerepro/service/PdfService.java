@@ -157,7 +157,7 @@ public class PdfService {
 			String recipient = optUser.get().getEmail();
 			
 		    String subject = "Nuovo PDF generato da " + optCandidate.get().getFirstname() + optCandidate.get().getLastname();
-		    String mess = "Ciao, in allegato il PDF generato al termine del questionario compilato da " + optCandidate.get().getFirstname() + optCandidate.get().getLastname() + ", candidato con ID: " + optCandidate.get().getId() + ".";
+		    String mess = "Ciao, in allegato il PDF generato al termine del questionario compilato da " + optCandidate.get().getFirstname() + " " + optCandidate.get().getLastname() + ", candidato con ID " + optCandidate.get().getId() + ".";
 		    
 		    String path = env.getProperty("app.folder.candidate.survey.pdf");
 			String name = optCandidate.get().getFirstname() + "-" + optCandidate.get().getLastname() + "-" 

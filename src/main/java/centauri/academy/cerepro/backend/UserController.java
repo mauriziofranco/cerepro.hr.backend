@@ -199,6 +199,7 @@ public class UserController {
 			currentUser.setEmail(user.getEmail());
 			currentUser.setFirstname(user.getFirstname());
 			currentUser.setLastname(user.getLastname());
+			currentUser.setRole(user.getRole());
 			userRepository.save(currentUser);
 			return new ResponseEntity<>(currentUser, HttpStatus.OK);
 		} catch (Exception e) {
