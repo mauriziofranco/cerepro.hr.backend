@@ -73,15 +73,13 @@ public class CandidateSurveyTokenCustomController {
 	/**
 	 * 
 	 */
-	@GetMapping("/active/{size}/{number}/")
-	public ResponseEntity<Page<CandidateSurveyTokenCustom>> getActiveUserSurveyToken(
-			@PathVariable("size") final int size,
-			@PathVariable("number") final int number) {
-		Page<CandidateSurveyTokenCustom> cC = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExpiredPaginated(PageRequest.of(number, size, Sort.Direction.ASC, "id"), false);
-		if (cC.isEmpty()) {
+	@GetMapping("/active/")
+	public ResponseEntity<List<CandidateSurveyTokenCustom>> getActiveUserSurveyToken() {
+		List<CandidateSurveyTokenCustom> list = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenActive();
+		if (list.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>(cC, HttpStatus.OK);
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
 }
