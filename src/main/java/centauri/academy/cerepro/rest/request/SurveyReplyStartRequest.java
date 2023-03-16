@@ -20,6 +20,22 @@ public class SurveyReplyStartRequest {
 	
 	@NotNull(message = "error.userTokenId.empty")
 	private long userTokenId;
+	
+	private String generated_token;
+
+	/**
+	 * @return the generated_token
+	 */
+	public String getGenerated_token() {
+		return generated_token;
+	}
+
+	/**
+	 * @param generated_token the generated_token to set
+	 */
+	public void setGenerated_token(String generated_token) {
+		this.generated_token = generated_token;
+	}
 
 	/**
 	 * @return the surveyId

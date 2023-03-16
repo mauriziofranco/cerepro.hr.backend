@@ -89,7 +89,17 @@ public class PdfService {
 		Optional<Candidate> candidate = candidateService.getById(surveyReply
 				.get().getCandidateId());
 		List<QuestionCustom> questionCustomList = questionService.getAllQuestionCustomListFromSurveyId(surveyReply.get().getSurveyId());
-		List<QuestionAndReply> questionReplyList = this.createQuestionReplyList(questionCustomList, surveyReply.get().getAnswers());
+		List<QuestionAndReply> questionReplyList = null;
+		
+		try {
+			questionReplyList = this.createQuestionReplyList(questionCustomList, surveyReply.get().getAnswers());
+			System.out.println("######## QUESTION LIST è null? " + questionCustomList == null);
+			if(questionReplyList == null)
+				return false;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return false;
+		}
 		
 		logger.debug("################### SURVEY FOUND WITH ID: " + surveyReply
 				.get().getId());
@@ -97,6 +107,7 @@ public class PdfService {
 		if (!surveyReply.isPresent()) {
 			return false;
 		}
+		
 		
 		Document document = new Document();
 		String path = env.getProperty("app.folder.candidate.survey.pdf");
@@ -182,7 +193,7 @@ public class PdfService {
 	}
 
 	private List<QuestionAndReply> createQuestionReplyList(
-			List<QuestionCustom> questionCustomList, String answers) {
+			List<QuestionCustom> questionCustomList, String answers) throws Exception{
 		
 		List<QuestionAndReply> lista = new ArrayList<QuestionAndReply>();
 		logger.info("createQuestionReplyList - DEBUG - #### DIMENSIONE QUESTION CUSTOM LIST : " + questionCustomList.size() + " ######");
@@ -191,6 +202,8 @@ public class PdfService {
 		Gson gson = new Gson(); 
 		QuestionAndReply[] qarArray = gson.fromJson(answers, QuestionAndReply[].class); 
 //		int i = 0;
+		if(answers == null || answers.equals(""))
+			return null;
 		try {
 //			List<QuestionAndReply> qaaq = mapper.readValue(answers, List<QuestionAndReply.class>);
 			for(QuestionCustom es : questionCustomList) {
@@ -227,6 +240,7 @@ public class PdfService {
 //			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 		
 		
