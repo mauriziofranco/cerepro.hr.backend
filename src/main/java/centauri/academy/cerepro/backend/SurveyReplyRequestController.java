@@ -86,6 +86,7 @@ public class SurveyReplyRequestController {
 		surveyReply.setAnswers(surveyReplyRequestService.answersToString(surveyReplyRequest.getAnswers()));
 		surveyReply.setPoints(surveyReplyRequestService.calculateScore(surveyReplyRequest.getAnswers()).toString()); 
 		surveyReply.setPdffilename("Risposte del candidato n."+surveyReplyRequest.getUserId()+" Al questionario n."+surveyReplyRequest.getSurveyId());
+		surveyReply.setGenerated_token(surveyReplyRequest.getGenerated_token());
 		
 		surveyReplyRepository.save(surveyReply);
 		return new ResponseEntity<>(surveyReply, HttpStatus.CREATED);
@@ -111,7 +112,7 @@ public class SurveyReplyRequestController {
 		surveyReply.setSurveyId(surveyReplyRequest.getSurveyId());
 		surveyReply.setCandidateId(surveyReplyRequest.getCandidateId());
 		surveyReply.setStarttime(LocalDateTime.now());
-		
+		surveyReply.setGenerated_token(surveyReplyRequest.getGenerated_token());
 			
 		surveyReplyRepository.save(surveyReply);
 		
@@ -143,6 +144,8 @@ public class SurveyReplyRequestController {
 //		currentSurveyReply.setPoints(surveyReplyRequestService.pointsCalculator(surveyReplyRequest.getAnswers()).toString()); 
 		currentSurveyReply.setPoints(surveyReplyRequestService.calculateScore(surveyReplyRequest.getAnswers())); 
 	 
+		currentSurveyReply.setGenerated_token(surveyReplyRequest.getGenerated_token());
+		
 		surveyReplyRepository.save(currentSurveyReply);
 		
 		pdfController.createPdfForSurveyFromId(currentSurveyReply.getId());
