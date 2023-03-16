@@ -67,15 +67,28 @@ public class CandidateSurveyTokenCustomController {
 		return new ResponseEntity<>(cC, HttpStatus.OK);
 	}
 	
-	/******** PAGEABLE *******/
 	
-	/******* PAGEABLE ********/
-	/**
-	 * 
-	 */
 	@GetMapping("/active/")
-	public ResponseEntity<List<CandidateSurveyTokenCustom>> getActiveUserSurveyToken() {
+	public ResponseEntity<List<CandidateSurveyTokenCustom>> getNotJetExecutedAndNotExpiredSurveys() {
 		List<CandidateSurveyTokenCustom> list = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenActive();
+		if (list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/executed/")
+	public ResponseEntity<List<CandidateSurveyTokenCustom>> getExecutedSurveys() {
+		List<CandidateSurveyTokenCustom> list = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExecuted();
+		if (list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/expired/")
+	public ResponseEntity<List<CandidateSurveyTokenCustom>> getExpiredSurveys() {
+		List<CandidateSurveyTokenCustom> list = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExpiredAndNotExecuted();
 		if (list.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
