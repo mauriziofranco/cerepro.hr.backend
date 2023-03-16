@@ -52,20 +52,20 @@ public class CandidateSurveyTokenCustomController {
 			return new ResponseEntity<>(candidateSurveyTokenList, HttpStatus.OK);
 	}
 	
-	/**
-	 * 
-	 * 
-	 */
-	@GetMapping("/expired/{size}/{number}/")
-	public ResponseEntity<Page<CandidateSurveyTokenCustom>> getExpiredUserSurveyToken(
-			@PathVariable("size") final int size,
-			@PathVariable("number") final int number) {
-		Page<CandidateSurveyTokenCustom> cC = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExpiredPaginated(PageRequest.of(number, size, Sort.Direction.ASC, "id"), true);
-		if (cC.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<>(cC, HttpStatus.OK);
-	}
+//	/**
+//	 * 
+//	 * 
+//	 */
+//	@GetMapping("/expired/{size}/{number}/")
+//	public ResponseEntity<Page<CandidateSurveyTokenCustom>> getExpiredUserSurveyToken(
+//			@PathVariable("size") final int size,
+//			@PathVariable("number") final int number) {
+//		Page<CandidateSurveyTokenCustom> cC = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExpiredPaginated(PageRequest.of(number, size, Sort.Direction.ASC, "id"), true);
+//		if (cC.isEmpty()) {
+//			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//		}
+//		return new ResponseEntity<>(cC, HttpStatus.OK);
+//	}
 	
 	
 	@GetMapping("/active/")
