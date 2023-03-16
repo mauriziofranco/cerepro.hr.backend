@@ -3,6 +3,8 @@ package centauri.academy.cerepro.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,10 +114,7 @@ public class PdfService {
 		Document document = new Document();
 		String path = env.getProperty("app.folder.candidate.survey.pdf");
 		logger.info("generatePdf - DEBUG - app.folder.candidate.survey.pdf: " + path);
-		String name = candidate.get().getFirstname() + "-" + candidate.get().getLastname()+"-" 
-				+ surveyReply.get().getStarttime().getMonthValue() + "-" 
-				+ surveyReply.get().getStarttime().getDayOfMonth() + "-" 
-				+ surveyReply.get().getId() + ".pdf";
+		String name = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH_mm_ss")) + "-" + surveyReply.get().getId() + ".pdf";
 		String aa = path.concat(File.separator).concat(name);
 		boolean pdfGenerated = false ;
 		try {
