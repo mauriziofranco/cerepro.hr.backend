@@ -209,12 +209,13 @@
 		<dependency>
 			<groupId>centauri.academy</groupId>
 			<artifactId>cerepro.persistence</artifactId>
-			<version>1.5.3</version>
+			<version>1.5.4</version>
+
 		</dependency>
 		<dependency>
 			<groupId>centauri.academy</groupId>
 			<artifactId>cerepro.mail.manager</artifactId>
-			<version>0.9.6</version>
+			<version>0.9.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
