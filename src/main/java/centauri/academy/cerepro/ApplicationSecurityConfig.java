@@ -43,7 +43,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.POST, "/api/v1/**/**").authenticated()
 		.antMatchers(HttpMethod.PUT, "/api/v1/**/**").authenticated()
 		.antMatchers(HttpMethod.DELETE, "/api/v1/**/**").authenticated()
-//		.antMatchers(HttpMethod.DELETE, "/api/v1/**/**/**/**/**").hasAuthority("ADMIN")
+		.antMatchers(HttpMethod.DELETE, "/api/v1/**/**/**/**/**").hasAuthority("ADMIN")
 		.and().csrf().disable().cors();
 	}
 	

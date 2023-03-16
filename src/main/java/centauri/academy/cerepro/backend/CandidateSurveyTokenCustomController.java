@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.custom.CandidateSurveyTokenCustom;
 import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
+import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
 
 /**
  * controller class for CandidateSurveyTokenCustom entity
@@ -39,6 +41,7 @@ public class CandidateSurveyTokenCustomController {
 	@Autowired
 	private CandidateSurveyTokenRepository candidateSurveyTokenRepository;
 	
+	
 	/**
 	 * listAllUserSurveyToken method gets all CandidateSurveyTokenCustom
 	 * @return a new ResponseEntity with the given status code
@@ -46,10 +49,12 @@ public class CandidateSurveyTokenCustomController {
 	@GetMapping("/")
 	public ResponseEntity<List<CandidateSurveyTokenCustom>> listAllUserSurveyToken() {
 		List<CandidateSurveyTokenCustom> candidateSurveyTokenList = candidateSurveyTokenRepository.getAllCustomCandidateSurveyToken();
+		System.out.println("DIMENSIONE LISTA CANDIDATE: " + candidateSurveyTokenList.size());
 		if (candidateSurveyTokenList.isEmpty()) {                
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}else
+		}else {
 			return new ResponseEntity<>(candidateSurveyTokenList, HttpStatus.OK);
+		}
 	}
 	
 	/**
