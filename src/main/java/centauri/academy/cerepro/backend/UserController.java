@@ -4,6 +4,7 @@
 package centauri.academy.cerepro.backend;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,6 +120,25 @@ public class UserController {
 		}
 
 		return new ResponseEntity<>(optUser.get(), HttpStatus.OK);
+	}
+	
+	/**
+	 * getUserByRole method gets all users by role
+	 * 
+	 * @param role of the user to be selected
+	 * @return a new List <ResponseEntity> with the given status code
+	 */
+	@GetMapping("/role/{role}")
+	public ResponseEntity<List<User>> getUserByRole(@PathVariable("role") final Integer role) {
+		List<Optional<User>> optionalUsers = userService.getByRole(role);
+		List <User> users = new ArrayList<User>();
+		if (optionalUsers.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		for (Optional<User> u : optionalUsers) {
+			users.add(u.get());
+		}
+		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
 	/**

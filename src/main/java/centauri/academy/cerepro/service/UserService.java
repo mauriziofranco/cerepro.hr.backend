@@ -77,6 +77,11 @@ public class UserService {
 		return userRepository.findById(id);
 	}
 	
+	public List <Optional <User>> getByRole(Integer role) {
+		logger.debug("getByRole - START");
+		return userRepository.findByRole(role);
+	}
+	
 	public Boolean updateEnabledById(Long id, Boolean b) {
 		logger.debug("updateEnabledById - START");
 		return (userRepository.updateEnabledById(id, b)==1?true:false);
