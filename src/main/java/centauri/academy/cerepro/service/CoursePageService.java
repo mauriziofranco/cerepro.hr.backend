@@ -39,24 +39,9 @@ public class CoursePageService {
     public List<CoursePageCustom> getAllCoursePageCustom() {
     	
     	List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
-		List<CoursePageCustom> coursePageEmpty = coursePageRepositoryCustom.findAllCustomEmpty();
-		List<CoursePageCustom> coursePages = new ArrayList<>();
-		List<Long> ids = new ArrayList<>();
-		for (CoursePageCustom cpf : coursePageFilled) {
-			coursePages.add(cpf);
-			ids.add(cpf.getId());
-		}
-		for (CoursePageCustom cpe : coursePageEmpty)  {
-			if (!ids.contains(cpe.getId())) coursePages.add(cpe);
-		}
 		
-		Collections.sort(coursePages, new Comparator<CoursePageCustom>() {
-			public int compare(CoursePageCustom c1, CoursePageCustom c2) {
-				return (int)(c1.getId() - c2.getId());
-			}
-		});
 		
-		return coursePages;
+		return coursePageFilled;
     	
     }
 	

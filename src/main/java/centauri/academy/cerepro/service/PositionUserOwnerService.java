@@ -43,7 +43,7 @@ public class PositionUserOwnerService {
 	
 	public Optional<PositionUserOwner> getByCoursePageId(Long coursePageId) {
 		logger.debug("getByCoursePageIdAndUserId - START");
-		Optional<PositionUserOwner> positionUserOwner =positionUserOwnerRepository.findByCoursePageId(coursePageId);
+		Optional<PositionUserOwner> positionUserOwner = positionUserOwnerRepository.findByCoursePageId(coursePageId);
 		return positionUserOwner;
 	}
 	
