@@ -19,9 +19,9 @@ import centauri.academy.cerepro.persistence.entity.CoursePage;
 import centauri.academy.cerepro.persistence.entity.Role;
 import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.repository.CandidateStatesRepository;
-import centauri.academy.cerepro.persistence.repository.CoursePageRepository;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
+import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepository;
 import centauri.academy.cerepro.service.CandidateService;
 
 /**

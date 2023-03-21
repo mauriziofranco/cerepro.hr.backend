@@ -25,7 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.CoursePage;
-import centauri.academy.cerepro.persistence.repository.CoursePageRepository;
+import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepository;
 
 /**
  * @author Traian Cojocariu

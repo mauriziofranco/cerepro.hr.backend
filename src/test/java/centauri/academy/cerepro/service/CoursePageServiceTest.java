@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import centauri.academy.cerepro.CeReProBackendApplication;
 import centauri.academy.cerepro.persistence.entity.CoursePage;
-import centauri.academy.cerepro.persistence.repository.CoursePageRepository;
+import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepository;
 
 /**
  * @author m.franco@proximainformatica.com

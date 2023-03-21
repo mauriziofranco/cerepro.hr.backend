@@ -1,13 +1,21 @@
 package centauri.academy.cerepro.service;
 
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import centauri.academy.cerepro.persistence.entity.CoursePage;
-import centauri.academy.cerepro.persistence.repository.CoursePageRepository;
+import centauri.academy.cerepro.persistence.entity.custom.CoursePageCustom;
+import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepository;
+import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepositoryCustom;
 
 /**
  * 
@@ -21,8 +29,35 @@ public class CoursePageService {
 	@Autowired
 	private CoursePageRepository coursePageRepository;
 	
+	@Autowired
+	private CoursePageRepositoryCustom coursePageRepositoryCustom;
+	
     public CoursePage getCoursePageByCode(String code) {
         return coursePageRepository.findByCode(code);
+    }
+    
+    public List<CoursePageCustom> getAllCoursePageCustom() {
+    	
+    	List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
+		List<CoursePageCustom> coursePageEmpty = coursePageRepositoryCustom.findAllCustomEmpty();
+		List<CoursePageCustom> coursePages = new ArrayList<>();
+		List<Long> ids = new ArrayList<>();
+		for (CoursePageCustom cpf : coursePageFilled) {
+			coursePages.add(cpf);
+			ids.add(cpf.getId());
+		}
+		for (CoursePageCustom cpe : coursePageEmpty)  {
+			if (!ids.contains(cpe.getId())) coursePages.add(cpe);
+		}
+		
+		Collections.sort(coursePages, new Comparator<CoursePageCustom>() {
+			public int compare(CoursePageCustom c1, CoursePageCustom c2) {
+				return (int)(c1.getId() - c2.getId());
+			}
+		});
+		
+		return coursePages;
+    	
     }
 	
 	/**
