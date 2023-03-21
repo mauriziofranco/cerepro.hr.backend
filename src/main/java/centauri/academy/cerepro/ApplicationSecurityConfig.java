@@ -40,6 +40,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET,  "/api/v1/application/info/**").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/v1/pdf/**").permitAll()
 		.antMatchers(HttpMethod.GET, "/api/v1/coursepagecustom").authenticated()
+		.antMatchers(HttpMethod.GET, "/api/v1/positionuserowner").authenticated()
 		.antMatchers(HttpMethod.PATCH, "/api/v1/user/**").authenticated()
 		.antMatchers(HttpMethod.GET, "/api/v1/**/**").authenticated()
 		.antMatchers(HttpMethod.POST, "/api/v1/**/**").authenticated()
