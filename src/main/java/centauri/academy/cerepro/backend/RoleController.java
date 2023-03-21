@@ -70,6 +70,20 @@ public class RoleController {
 		return new ResponseEntity<>(optRole.get(), HttpStatus.OK);
 	}
 	
+	@GetMapping("/level/{level}")
+	public ResponseEntity<CeReProAbstractEntity> getRoleByLevel(@PathVariable("level") final Integer level){
+		logger.info("getRoleByLevel - START - level: {}", level);
+		Role optRole = roleService.selectByLevel(level);
+		
+		if (optRole== null) {
+			return new ResponseEntity<>(
+				new CustomErrorType("Role with level " + level + " not found"),
+				HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(optRole, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CeReProAbstractEntity> createRole(
 			@Valid @RequestBody final Role role) {
