@@ -39,6 +39,12 @@ public class CoursePageService {
     public List<CoursePageCustom> getAllCoursePageCustom() {
     	
     	List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
+    	
+    	Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
+			public int compare(CoursePageCustom c1, CoursePageCustom c2) {
+				return (int)(c1.getId() - c2.getId());
+			}
+		});
 		
 		
 		return coursePageFilled;
