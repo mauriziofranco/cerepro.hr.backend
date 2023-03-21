@@ -471,7 +471,7 @@ public class CandidateCustomController {
 		logger.info("delete - START - for id: {}", id);
 		try {
 			candidateService.deleteCandidate(id);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (CandidateNotFoundException e) {
 			logger.error(e.getMessage());
 			logger.error("ERROR in updating candidate, Candidate not found: ", e);

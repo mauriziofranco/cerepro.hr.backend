@@ -1,6 +1,7 @@
 package centauri.academy.cerepro.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import centauri.academy.cerepro.persistence.entity.Role;
+import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.repository.RoleRepository;
 
 /**
@@ -53,5 +55,12 @@ public class RoleService {
 		entity = roleRepository.save(entity);
 		logger.info("insert - END - returning inserted entity: {}" + entity);
 		return entity;
+	}
+	
+	public Role selectByLevel(int level) {
+		logger.info("selectByLevel - START - level: {}", level);
+		Role role = roleRepository.findByLevel(level);
+		logger.info("selectByLevel - END - returning selectByLevel role: {}" + role);
+		return role;
 	}
 }

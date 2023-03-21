@@ -52,36 +52,47 @@ public class CandidateSurveyTokenCustomController {
 			return new ResponseEntity<>(candidateSurveyTokenList, HttpStatus.OK);
 	}
 	
-	/**
-	 * 
-	 * 
-	 */
-	@GetMapping("/expired/{size}/{number}/")
-	public ResponseEntity<Page<CandidateSurveyTokenCustom>> getExpiredUserSurveyToken(
-			@PathVariable("size") final int size,
-			@PathVariable("number") final int number) {
-		Page<CandidateSurveyTokenCustom> cC = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExpiredPaginated(PageRequest.of(number, size, Sort.Direction.ASC, "id"), true);
-		if (cC.isEmpty()) {
+//	/**
+//	 * 
+//	 * 
+//	 */
+//	@GetMapping("/expired/{size}/{number}/")
+//	public ResponseEntity<Page<CandidateSurveyTokenCustom>> getExpiredUserSurveyToken(
+//			@PathVariable("size") final int size,
+//			@PathVariable("number") final int number) {
+//		Page<CandidateSurveyTokenCustom> cC = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExpiredPaginated(PageRequest.of(number, size, Sort.Direction.ASC, "id"), true);
+//		if (cC.isEmpty()) {
+//			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//		}
+//		return new ResponseEntity<>(cC, HttpStatus.OK);
+//	}
+	
+	
+	@GetMapping("/active/")
+	public ResponseEntity<List<CandidateSurveyTokenCustom>> getNotJetExecutedAndNotExpiredSurveys() {
+		List<CandidateSurveyTokenCustom> list = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenActive();
+		if (list.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>(cC, HttpStatus.OK);
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
-	/******** PAGEABLE *******/
-	
-	/******* PAGEABLE ********/
-	/**
-	 * 
-	 */
-	@GetMapping("/active/{size}/{number}/")
-	public ResponseEntity<Page<CandidateSurveyTokenCustom>> getActiveUserSurveyToken(
-			@PathVariable("size") final int size,
-			@PathVariable("number") final int number) {
-		Page<CandidateSurveyTokenCustom> cC = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExpiredPaginated(PageRequest.of(number, size, Sort.Direction.ASC, "id"), false);
-		if (cC.isEmpty()) {
+	@GetMapping("/executed/")
+	public ResponseEntity<List<CandidateSurveyTokenCustom>> getExecutedSurveys() {
+		List<CandidateSurveyTokenCustom> list = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExecuted();
+		if (list.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>(cC, HttpStatus.OK);
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/expired/")
+	public ResponseEntity<List<CandidateSurveyTokenCustom>> getExpiredSurveys() {
+		List<CandidateSurveyTokenCustom> list = candidateSurveyTokenRepository.getAllCustomCandidateSurveyTokenExpiredAndNotExecuted();
+		if (list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
 }

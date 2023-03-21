@@ -178,6 +178,23 @@ public class QuestionAndReply extends QuestionCustom {
 	public void setUserCansh(Boolean userCansh) {
 		this.userCansh = userCansh;
 	}
+
+	@Override
+	public String toString() {
+		return "QuestionAndReply [questionId=" + questionId + ", userCansa=" + userCansa + ", userCansb=" + userCansb
+				+ ", userCansc=" + userCansc + ", userCansd=" + userCansd + ", userCanse=" + userCanse + ", userCansf="
+				+ userCansf + ", userCansg=" + userCansg + ", userCansh=" + userCansh + ", getPosition()="
+				+ getPosition() + ", toString()=" + super.toString() + ", getId()=" + getId() + ", getLabel()="
+				+ getLabel() + ", getDescription()=" + getDescription() + ", getAnsa()=" + getAnsa() + ", getAnsb()="
+				+ getAnsb() + ", getAnsc()=" + getAnsc() + ", getAnsd()=" + getAnsd() + ", getAnse()=" + getAnse()
+				+ ", getAnsf()=" + getAnsf() + ", getAnsg()=" + getAnsg() + ", getAnsh()=" + getAnsh() + ", getCansa()="
+				+ getCansa() + ", getCansb()=" + getCansb() + ", getCansc()=" + getCansc() + ", getCansd()="
+				+ getCansd() + ", getCanse()=" + getCanse() + ", getCansf()=" + getCansf() + ", getCansg()="
+				+ getCansg() + ", getCansh()=" + getCansh() + ", getFullAnswer()=" + getFullAnswer() + ", getClass()="
+				+ getClass() + ", hashCode()=" + hashCode() + "]";
+	}
+	
+	
 	
 
 }

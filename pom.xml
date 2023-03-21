@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>centauri.academy</groupId>
 	<artifactId>cerepro.backend</artifactId>
-	<version>1.3.5</version>
+	<version>1.3.6</version>
 
 	<name>CeReProBackend</name>
 	<description>Backend module for CeRePro project designed by milan centauri academy number 3, 4 and 5</description>
@@ -214,7 +214,7 @@
 		<dependency>
 			<groupId>centauri.academy</groupId>
 			<artifactId>cerepro.mail.manager</artifactId>
-			<version>0.9.6</version>
+			<version>0.9.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

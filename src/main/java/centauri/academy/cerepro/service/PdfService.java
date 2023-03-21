@@ -3,47 +3,37 @@ package centauri.academy.cerepro.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 import org.proxima.common.mail.MailUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import aj.org.objectweb.asm.Type;
-import centauri.academy.cerepro.backend.PdfController;
 import centauri.academy.cerepro.backend.QuestionController;
+import centauri.academy.cerepro.dto.AswerJsonResponse;
 import centauri.academy.cerepro.dto.QuestionAndReply;
 import centauri.academy.cerepro.persistence.entity.Candidate;
-import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.Survey;
 import centauri.academy.cerepro.persistence.entity.SurveyReply;
 import centauri.academy.cerepro.persistence.entity.User;
-import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.entity.custom.QuestionCustom;
 import centauri.academy.cerepro.persistence.repository.SurveyRepository;
 import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.candidate.CandidateRepository;
-import centauri.academy.cerepro.persistence.repository.candidatesurveytoken.CandidateSurveyTokenRepository;
 import centauri.academy.cerepro.persistence.repository.surveyreply.SurveyReplyRepository;
-import centauri.academy.cerepro.rest.response.ResponseQuestion;
 
 /**
  * 
@@ -82,14 +72,24 @@ public class PdfService {
 
 	public boolean generatePdf(Long surveyReplyId) {
 		
-		logger.debug("################### SERVICE METHOD CALLED ###################");
+		logger.debug("################### generatePdf START ###################");
 		
 		Optional<SurveyReply> surveyReply = surveyReplyRepository.findById(surveyReplyId);
 		Optional<Survey> survey = surveyRepository.findById(surveyReply.get().getSurveyId());
 		Optional<Candidate> candidate = candidateService.getById(surveyReply
 				.get().getCandidateId());
 		List<QuestionCustom> questionCustomList = questionService.getAllQuestionCustomListFromSurveyId(surveyReply.get().getSurveyId());
-		List<QuestionAndReply> questionReplyList = this.createQuestionReplyList(questionCustomList, surveyReply.get().getAnswers());
+		List<QuestionAndReply> questionReplyList = null;
+		
+		try {
+			questionReplyList = this.createQuestionReplyList(questionCustomList, surveyReply.get().getAnswers());
+			//System.out.println("######## QUESTION LIST è null? " + questionCustomList == null);
+			if(questionReplyList == null)
+				return false;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return false;
+		}
 		
 		logger.debug("################### SURVEY FOUND WITH ID: " + surveyReply
 				.get().getId());
@@ -98,13 +98,11 @@ public class PdfService {
 			return false;
 		}
 		
+		
 		Document document = new Document();
 		String path = env.getProperty("app.folder.candidate.survey.pdf");
 		logger.info("generatePdf - DEBUG - app.folder.candidate.survey.pdf: " + path);
-		String name = candidate.get().getFirstname() + "-" + candidate.get().getLastname()+"-" 
-				+ surveyReply.get().getStarttime().getMonthValue() + "-" 
-				+ surveyReply.get().getStarttime().getDayOfMonth() + "-" 
-				+ surveyReply.get().getId() + ".pdf";
+		String name = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH_mm_ss")) + "-" + surveyReply.get().getId() + ".pdf";
 		String aa = path.concat(File.separator).concat(name);
 		boolean pdfGenerated = false ;
 		try {
@@ -133,7 +131,11 @@ public class PdfService {
 			document.close();
 			
 			pdfGenerated = surveyReplyService.updatePdfName(name, surveyReply.get().getId());
-			if (pdfGenerated) {
+			surveyReply = surveyReplyRepository.findById(surveyReplyId) ;
+			logger.info("generatePdf - DEBUG - New object retrieved={}", surveyReply.get());
+			String pdffilename = surveyReply.get().getPdffilename();
+			if (pdfGenerated&&pdffilename!=null) {
+				
 				sendEmailWithPdf(candidate.get().getId(), surveyReply.get());
 			} else {
 			    logger.error("Nessun PDF trovato da inviare.");
@@ -169,6 +171,7 @@ public class PdfService {
 		    String pdfFileName = surveyReply.getPdffilename();
 		    String attachmentName = pdfFileName;
 		    
+		    logger.info("sendEmailWithPdf - DEBUG - recipient={} - subject={} - mess={}, attachmentPath={}, attachmentName={}", recipient, subject, mess, attachmentPath, attachmentName);
 		    boolean mailSent = MailUtility.sendMailWithAttachment(recipient, subject, mess, attachmentPath, attachmentName);
 
 		    if (mailSent) {
@@ -182,27 +185,35 @@ public class PdfService {
 	}
 
 	private List<QuestionAndReply> createQuestionReplyList(
-			List<QuestionCustom> questionCustomList, String answers) {
+			List<QuestionCustom> questionCustomList, String answers) throws Exception{
 		
 		List<QuestionAndReply> lista = new ArrayList<QuestionAndReply>();
 		logger.info("createQuestionReplyList - DEBUG - #### DIMENSIONE QUESTION CUSTOM LIST : " + questionCustomList.size() + " ######");
 		
 //		ObjectMapper mapper = new ObjectMapper();
 		Gson gson = new Gson(); 
-		QuestionAndReply[] qarArray = gson.fromJson(answers, QuestionAndReply[].class); 
+		logger.info("createQuestionReplyList - DEBUG - answers: {}", answers);
+		AswerJsonResponse[] qarArray = gson.fromJson(answers, AswerJsonResponse[].class); 
+		logger.info("qarArray.length: " + qarArray.length);
+		logger.info("questionCustomList.size(): " + questionCustomList.size());
 //		int i = 0;
+		if(answers == null || answers.equals(""))
+			return null;
 		try {
 //			List<QuestionAndReply> qaaq = mapper.readValue(answers, List<QuestionAndReply.class>);
 			for(QuestionCustom es : questionCustomList) {
 				logger.info("createQuestionReplyList - DEBUG - " + es);
 				for (int i=0; i<qarArray.length; i++) {
+					logger.info("qarArray[i].getQuestionId(): "+qarArray[i].getQuestionId());
+					logger.info("es.getId(): " + es.getId());
 					if (qarArray[i].getQuestionId()==es.getId()) {
 						QuestionAndReply qar = new QuestionAndReply(es.getId(), es.getLabel(), es.getDescription(), 
 								es.getAnsa(), es.getAnsb(), es.getAnsc(), es.getAnsd(), es.getAnse(), es.getAnsf(), 
 								es.getAnsg(), es.getAnsh(), es.getCansa(), es.getCansb(), es.getCansc(), es.getCansd(), 
 								es.getCanse(), es.getCansf(), es.getCansg(), es.getCansh() , es.getFullAnswer(), es.getPosition(),
-								qarArray[i].getQuestionId(), qarArray[i].getUserCansa(), qarArray[i].getUserCansb(), qarArray[i].getUserCansc(), qarArray[i].getUserCansd(), qarArray[i].getUserCanse(),
-								qarArray[i].getUserCansf(), qarArray[i].getUserCansg(), qarArray[i].getUserCansh());
+								qarArray[i].getQuestionId(), qarArray[i].getCansa(), qarArray[i].getCansb(), qarArray[i].getCansc(), qarArray[i].getCansd(), qarArray[i].getCanse(),
+								qarArray[i].getCansf(), qarArray[i].getCansg(), qarArray[i].getCansh());
+						logger.info("createQuestionReplyList - DEBUG - qar={}", qar);
 						lista.add(qar);
 					}
 				}
@@ -227,6 +238,7 @@ public class PdfService {
 //			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 		
 		
@@ -278,9 +290,9 @@ public class PdfService {
 		s += "Exam name: " + survey.getLabel() + "(" + questionCustomList.size() + " questions)\n";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		s += "Exam execution day: " + surveyReply.getStarttime().format(formatter) + "\n";
-		s += "Tempo massimo di esecuzione del questionario: " + survey.getTime() + " minuti\n";
+		s += "Survey max execution time: " + survey.getTime() + " minuti\n";
 		formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-		s += "Inizio: " + surveyReply.getStarttime().format(formatter) + " - Fine: " + surveyReply.getEndtime().format(formatter) + "\n";
+		s += "Start time: " + surveyReply.getStarttime().format(formatter) + " - End time: " + surveyReply.getEndtime().format(formatter) + "\n";
 		s += "\n\n\n";
 		lista.add(s);
 		int i = 0;
@@ -294,28 +306,28 @@ public class PdfService {
 				s += rq.getDescription() + "\n";
 //				s += "Position: " + rq.getPosition() + "\n";
 				if (rq.getAnsa()!=null) {
-					s += "Answer A: " + rq.getAnsa() + "(" + rq.getCansa() + "): " + questionReplyList.get(i).getCansa()+ "\n";
+					s += "Answer A: " + rq.getAnsa() + "(" + rq.getCansa() + "): " + questionReplyList.get(i).getUserCansa()+ "\n";
 				}
 				if (rq.getAnsb()!=null) {
-				    s += "Answer B: " + rq.getAnsb() + "(" + rq.getCansb() + "): " + questionReplyList.get(i).getCansb() + "\n";
+				    s += "Answer B: " + rq.getAnsb() + "(" + rq.getCansb() + "): " + questionReplyList.get(i).getUserCansb() + "\n";
 				}
 				if (rq.getAnsc()!=null) {
-					s += "Answer C: " + rq.getAnsc() + "(" + rq.getCansc() + "): " + questionReplyList.get(i).getCansc() + "\n";
+					s += "Answer C: " + rq.getAnsc() + "(" + rq.getCansc() + "): " + questionReplyList.get(i).getUserCansc() + "\n";
 				}
 				if (rq.getAnsd()!=null) {
-					s += "Answer D: " + rq.getAnsd() + "(" + rq.getCansd() + "): " + questionReplyList.get(i).getCansd() + "\n";
+					s += "Answer D: " + rq.getAnsd() + "(" + rq.getCansd() + "): " + questionReplyList.get(i).getUserCansd() + "\n";
 				}
 				if (rq.getAnse()!=null) {
-					s += "Answer E: " + rq.getAnse() + "(" + rq.getCanse() + "): " + questionReplyList.get(i).getCanse() + "\n";
+					s += "Answer E: " + rq.getAnse() + "(" + rq.getCanse() + "): " + questionReplyList.get(i).getUserCanse() + "\n";
 				}
 				if (rq.getAnsf()!=null) {
-				    s += "Answer F: " + rq.getAnsf() + "(" + rq.getCansf() + "): " + questionReplyList.get(i).getCansf() + "\n";
+				    s += "Answer F: " + rq.getAnsf() + "(" + rq.getCansf() + "): " + questionReplyList.get(i).getUserCansf() + "\n";
 				}
 				if (rq.getAnsg()!=null) {
-				    s += "Answer G: " + rq.getAnsg() + "(" + rq.getCansg() + "): " + questionReplyList.get(i).getCansg() + "\n";
+				    s += "Answer G: " + rq.getAnsg() + "(" + rq.getCansg() + "): " + questionReplyList.get(i).getUserCansg() + "\n";
 				}
 				if (rq.getAnsh()!=null) {
-					s += "Answer H: " + rq.getAnsh() + "(" + rq.getCansh() + "): " + questionReplyList.get(i).getCansh() + "\n";
+					s += "Answer H: " + rq.getAnsh() + "(" + rq.getCansh() + "): " + questionReplyList.get(i).getUserCansh() + "\n";
 				}
 				s += "\n";
 				s += "Full answer: " + rq.getFullAnswer() + "\n\n\n\n";
