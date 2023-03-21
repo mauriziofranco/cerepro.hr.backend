@@ -38,6 +38,9 @@ public class CoursePageCustomController {
 	public ResponseEntity<List<CoursePageCustom>> listAllCoursePageCustom() {
 		
 		List<CoursePageCustom> coursePages = coursePageService.getAllCoursePageCustom();
+		for (CoursePageCustom current : coursePages) {
+			logger.info(current.toString());
+		}
 
 		if (coursePages.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
