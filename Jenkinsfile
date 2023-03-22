@@ -97,8 +97,8 @@ pipeline {
         stage ("DELIVERY ON DOCKER HOST") {
             steps {
                 echo "MOVING files on docker host"
-                sh "/cerepro_resources/scp_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${APPLICATION_DOCKER_HOST} archive"
-                sh "/cerepro_resources/scp_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} Dockerfile cerepro_resources ${APPLICATION_DOCKER_HOST} archive"
+                sh "/cerepro_resources/scp_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} ${ARTIFACT_FULL_FILE_NAME} cerepro_resources ${APPLICATION_DOCKER_HOST} archive ${JENKINS_HOME}"
+                sh "/cerepro_resources/scp_on_docker_host.sh ${JOB_NAME} ${BUILD_NUMBER} Dockerfile cerepro_resources ${APPLICATION_DOCKER_HOST} archive ${JENKINS_HOME}"
             }
         }
         stage ("PROMOTE DEV AND STAGE ENVIRONMENTS") {
