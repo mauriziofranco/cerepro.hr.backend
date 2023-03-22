@@ -34,8 +34,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import centauri.academy.cerepro.persistence.entity.CeReProAbstractEntity;
 import centauri.academy.cerepro.persistence.entity.CoursePage;
+import centauri.academy.cerepro.persistence.entity.custom.CoursePageCustom;
 import centauri.academy.cerepro.persistence.entity.custom.CustomErrorType;
 import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepository;
+import centauri.academy.cerepro.service.CoursePageService;
 
 /**
  * 
@@ -179,6 +181,8 @@ public class CoursePageController {
 	private String COURSE_PAGES_FOLDER;
 	@Autowired
 	private CoursePageRepository coursePageRepository;
+	@Autowired
+	CoursePageService coursePageService;
 
 	@Autowired
 	public void setCoursePageJpaRepository(CoursePageRepository coursePageRepository) {
@@ -205,6 +209,16 @@ public class CoursePageController {
 		logger.info("Creating coursePage : {}", coursePage);
 		coursePageRepository.save(coursePage);
 		return new ResponseEntity<>(coursePage, HttpStatus.CREATED);
+	}
+	
+	@CacheEvict(value = "codes", allEntries = true)
+	@PostMapping(value = "/createcoursepagecustom", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<CeReProAbstractEntity> createCoursePageCustom(@Valid @RequestBody final CoursePageCustom cpc) {
+		
+		logger.info("Creating CoursePageCustom : {}", cpc);
+		CoursePageCustom dbcpc = coursePageService.insertCoursePageCustom(cpc);
+		return new ResponseEntity<>(dbcpc, HttpStatus.CREATED);
+		
 	}
 	
 	
