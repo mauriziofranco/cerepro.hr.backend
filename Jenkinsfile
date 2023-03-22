@@ -40,9 +40,10 @@ pipeline {
         ENVIRONMENT_DEPLOY_DIR = "tomcat_webapps"
         */
     }
-    stages {        
+    stages {        	    
         stage("Compile") {
             steps {
+	            sh "printenv"
                 sh "./mvnw clean compile"
             }
         }
