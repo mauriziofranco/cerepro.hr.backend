@@ -13,7 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import centauri.academy.cerepro.persistence.entity.CoursePage;
+import centauri.academy.cerepro.persistence.entity.PositionUserOwner;
+import centauri.academy.cerepro.persistence.entity.User;
 import centauri.academy.cerepro.persistence.entity.custom.CoursePageCustom;
+import centauri.academy.cerepro.persistence.repository.PositionUserOwnerRepository;
+import centauri.academy.cerepro.persistence.repository.UserRepository;
 import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepository;
 import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepositoryCustom;
 
@@ -31,6 +35,31 @@ public class CoursePageService {
 	
 	@Autowired
 	private CoursePageRepositoryCustom coursePageRepositoryCustom;
+	
+	@Autowired
+	PositionUserOwnerRepository positionUserOwnerRepository;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	public CoursePageCustom insertCoursePageCustom(CoursePageCustom cpc) {
+		CoursePage cp = new CoursePage();
+		cp.setBodyText(cpc.getBodyText());
+		cp.setCode(cpc.getCode());
+		cp.setFileName(cpc.getFileName());
+		cp.setTitle(cpc.getTitle());
+		CoursePage dbcp = coursePageRepository.save(cp);
+		cpc.setId(cp.getId());
+		PositionUserOwner puo = new PositionUserOwner();
+		puo.setCoursePageId(dbcp.getId());
+		puo.setUserId(cpc.getUserId());
+		positionUserOwnerRepository.save(puo);
+		User u = userRepository.getOne(cpc.getUserId());
+		cpc.setCoursePageOwnerFirstname(u.getFirstname());
+		cpc.setCoursePageOwnerLastname(u.getLastname());
+		return cpc;
+
+	}
 	
     public CoursePage getCoursePageByCode(String code) {
         return coursePageRepository.findByCode(code);
