@@ -2,6 +2,7 @@ package centauri.academy.cerepro.service;
 
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,6 +49,8 @@ public class CoursePageService {
 		cp.setCode(cpc.getCode());
 		cp.setFileName(cpc.getFileName());
 		cp.setTitle(cpc.getTitle());
+		cp.setOpened_by(cpc.getOpened_by());
+		cp.setCreated_datetime(LocalDateTime.now());
 		CoursePage dbcp = coursePageRepository.save(cp);
 		cpc.setId(cp.getId());
 		PositionUserOwner puo = new PositionUserOwner();
@@ -68,6 +71,11 @@ public class CoursePageService {
     public List<CoursePageCustom> getAllCoursePageCustom() {
     	
     	List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
+    	
+    	for(CoursePageCustom c: coursePageFilled) {
+    		
+    		logger.info("--------------------------------" + c);
+    	}
     	
     	Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
 			public int compare(CoursePageCustom c1, CoursePageCustom c2) {
