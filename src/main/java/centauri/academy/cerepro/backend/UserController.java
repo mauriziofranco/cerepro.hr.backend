@@ -290,5 +290,23 @@ public class UserController {
 		}
 		
 	}
+	
+	@PatchMapping("/updatepassword/{id}")
+	public ResponseEntity<CeReProAbstractEntity> updatePasswordById(@PathVariable("id") final Long id, @RequestBody final String password) {
+	    Optional<User> optUser = userService.getById(id);
+	    if (!optUser.isPresent()) {
+	        return new ResponseEntity<>(new CustomErrorType("Unable to update. User with id " + id + " not found."), HttpStatus.NOT_FOUND);
+	    }
+	    try {
+	        User currentUser = optUser.get();
+	        String encoded = new BCryptPasswordEncoder().encode(password);
+	        currentUser.setPassword(encoded);
+	        userRepository.save(currentUser);
+	        return new ResponseEntity<>(currentUser, HttpStatus.OK);
+	    } catch (Exception e) {
+	        logger.error("error", e);
+	        return new ResponseEntity<>(new CustomErrorType(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
 
 }

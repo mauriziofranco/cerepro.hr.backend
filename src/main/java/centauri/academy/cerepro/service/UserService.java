@@ -86,4 +86,16 @@ public class UserService {
 		logger.debug("updateEnabledById - START");
 		return (userRepository.updateEnabledById(id, b)==1?true:false);
 	}
+	
+	public Boolean updatePasswordById(Long id, String newPassword) {
+		logger.debug("updatePasswordById - START");
+		Optional<User> optionalObj = userRepository.findById(id);
+		if (optionalObj.isPresent()) {
+			User userToUpdate = optionalObj.get();
+			userToUpdate.setPassword(newPassword);
+			userRepository.save(userToUpdate);
+			return true;
+		}
+		return false;
+	}
 }
