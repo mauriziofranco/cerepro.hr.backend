@@ -398,7 +398,7 @@ public class CoursePageController {
 			coursePageRepository.delete(coursePage.get());
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (DataIntegrityViolationException e) {
-			logger.error(e.getMessage(), e);
+			logger.warn(e.getMessage(), e);
 			String constraintViolationMessage = messageSource.getMessage("coursepage.error.delete.not.executed.contraint.violation", null, LocaleContextHolder.getLocale());
 			return new ResponseEntity<CeReProAbstractEntity>(new CustomErrorType(constraintViolationMessage)  , HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
