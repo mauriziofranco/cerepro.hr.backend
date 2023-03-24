@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,18 @@ public class CandidateStatesController {
 	@GetMapping("/")
 	public ResponseEntity<List<CandidateStates>> listAllCandidatesStates() {
 		List<CandidateStates> candidateStates = candidateStatesRepository.findAll();
+
+		if (candidateStates.isEmpty()) {
+
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+
+		return new ResponseEntity<>(candidateStates, HttpStatus.OK);
+	}
+	
+	@GetMapping("/orderByStatusCode")
+	public ResponseEntity<List<CandidateStates>> listAllCandidatesStatesByCode() {
+		List<CandidateStates> candidateStates = candidateStatesRepository.findAll(Sort.by(Sort.Direction.ASC,"statusCode"));
 
 		if (candidateStates.isEmpty()) {
 

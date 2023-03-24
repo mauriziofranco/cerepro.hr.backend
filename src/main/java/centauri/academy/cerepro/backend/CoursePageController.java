@@ -372,10 +372,13 @@ public class CoursePageController {
 					HttpStatus.NOT_FOUND);
 		}
 
+		currentCoursePage.get().setOpened_by(coursePage.getOpened_by());
 		currentCoursePage.get().setFileName(coursePage.getFileName());
 		currentCoursePage.get().setTitle(coursePage.getTitle());
 		currentCoursePage.get().setCode(coursePage.getCode());
 		currentCoursePage.get().setBodyText(coursePage.getBodyText());
+		currentCoursePage.get().setId(coursePage.getId());
+		currentCoursePage.get().setCreated_datetime(coursePage.getCreated_datetime());
 
 		coursePageRepository.saveAndFlush(currentCoursePage.get());
 
