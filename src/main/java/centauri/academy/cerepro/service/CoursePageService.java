@@ -60,6 +60,9 @@ public class CoursePageService {
 		User u = userRepository.getOne(cpc.getUserId());
 		cpc.setCoursePageOwnerFirstname(u.getFirstname());
 		cpc.setCoursePageOwnerLastname(u.getLastname());
+		User u2 = userRepository.getOne(cpc.getOpened_by());
+		cpc.setCoursePageFirstNameOpenedBy(u2.getFirstname());
+		cpc.setCoursePageLastNameOpenedBy(u2.getLastname());
 		return cpc;
 
 	}
