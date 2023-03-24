@@ -109,7 +109,7 @@ public class CoursePageControllerTest {
 	@Test
 	public void testDeleteCoursePage() {
 		logger.info("testDeleteCoursePage()  ---------------------- START");
-		CoursePage testCoursePage = new CoursePage(13L, "aaa", "bbb", "ccc");
+		CoursePage testCoursePage = new CoursePage(13L, "aaa", "bbb", "ccc", 1l);
 		Optional<CoursePage> currOpt = Optional.of(testCoursePage) ;
 		when(this.coursePageRepository.findById(13L)).thenReturn(currOpt);
 		ResponseEntity<CeReProAbstractEntity> responseEntity = this.coursePageController.deleteCoursePage(13L);
@@ -120,7 +120,7 @@ public class CoursePageControllerTest {
 	@Test
 	public void testUpdateCoursePage() {
 		logger.info("testUpdateCoursePage()  ---------------------- START");
-		CoursePage testCoursePage = new CoursePage (12L, "aaa", "bbb", "ccc");
+		CoursePage testCoursePage = new CoursePage (12L, "aaa", "bbb", "ccc", 1l);
 		Optional<CoursePage> currOpt = Optional.of(testCoursePage) ;
 		when(this.coursePageRepository.findById(12L)).thenReturn(currOpt);
 		testCoursePage.setBodyText("testerUPDATED1");
