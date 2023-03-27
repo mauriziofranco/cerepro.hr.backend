@@ -79,6 +79,8 @@ public class CoursePageService {
 
 	public boolean sendEmail(String firstname, String lastname, String email, String title) {
 		boolean value = false;
+		String[] emails = new String[1]; 
+		emails[0] = email;
 		try {
 			String messageBody = messageSource.getMessage("mail.coursepage.messageBody",null, Locale.getDefault());
 			messageBody = messageBody.replaceAll("XYZ", firstname + "" + lastname);
@@ -88,7 +90,9 @@ public class CoursePageService {
 			subject = subject.replaceAll("ZYX", firstname + "" + lastname);
 			String signature = messageSource.getMessage("mail.coursepage.signature",null, Locale.getDefault());
 			String message = messageBody + link + signature;
-			value = MailUtility.sendSimpleMail("hr@proximanetwork.it", subject, message);
+			logger.info("SEND EMAIL " + emails);
+//			value = MailUtility.sendSimpleMail("hr@proximanetwork.it", subject, message);
+			value = MailUtility.sendSimpleMailWithDefaultCcAndCcn(emails, subject, message);
 			return value;
 		} catch (Exception e) {
 			e.printStackTrace();
