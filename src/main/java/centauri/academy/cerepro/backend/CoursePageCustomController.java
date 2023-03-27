@@ -46,6 +46,18 @@ public class CoursePageCustomController {
 
 		return new ResponseEntity<>(coursePages, HttpStatus.OK);
 	}
-
+	
+//	@GetMapping("/bydate/")
+//	public ResponseEntity<List<CoursePageCustom>> listAllCoursePageCustomByDate() {
+//		
+//		List<CoursePageCustom> coursePages = coursePageService.getAllCoursePageCustomByDate();
+//		for (CoursePageCustom current : coursePages) {
+//			logger.info(current.toString());
+//		}
+//
+//		if (coursePages.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//
+//		return new ResponseEntity<>(coursePages, HttpStatus.OK);
+//	}
 	
 }

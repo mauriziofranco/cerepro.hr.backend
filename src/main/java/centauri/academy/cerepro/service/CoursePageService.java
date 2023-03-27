@@ -79,8 +79,6 @@ public class CoursePageService {
 
 	public boolean sendEmail(String firstname, String lastname, String email, String title) {
 		boolean value = false;
-		String[] emails = new String[1]; 
-		emails[0] = email;
 		try {
 			String messageBody = messageSource.getMessage("mail.coursepage.messageBody",null, Locale.getDefault());
 			messageBody = messageBody.replaceAll("XYZ", firstname + "" + lastname);
@@ -90,8 +88,7 @@ public class CoursePageService {
 			subject = subject.replaceAll("ZYX", firstname + "" + lastname);
 			String signature = messageSource.getMessage("mail.coursepage.signature",null, Locale.getDefault());
 			String message = messageBody + link + signature;
-//			value = MailUtility.sendSimpleMail("hr@proximanetwork.it", subject, message);
-			value = MailUtility.sendSimpleMailWithDefaultCcAndCcn(emails, subject, message);
+			value = MailUtility.sendSimpleMail("hr@proximanetwork.it", subject, message);
 			return value;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -112,15 +109,24 @@ public class CoursePageService {
 			logger.info("--------------------------------" + c);
 		}
 
-		Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
-			public int compare(CoursePageCustom c1, CoursePageCustom c2) {
-				return (int) (c1.getId() - c2.getId());
-			}
-		});
+//		Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
+//			public int compare(CoursePageCustom c1, CoursePageCustom c2) {
+//				return (int) (c1.getId() - c2.getId());
+//			}
+//		});
 
 		return coursePageFilled;
-
 	}
+	
+//	public List<CoursePageCustom> getAllCoursePageCustomByDate() {
+//	    List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
+//	    Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
+//	        public int compare(CoursePageCustom c1, CoursePageCustom c2) {
+//	            return c2.getCreated_datetime().compareTo(c1.getCreated_datetime());
+//	        }
+//	    });
+//	    return coursePageFilled;
+//	}
 
 	/**
 	 * Check if course_code exists into coursePage table If no, provides a default
