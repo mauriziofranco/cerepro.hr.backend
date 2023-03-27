@@ -2,17 +2,23 @@ package centauri.academy.cerepro.service;
 
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
 
+import org.proxima.common.mail.MailUtility;
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import centauri.academy.cerepro.backend.CandidateSurveyTokenController;
 import centauri.academy.cerepro.persistence.entity.CoursePage;
 import centauri.academy.cerepro.persistence.entity.PositionUserOwner;
 import centauri.academy.cerepro.persistence.entity.User;
@@ -27,22 +33,25 @@ import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepo
  * @author maurizio.franco@ymail.com
  *
  */
-@Service 
+@Service
 public class CoursePageService {
 	public static final Logger logger = LoggerFactory.getLogger(CoursePageService.class);
 	
 	@Autowired
+	private MessageSource messageSource;
+
+	@Autowired
 	private CoursePageRepository coursePageRepository;
-	
+
 	@Autowired
 	private CoursePageRepositoryCustom coursePageRepositoryCustom;
-	
+
 	@Autowired
 	PositionUserOwnerRepository positionUserOwnerRepository;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
+
 	public CoursePageCustom insertCoursePageCustom(CoursePageCustom cpc) {
 		CoursePage cp = new CoursePage();
 		cp.setBodyText(cpc.getBodyText());
@@ -63,53 +72,81 @@ public class CoursePageService {
 		User u2 = userRepository.getOne(cpc.getOpened_by());
 		cpc.setCoursePageFirstNameOpenedBy(u2.getFirstname());
 		cpc.setCoursePageLastNameOpenedBy(u2.getLastname());
+		boolean value = sendEmail(u2.getFirstname(), u2.getLastname(), u.getEmail(), cp.getTitle());
+		logger.info("SEND EMAIL END" + value);
 		return cpc;
+	}
 
+	public boolean sendEmail(String firstname, String lastname, String email, String title) {
+		boolean value = false;
+		try {
+			String messageBody = messageSource.getMessage("mail.coursepage.messageBody",null, Locale.getDefault());
+			messageBody = messageBody.replaceAll("XYZ", firstname + "" + lastname);
+			messageBody = messageBody.replaceAll("ABC", title);
+			String link = messageSource.getMessage("mail.coursepage.link",null, Locale.getDefault());
+			String subject = messageSource.getMessage("mail.coursepage.subject",null, Locale.getDefault());
+			subject = subject.replaceAll("ZYX", firstname + "" + lastname);
+			String signature = messageSource.getMessage("mail.coursepage.signature",null, Locale.getDefault());
+			String message = messageBody + link + signature;
+			value = MailUtility.sendSimpleMail("hr@proximanetwork.it", subject, message);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return value;
+		}
+	}
+
+	public CoursePage getCoursePageByCode(String code) {
+		return coursePageRepository.findByCode(code);
+	}
+
+	public List<CoursePageCustom> getAllCoursePageCustom() {
+
+		List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
+
+		for (CoursePageCustom c : coursePageFilled) {
+
+			logger.info("--------------------------------" + c);
+		}
+
+//		Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
+//			public int compare(CoursePageCustom c1, CoursePageCustom c2) {
+//				return (int) (c1.getId() - c2.getId());
+//			}
+//		});
+
+		return coursePageFilled;
 	}
 	
-    public CoursePage getCoursePageByCode(String code) {
-        return coursePageRepository.findByCode(code);
-    }
-    
-    public List<CoursePageCustom> getAllCoursePageCustom() {
-    	
-    	List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
-    	
-    	for(CoursePageCustom c: coursePageFilled) {
-    		
-    		logger.info("--------------------------------" + c);
-    	}
-    	
-    	Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
-			public int compare(CoursePageCustom c1, CoursePageCustom c2) {
-				return (int)(c1.getId() - c2.getId());
-			}
-		});
-		
-		
-		return coursePageFilled;
-    	
-    }
-	
+//	public List<CoursePageCustom> getAllCoursePageCustomByDate() {
+//	    List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
+//	    Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
+//	        public int compare(CoursePageCustom c1, CoursePageCustom c2) {
+//	            return c2.getCreated_datetime().compareTo(c1.getCreated_datetime());
+//	        }
+//	    });
+//	    return coursePageFilled;
+//	}
+
 	/**
-	 * Check if course_code exists into coursePage table
-	 * If no, provides a default value.
+	 * Check if course_code exists into coursePage table If no, provides a default
+	 * value.
+	 * 
 	 * @return a String representative of a valid course page code
 	 */
 	public String checkCoursePageCode(String code) {
 		logger.info("checkCoursePageCode START - code: " + code);
-		if ((code==null) || (code.trim().length()==0)) 
-		{
-			return CoursePage.GENERIC_CANDIDATURE_CODE ;
-			}
-        CoursePage current = coursePageRepository.findByCode(code);
-        if (current!=null) 
-        	return current.getCode();
+		if ((code == null) || (code.trim().length() == 0)) {
+			return CoursePage.GENERIC_CANDIDATURE_CODE;
+		}
+		CoursePage current = coursePageRepository.findByCode(code);
+		if (current != null)
+			return current.getCode();
 //        else return cpRepository.findByCode(CoursePage.GENERIC_CANDIDATURE_CODE).getCode() ;
-        else 
-        	return CoursePage.GENERIC_CANDIDATURE_CODE ;
+		else
+			return CoursePage.GENERIC_CANDIDATURE_CODE;
 	}
-	
+
 	/**
 	 * Try to delete all entities from course page table
 	 */
@@ -117,5 +154,5 @@ public class CoursePageService {
 		logger.debug("deleteAll - START");
 		coursePageRepository.deleteAll();
 	}
-	
+
 }
