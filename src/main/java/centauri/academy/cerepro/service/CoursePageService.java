@@ -15,6 +15,7 @@ import org.proxima.common.mail.MailUtility;
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,9 @@ import centauri.academy.cerepro.persistence.repository.coursepage.CoursePageRepo
 @Service
 public class CoursePageService {
 	public static final Logger logger = LoggerFactory.getLogger(CoursePageService.class);
+	
+	@Value("${app.runtime.environment}")
+	private String runtimeEnvironment ;
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -72,27 +76,29 @@ public class CoursePageService {
 		User u2 = userRepository.getOne(cpc.getOpened_by());
 		cpc.setCoursePageFirstNameOpenedBy(u2.getFirstname());
 		cpc.setCoursePageLastNameOpenedBy(u2.getLastname());
-		boolean value = sendEmail(u2.getFirstname(), u2.getLastname(), u.getEmail(), cp.getTitle());
+		boolean value = sendEmail(u2.getFirstname(), u2.getLastname(), u.getEmail(), cp.getTitle(), cpc.getCode());
 		logger.info("SEND EMAIL END" + value);
 		return cpc;
 	}
 
-	public boolean sendEmail(String firstname, String lastname, String email, String title) {
+	public boolean sendEmail(String firstname, String lastname, String email, String title, String positionCode) {
+		logger.info("sendEmail - START - firstname={}, lastname={}, email={}, title={}, positionCode={}", firstname, lastname, email, title, positionCode);
 		boolean value = false;
 		String[] emails = new String[1]; 
 		emails[0] = email;
 		try {
 			String messageBody = messageSource.getMessage("mail.coursepage.messageBody",null, Locale.getDefault());
-			messageBody = messageBody.replaceAll("XYZ", firstname + "" + lastname);
+			messageBody = messageBody.replaceAll("XYZ", firstname + " " + lastname);
 			messageBody = messageBody.replaceAll("ABC", title);
 			String link = messageSource.getMessage("mail.coursepage.link",null, Locale.getDefault());
+			link = link.replaceAll("YYY", runtimeEnvironment);
+			link = link.replaceAll("ABC", positionCode);
 			String subject = messageSource.getMessage("mail.coursepage.subject",null, Locale.getDefault());
-			subject = subject.replaceAll("ZYX", firstname + "" + lastname);
 			String signature = messageSource.getMessage("mail.coursepage.signature",null, Locale.getDefault());
 			String message = messageBody + link + signature;
-			logger.info("SEND EMAIL " + emails);
-//			value = MailUtility.sendSimpleMail("hr@proximanetwork.it", subject, message);
+			logger.info("sendEmail - DEBUG - emails={}, subject={}, message={}", emails, subject, message);
 			value = MailUtility.sendSimpleMailWithDefaultCcAndCcn(emails, subject, message);
+			logger.info("sendEmail - DEBUG - value={}"); 
 			return value;
 		} catch (Exception e) {
 			e.printStackTrace();
