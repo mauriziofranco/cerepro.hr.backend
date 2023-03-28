@@ -128,6 +128,55 @@ public class CoursePageService {
 		return coursePageFilled;
 	}
 	
+	public CoursePageCustom getCoursePageCustomById(Long id) {
+		CoursePage coursePage = coursePageRepository.getOne(id);
+		PositionUserOwner userOwner = positionUserOwnerRepository.findByCoursePageId(coursePage.getId()).get();
+		User u = userRepository.getOne(userOwner.getUserId());
+		User u2 = userRepository.getOne(coursePage.getOpened_by());
+		CoursePageCustom coursePageCustom = new CoursePageCustom();
+		coursePageCustom.setId(coursePage.getId());
+		coursePageCustom.setTitle(coursePage.getTitle());
+		coursePageCustom.setCode(coursePage.getCode());
+		coursePageCustom.setBodyText(coursePage.getBodyText());
+		coursePageCustom.setFileName(coursePage.getFileName());
+		coursePageCustom.setOpened_by(coursePage.getOpened_by());
+		coursePageCustom.setCreated_datetime(coursePage.getCreated_datetime());
+		coursePageCustom.setCoursePageOwnerFirstname(u.getFirstname());
+		coursePageCustom.setCoursePageOwnerLastname(u.getLastname());
+		coursePageCustom.setCoursePageFirstNameOpenedBy(u2.getFirstname());
+		coursePageCustom.setCoursePageLastNameOpenedBy(u2.getLastname());
+		return coursePageCustom;
+	}
+	
+	public CoursePageCustom updateCoursePageCustom(Long id,CoursePageCustom coursePageCustom) {
+		logger.info("updateCoursePageCustom START - ");
+		CoursePage coursePage = coursePageRepository.getOne(id);
+		PositionUserOwner userOwner = positionUserOwnerRepository.findByCoursePageId(coursePage.getId()).get();
+		logger.info("updateCoursePageCustom get id UserOwner - " +coursePageCustom.getUserId());
+		userOwner.setUserId(coursePageCustom.getUserId());
+		positionUserOwnerRepository.deleteById(userOwner.getId());
+		logger.info("updateCoursePageCustom delete UserOwner - " +userOwner);
+		User u = userRepository.getOne(userOwner.getUserId());
+		User u2 = userRepository.getOne(coursePage.getOpened_by());
+		coursePageCustom.setId(coursePage.getId());
+		coursePageCustom.setTitle(coursePage.getTitle());
+		coursePageCustom.setCode(coursePage.getCode());
+		coursePageCustom.setBodyText(coursePage.getBodyText());
+		coursePageCustom.setFileName(coursePage.getFileName());
+		coursePageCustom.setOpened_by(coursePage.getOpened_by());
+		coursePageCustom.setCreated_datetime(coursePage.getCreated_datetime());
+		coursePageCustom.setCoursePageOwnerFirstname(u.getFirstname());
+		coursePageCustom.setCoursePageOwnerLastname(u.getLastname());
+		coursePageCustom.setCoursePageFirstNameOpenedBy(u2.getFirstname());
+		coursePageCustom.setCoursePageLastNameOpenedBy(u2.getLastname());
+		logger.info("updateCoursePageCustom save New UserOwner - " +userOwner);
+		positionUserOwnerRepository.save(userOwner);
+		logger.info("updateCoursePageCustom END - ");
+		return coursePageCustom;
+	}
+	
+	
+	
 //	public List<CoursePageCustom> getAllCoursePageCustomByDate() {
 //	    List<CoursePageCustom> coursePageFilled = coursePageRepositoryCustom.findAllCustom();
 //	    Collections.sort(coursePageFilled, new Comparator<CoursePageCustom>() {
