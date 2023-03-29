@@ -32,52 +32,10 @@
 
 	<build>
 		<finalName>${package.file.name}</finalName>
-		<!-- <resources> -->
-		<!-- <resource> -->
-		<!-- <directory>src/main/resources</directory> -->
-		<!-- <excludes> -->
-		<!-- <exclude>application.*</exclude> -->
-		<!-- <exclude>mail.properties</exclude> -->
-		<!-- </excludes> -->
-		<!-- <filtering>false</filtering> -->
-		<!-- </resource> -->
-		<!-- </resources> -->
 		<plugins>
-		
-
-			<!-- <plugin> -->
-			<!-- <artifactId>maven-resources-plugin</artifactId> -->
-			<!-- <version>3.1.0</version> -->
-			<!-- <executions> -->
-			<!-- <execution> -->
-			<!-- <id>copy-resources</id> -->
-			<!-- <phase>compile</phase> -->
-			<!-- <goals> -->
-			<!-- <goal>copy-resources</goal> -->
-			<!-- </goals> -->
-			<!-- <configuration> -->
-			<!-- <outputDirectory>${basedir}/target/conf</outputDirectory> -->
-			<!-- <resources> -->
-			<!-- <resource> -->
-			<!-- <directory>src/main/resources</directory> -->
-			<!-- <filtering>true</filtering> -->
-			<!-- </resource> -->
-			<!-- </resources> -->
-			<!-- </configuration> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!-- <configuration> -->
-				<!-- <webResources> -->
-				<!-- <resource> -->
-				<!-- this is relative to the pom.xml directory -->
-				<!-- <directory>src/main/resources/static</directory> -->
-				<!-- </resource> -->
-				<!-- </webResources> -->
-				<!-- </configuration> -->
 			</plugin>
 
 			<plugin>
@@ -277,6 +235,7 @@
 			<version>1.18.20</version>
 			<scope>provided</scope>
 		</dependency>
+
 	</dependencies>
 
 

@@ -8,11 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -39,8 +36,6 @@ public class CeReProBackendApplication extends SpringBootServletInitializer {
 //		for (String name : applicationContext.getBeanDefinitionNames()) {
 //			logger.info(name);
 //		}
-		
-
 	
 //		SpringApplication application = new SpringApplication(CeReProBackendApplication.class);
 
