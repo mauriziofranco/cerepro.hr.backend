@@ -158,19 +158,38 @@ public class CoursePageService {
 		logger.info("updateCoursePageCustom delete UserOwner - " +userOwner);
 		User u = userRepository.getOne(userOwner.getUserId());
 		User u2 = userRepository.getOne(coursePage.getOpened_by());
-		coursePageCustom.setId(coursePage.getId());
-		coursePageCustom.setTitle(coursePage.getTitle());
-		coursePageCustom.setCode(coursePage.getCode());
-		coursePageCustom.setBodyText(coursePage.getBodyText());
-		coursePageCustom.setFileName(coursePage.getFileName());
-		coursePageCustom.setOpened_by(coursePage.getOpened_by());
-		coursePageCustom.setCreated_datetime(coursePage.getCreated_datetime());
+//		coursePage.setId(coursePageCustom.getId());
+//		coursePage.setTitle(coursePageCustom.getTitle());
+//		coursePage.setCode(coursePageCustom.getCode());
+//		coursePage.setBodyText(coursePageCustom.getBodyText());
+//		coursePage.setFileName(coursePageCustom.getFileName());
+//		coursePage.setOpened_by(coursePageCustom.getOpened_by());
+//		coursePage.setCreated_datetime(coursePageCustom.getCreated_datetime());
+//		coursePage.setStatusOpen(coursePageCustom.getStatusOpen());
+		logger.info("START UPDATE ID : " + coursePageCustom.getId());
+		coursePageRepository.updateCoursePage(coursePageCustom.getId(),
+				coursePageCustom.getTitle(), 
+				coursePageCustom.getBodyText(), 
+				coursePageCustom.getFileName(),
+				coursePageCustom.getCode(), 
+				coursePageCustom.getOpened_by(),
+				coursePageCustom.getCreated_datetime(),
+				coursePageCustom.getStatusOpen());
+//		coursePageCustom.setId(coursePage.getId());
+//		coursePageCustom.setTitle(coursePage.getTitle());
+//		coursePageCustom.setCode(coursePage.getCode());
+//		coursePageCustom.setBodyText(coursePage.getBodyText());
+//		coursePageCustom.setFileName(coursePage.getFileName());
+//		coursePageCustom.setOpened_by(coursePage.getOpened_by());
+//		coursePageCustom.setCreated_datetime(coursePage.getCreated_datetime());
+//		coursePageCustom.setStatusOpen(coursePage.getStatusOpen());
 		coursePageCustom.setCoursePageOwnerFirstname(u.getFirstname());
 		coursePageCustom.setCoursePageOwnerLastname(u.getLastname());
 		coursePageCustom.setCoursePageFirstNameOpenedBy(u2.getFirstname());
 		coursePageCustom.setCoursePageLastNameOpenedBy(u2.getLastname());
 		logger.info("updateCoursePageCustom save New UserOwner - " +userOwner);
 		positionUserOwnerRepository.save(userOwner);
+		
 		logger.info("updateCoursePageCustom END - ");
 		return coursePageCustom;
 	}
