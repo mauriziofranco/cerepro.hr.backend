@@ -103,6 +103,9 @@ public abstract class AbstractIntegrationTests {
 		testCoursePage.setBodyText("FakeBodyText " + random);
 		testCoursePage.setFileName("FakeFileName " + random);
 		testCoursePage.setCode(code);
+		testCoursePage.setStatusOpen(true);
+		testCoursePage.setCreated_datetime(LocalDateTime.now());
+		testCoursePage.setOpened_by(getFakeUser().getId());
 		coursePageRepository.save(testCoursePage);
 		return testCoursePage;
 	}
