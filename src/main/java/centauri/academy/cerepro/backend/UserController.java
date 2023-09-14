@@ -5,6 +5,7 @@ package centauri.academy.cerepro.backend;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Optional;
 
@@ -292,17 +293,21 @@ public class UserController {
 	}
 	
 	@PatchMapping("/updatepassword/{id}")
-	public ResponseEntity<CeReProAbstractEntity> updatePasswordById(@PathVariable("id") final Long id, @RequestBody final String password) {
-	    Optional<User> optUser = userService.getById(id);
+	public ResponseEntity<CeReProAbstractEntity> updatePasswordById(@PathVariable("id") final Long id, @RequestBody final Hashtable<String, String> passwordHashtable) {
+		logger.info("updatePasswordById - START");
+		Optional<User> optUser = userService.getById(id);
+		logger.info("updatePasswordById - DEBUG - requesting update password for user id: {} ", id);
 	    if (!optUser.isPresent()) {
 	        return new ResponseEntity<>(new CustomErrorType("Unable to update. User with id " + id + " not found."), HttpStatus.NOT_FOUND);
 	    }
 	    try {
 	        User currentUser = optUser.get();
+	        String password = passwordHashtable.get("password");
+	        logger.info("updatePasswordById - DEBUG - requesting update password for user id {} with password {} to encode.", id, password);
 	        String encoded = new BCryptPasswordEncoder().encode(password);
 	        currentUser.setPassword(encoded);
-	        userRepository.save(currentUser);
-	        return new ResponseEntity<>(currentUser, HttpStatus.OK);
+	        User updatedUser = userRepository.save(currentUser);
+	        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 	    } catch (Exception e) {
 	        logger.error("error", e);
 	        return new ResponseEntity<>(new CustomErrorType(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
