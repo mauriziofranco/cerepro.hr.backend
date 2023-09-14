@@ -32,7 +32,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.httpBasic().and().authorizeRequests()
-		.antMatchers(HttpMethod.POST, "/api/v1/user/").permitAll()//to allow regitration????
+		.antMatchers(HttpMethod.POST, "/api/v1/user/").permitAll()//to allow registration????
 		.antMatchers(HttpMethod.GET, "/api/v1/user/email/**").permitAll()//to allow login
 		.antMatchers(HttpMethod.GET,  "/api/v1/survey/getSurveyForCandidate/**").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/v1/surveyreplyrequest/start/").permitAll()		
